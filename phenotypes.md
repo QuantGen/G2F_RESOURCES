@@ -10,3 +10,6 @@ The following scripts use data from the GxE initiative of the G2F project availa
  DATA=read.csv(fname,header=TRUE)
 
 ```
+
+
+[main](https://github.com/QuantGen/G2F_RESOURCES)
