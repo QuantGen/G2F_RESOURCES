@@ -5,7 +5,7 @@ This repository provides resources (data and pipelines) linked to data generated
 
 ## Data and data pre-procesing
 
- - [Phenotypes]()
+ - [Phenotypes](https://github.com/QuantGen/G2F_RESOURCES/blob/main/phenotypes.md)
  - [Genotypes]()
  - [Meta-data]()
  - [Environmental Covariates]()
