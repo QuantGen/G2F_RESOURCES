@@ -7,21 +7,21 @@ The following scripts use data from the GxE initiative of the G2F project availa
 **Reading the data from one year into R**
 
 ```r
-token17 <- '?token=ADHZTMMBWS73JO7UGLXGXM3AAXNVM' # Remove this when the repository is public
-token18 <- '?token=ADHZTMKTJLN6L5PQ7EVWDWLAAXR3M' # Remove this when the repository is public
-token19 <- '?token=ADHZTMKIQ4HEEGYN7CRWURTAAXSEI' # Remove this when the repository is public
+token17 <- '?token=ADHZTMMBWS73JO7UGLXGXM3AAXNVM' # Remove this before publish repository
+token18 <- '?token=ADHZTMKTJLN6L5PQ7EVWDWLAAXR3M' # Remove this before publish repository
+token19 <- '?token=ADHZTMKIQ4HEEGYN7CRWURTAAXSEI' # Remove this before publish repository
 
 dpath <- 'https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Data/Phenotypes/data_phenotypes_'
 fyear <- 2017
 fext <- '.csv'
-Data <- read.csv(paste0(dpath, fyear, fext, token17), header=T) # Remove token17
+Data <- read.csv(paste0(dpath, fyear, fext, token17), header=T) # Remove this before publish repository
 ```
 
 **Reading and mergining data from multiple years**
 ```r
 pData <- list()
 for (y in c('2017', '2018', '2019')){
-  token <- switch(y, '2017'=token17, '2018'=token18, '2019'=token19) # Remove token
+  token <- switch(y, '2017'=token17, '2018'=token18, '2019'=token19) # Remove this before publish repository
   pData[[length(pData) + 1]] <- read.csv(paste0(dpath, y, fext, token), header=T, stringsAsFactors=F, na.strings=c(''))
 }
 
