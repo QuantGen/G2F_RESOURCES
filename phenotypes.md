@@ -14,7 +14,7 @@ token19 <- '?token=ADHZTMKIQ4HEEGYN7CRWURTAAXSEI' # Remove this before publish r
 dpath <- 'https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Data/Phenotypes/data_phenotypes_'
 fyear <- 2017
 fext <- '.csv'
-Data <- read.csv(paste0(dpath, fyear, fext, token17), header=T) # Remove this before publish repository
+Data <- read.csv(paste0(dpath, fyear, fext, token17), header=T) # Remove token before publish repository
 ```
 
 **Reading and mergining data from multiple years**
@@ -80,7 +80,7 @@ for (i in 1:nrow(rep_matrix)) {
 
 # merge datasets from different years
 myCols <- names(which(table(unlist(lapply(pData, colnames))) == 3))
-pData2 <- do.call(rbind, lapply(pData, function(x) x[myCols]))
+pheno <- do.call(rbind, lapply(pData, function(x) x[myCols]))
 ```
 
 
