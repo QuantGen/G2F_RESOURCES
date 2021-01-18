@@ -4,19 +4,6 @@ The following scripts use data from the GxE initiative of the G2F project availa
 
  - [G2F site](https://www.genomes2fields.org/resources/)
  
-**Reading the data from one year into R**
-
-```r
-token17 <- '?token=ADHZTMMBWS73JO7UGLXGXM3AAXNVM' # Remove this before publish repository
-token18 <- '?token=ADHZTMKTJLN6L5PQ7EVWDWLAAXR3M' # Remove this before publish repository
-token19 <- '?token=ADHZTMKIQ4HEEGYN7CRWURTAAXSEI' # Remove this before publish repository
-
-dpath <- 'https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Data/Phenotypes/data_phenotypes_'
-fyear <- 2017
-fext <- '.csv'
-Data <- read.csv(paste0(dpath, fyear, fext, token17), header=T) # Remove token before publish repository
-```
-
 **Reading and mergining data from multiple years**
 ```r
 pData <- list()
