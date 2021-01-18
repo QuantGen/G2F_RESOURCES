@@ -5,10 +5,12 @@ This repository provides resources (data and pipelines) linked to data generated
 
 ## Data and data pre-procesing
 
- - [Phenotypes](https://github.com/QuantGen/G2F_RESOURCES/blob/main/phenotypes.md)
- - [Genotypes]()
- - [Meta-data]()
- - [Environmental Covariates](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Environmental_Covariates.md)
+|Output|Source|Script|Comments|
+|------|------|------|--------|
+|[phenotype.csv]()|[DataCommons]()|[code](https://github.com/QuantGen/G2F_RESOURCES/blob/main/phenotypes.md)|Formats the phenotype data into a friendly dataset|
+|[Genotypes]()|[DataCommons]()|[code]()||
+|[Meta-data]()||||
+|[Environmental Covariates]()| [repository]()/[DataCommons]()|[code](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Environmental_Covariates.md)|Reads G2F weather data and downloads from ASOS or NOAA|
 
 ## Analysis pipelines
 
