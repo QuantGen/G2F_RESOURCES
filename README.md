@@ -8,7 +8,7 @@ This repository provides resources (data and pipelines) linked to data generated
  - [Phenotypes](https://github.com/QuantGen/G2F_RESOURCES/blob/main/phenotypes.md)
  - [Genotypes]()
  - [Meta-data]()
- - [Environmental Covariates]()
+ - [Environmental Covariates](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Environmental_Covariates.md)
 
 ## Analysis pipelines
 
