@@ -31,17 +31,9 @@ pData[[3]]$block <- 1
 # lower case all column names
 pData <- lapply(pData, function(x){colnames(x) <- tolower(colnames(x));x})
 
-# Function to rename columns
-rename_columns <- function(existing_colname, new_colname){
-  lapply(pData, function(x){
-    x_col <- grep(existing_colname, colnames(x), ignore.case=T)
-    if(is.na(new_colname) & length(x_col) == 1) { x[,x_col] <- NULL } else {
-      if(length(x_col) == 1) colnames(x)[x_col] <- new_colname }
-    if(length(x_col) > 1) stop(paste('Two columns matched existing_colname:', paste(colnames(x)[x_col], collapse = ' and ')))
-    if(length(x_col) < 1) warning('no column matched existing_colname in at least one dataset.')
-    return(x)
-  })
-}
+# Load function to rename columns
+ftoken <- '?token=ADHZTMISK6CIKMVRAHCQRTLAB3UWC' # Remove token
+source(paste0('https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Code/Functions.R', ftoken))
 
 # Renaming columns
 rep_matrix <- matrix(c('(field.*location)', 'location',
