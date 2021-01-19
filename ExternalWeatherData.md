@@ -32,6 +32,23 @@ for (i in 1:length(states)){
   print(states[i])
 }
 ASOSstations <- do.call(rbind, stations_list)
-write.csv(ASOSstations, file = '../OutputFiles/ASOS_Stations.csv')
+write.csv(ASOSstations, file='../OutputFiles/ASOS_Stations.csv')
 
 ```
+
+#### Calculates distance between ASOS stations and G2F trial locations
+
+```r
+library(geosphere)
+
+dist_matrix <- matrix(NA, ncol=nrow(info_loc), nrow=nrow(ASOSstations))
+colnames(dist_matrix) <- info_loc$Location
+rownames(dist_matrix) <- ASOSstations$sid
+for(i in 1:nrow(info_loc)){
+  for(j in 1:nrow(ASOSstations)){
+    dist_matrix[j,i] <- distGeo(c(info_loc[i,'lon'], info_loc[i,'lat']), c(ASOSstations[j, 'lon'], ASOSstations[j, 'lat']))
+  }
+}
+```
+
+
