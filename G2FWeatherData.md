@@ -8,8 +8,6 @@ It also calculates daily mean temperature and daily accumulated rainfall.
 ```r
 # Download G2F data
 
-# THIS DOES NOT WORK ON PRIVATE REPOSITORIES
-
 urlg2f2018 <- 'https://github.com/QuantGen/G2F_RESOURCES/raw/main/Data/EnvironmentalCovariates/G2F_weather_2018.csv.zip'
 urlg2f2019 <- 'https://github.com/QuantGen/G2F_RESOURCES/raw/main/Data/EnvironmentalCovariates/G2F_weather_2019.csv.zip'
 
@@ -17,12 +15,8 @@ wdata_G2F <- list()
 wdata_G2F[[1]] <- read.csv(unz(urlg2f2018, filename = 'G2F_weather_2018.csv'))
 wdata_G2F[[2]] <- read.csv(unz(urlg2f2019, filename = 'G2F_weather_2019.csv'))
 
-# wdata_G2F[[1]] <- read.csv('~/OneDrive/NewWorks/G2F_RESOURCES/Data/EnvironmentalCovariates/G2F_weather_2018.csv')
-# wdata_G2F[[2]] <- read.csv('~/OneDrive/NewWorks/G2F_RESOURCES/Data/EnvironmentalCovariates/G2F_weather_2019.csv')
-
 # Load function to rename columns
-ftoken <- '?token=ADHZTMISK6CIKMVRAHCQRTLAB3UWC' # Remove token
-source(paste0('https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Code/Functions.R', ftoken))
+source('https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Code/Functions.R')
 
 # lower case all column names
 wdata_G2F <- lapply(wdata_G2F, function(x){colnames(x) <- tolower(colnames(x));x})
