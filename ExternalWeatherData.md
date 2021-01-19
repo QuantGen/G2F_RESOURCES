@@ -1,7 +1,9 @@
-### G2F weather data
+### External weather data
 
-The following script allows to read G2F weather data for the locations that were evaluated in 2018 and 2019.
-It also calculates daily mean temperature and daily accumulated rainfall.
+The following script downloads weather data for each trial location, from sowing to harvesting.
+The data come from two external weather networks: ASOS and NOAA.
 
 ```r
+
+
 ```
