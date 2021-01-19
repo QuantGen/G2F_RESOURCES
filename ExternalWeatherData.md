@@ -14,12 +14,12 @@ info_loc$sowing <- strptime(info_loc$sowing, "%m/%d/%y")
 info_loc$harvesting <- strptime(info_loc$harvesting, "%m/%d/%y")
 ```
 
-#### Creates a dataframe of all ASOS/AWOS weather stations in the network
+#### Creates a dataframe of ASOS/AWOS weather stations in the network
 (warning: this code takes several minutes)
 ```r
 # Load functions
 source('https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Code/Functions.R')
-
+# States of interest
 states <- c('AR', 'DE', 'GA', 'IA', 'IL', 'IN', 'KS', 'MI', 'MN', 'MO', 'NC', 'NE', 'NY', 'OH', 'CA_ON', 'SC', 'TX', 'WI', 'CO', 'AWOS')
 
 stations_list <- list()
