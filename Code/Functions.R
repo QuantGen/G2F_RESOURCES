@@ -52,7 +52,7 @@ calculate_daily <- function(x) {
 # Get weather data from ASOS/AWOS network through https://mesonet.agron.iastate.edu
 
 getWeatherASOS <- function(time_period = NA, network = "IA_ASOS", sid = NA) {
-  
+  require(jsonlite)
   time_period <- as.Date(time_period)
   if (is.na(sid) | is.na(time_period)[1]) {
     uri <- paste("https://mesonet.agron.iastate.edu/geojson/network/", network, ".geojson", sep = "")
