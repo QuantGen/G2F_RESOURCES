@@ -47,3 +47,43 @@ calculate_daily <- function(x) {
   prec[,5:4]
 }
 
+#####
+
+# Get weather data from ASOS/AWOS network through https://mesonet.agron.iastate.edu
+
+getWeatherASOS <- function(time_period = NA, network = "IA_ASOS", sid = NA) {
+  
+  time_period <- as.Date(time_period)
+  if (is.na(sid) | is.na(time_period)[1]) {
+    uri <- paste("https://mesonet.agron.iastate.edu/geojson/network/", network, ".geojson", sep = "")
+    data <- url(uri)
+    jdict <- fromJSON(data)
+    return(jdict$features$properties)
+  } else {
+    if(time_period[1] > time_period[2]) stop('error: time period 1 must be before 2')
+    service <- "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?"
+    service <- paste(service, "data=all&tz=Etc/UTC&format=comma&latlon=yes&", sep = "")
+    service <- paste(service, "year1=", year(time_period)[1], "&month1=", month(time_period)[1], "&day1=", mday(time_period)[1], "&", sep = "")
+    service <- paste(service, "year2=", year(time_period)[2], "&month2=", month(time_period)[2], "&day2=", mday(time_period)[2], "&", sep = "")
+    
+    uri2 <- paste(service, "station=", sid, sep = '')
+    data_table <- read.table(uri2, header = T, sep = ',')
+    
+    return(data_table)
+  }
+}
+
+# Get weather station information from ASOS/AWOS
+
+getStationASOS <- function(network){
+  stations <- getWeatherASOS(network = network)
+  if (is.null(stations[1])) stop('network not found')
+  stations$lat <- NA
+  stations$lon <- NA
+  for (i in 1:nrow(stations)){
+    tmp <- getWeatherASOS(time_period = c('2018-10-10', '2018-10-10'), network, stations$sid[i])
+    stations$lat[i] <- tmp$lat[1]
+    stations$lon[i] <- tmp$lon[1]
+  }
+  stations[,c('elevation', 'sname', 'county', 'state', 'country', 'sid', 'lat', 'lon')]
+}
