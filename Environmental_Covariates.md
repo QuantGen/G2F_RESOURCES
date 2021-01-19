@@ -1,7 +1,7 @@
 ## Environmental Covariates
 
-The following script allows to get daily records of precipitation and temperature for the locations that were evaluated in 2018 and 2019.
-We also provide code to download these data from external sources (ASOS weather network and NOAA).
+The following script allows to read G2F weather data for the locations that were evaluated in 2018 and 2019.
+It also calculates daily mean temperature and daily accumulated rainfall.
 
 ### G2F weather data
 
@@ -81,8 +81,4 @@ wdata_G2F <- lapply(wdata_G2F, function(data){
   return(data)
 })
 ```
-
-### ASOS weather data
-
-### NOAA weather data
 
