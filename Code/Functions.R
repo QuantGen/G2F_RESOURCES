@@ -16,6 +16,7 @@ rename_columns <- function(existing_colname, new_colname, mydata = pData){
 # Calculate daily rainfall from a dataset with columns 'valid' and 'rainfall'
 
 calculate_daily <- function(x) {
+  require(tidyverse)
   options(dplyr.summarise.inform = FALSE) # added
   if (!all(c('rainfall', 'valid') %in% colnames(x))) stop('columns named (rainfall) and (valid) are needed.')
   precip <- x %>% 
@@ -43,6 +44,6 @@ calculate_daily <- function(x) {
     summarize('rainfall' = sum(hourlyprecip, na.rm=TRUE))
   prec <- as.data.frame(prec)
   prec$date <- date(ISOdate(prec$year, prec$month, prec$day))
-  prec
+  prec[,5:4]
 }
 
