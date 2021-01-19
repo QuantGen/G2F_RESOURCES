@@ -67,7 +67,7 @@ pheno <- pheno[rowSums(is.na(pheno)) != ncol(pheno),]
 pheno <- pheno[!pheno$discarded %in% c('Yes', 'yes'),]
 
 
-write.csv(pheno, file = '../Output_files/phenotypes.csv')
+write.csv(pheno, file = '../OutputFiles/phenotypes.csv')
 ```
 
 The resulting file has the following columns:
