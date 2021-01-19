@@ -23,6 +23,7 @@ wdata_G2F <- lapply(wdata_G2F, function(x){colnames(x) <- tolower(colnames(x));x
 rep_matrix <- matrix(c('(record.*number)', NA,
                        '(field.*location)', 'location',
                        '(station.*id)', 'station_id',
+                       'date_local', NA,
                        'nws.*network', NA,
                        'nws.*station', NA,
                        '^temperature', 'temp',
@@ -52,10 +53,6 @@ for (i in 1:nrow(rep_matrix))
 #### Calculate daily mean temperature and precipitation
 
 ```r
-# Remove locations without data
-wdata_G2F <- lapply(wdata_G2F, function(data)  
-  data[data$location %in% names(which(table(data$location) > 10)),])
-
 # Load package to manipulate dates
 library(lubridate)
 
@@ -64,13 +61,37 @@ wdata_G2F <- lapply(wdata_G2F, function(data){
   if(lengths(regmatches(data$time[1], gregexpr(":", data$time[1]))) == 1)
     data$time <- paste0(data$time, ':00') # add if missing seconds
   tmp <- matrix(unlist(strsplit(data$time, ':')), ncol=3, byrow=T)
-  data$date <- with(data,
+  data$valid <- with(data,
                     date(ISOdate(year, month, day,
                                  hour = as.numeric(tmp[,1]),
                                  min = as.numeric(tmp[,2]),
                                  sec = as.numeric(tmp[,3])
-                                 )))
+                    )))
   return(data)
 })
+
+# Transform weather list to data frame
+wdf_G2F <- do.call(rbind, wdata_G2F)
+
+# Remove locations without data
+wdf_G2F <- wdf_G2F[wdf_G2F$location %in% names(which(table(wdf_G2F$location) > 10)),]
+
+# Rainfall as numeric
+wdf_G2F$rainfall <- as.numeric(wdf_G2F$rainfall)
+
+# Calculate daily temperature
+temp <- aggregate(temp ~ valid + location, data = wdf_G2F, FUN = function(x) c(mean(x, na.rm=T), min(x, na.rm=T), max(x, na.rm=T)))
+daily_temp <-  data.frame(date = temp$valid, location = temp$location, 
+                          temp_mean = temp$temp[,1], temp_min = temp$temp[,2], temp_max = temp$temp[,3])
+
+# Calculate daily rainfall
+daily_rf <- do.call(rbind, by(wdf_G2F, paste0(wdf_G2F$location, '_', wdf_G2F$year), calculate_daily))
+daily_rf$location <- sapply(strsplit(rownames(daily_rf), '_'), function(x) x[1])
+rownames(daily_rf) <- NULL
+
+# Merge daily rainfall with temperature
+wdaily_G2F <- merge(daily_rf, daily_temp, by = c('date', 'location'))
+
+write.csv(wdaily_G2F, file = '../OutputFiles/G2Fdaily.csv')
 ```
 
