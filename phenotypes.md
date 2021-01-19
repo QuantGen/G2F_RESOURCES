@@ -4,13 +4,11 @@ The following scripts use data from the GxE initiative of the G2F project availa
 
  - [G2F site](https://www.genomes2fields.org/resources/)
 
-Trials in years 2017 and 2018 followed an incompleted block design were a set of replicated hybrids were in complete blocks with two repetitions and a set of un-replicated hybrids assigned with stratification to one of the two replicates. Stratification ensured nearly equal proportion of families in each replicate. Hybrids were grouped by families that were randomized on each replicate.
-Trials in 2019 followed...
+Trials follow an incompleted block design where a set of replicated hybrids are in complete blocks with two repetitions and a set of un-replicated hybrids assigned with stratification to one of the two replicates. Stratification ensured nearly equal proportion of families in each replicate. Hybrids were grouped by families that were randomized on each replicate.
 
 **Reading and merging data from multiple years**
 
 ```r
-ftoken <- '?token=ADHZTMISK6CIKMVRAHCQRTLAB3UWC' # Remove token
 files <- c("data_phenotypes_2017.csv", "data_phenotypes_2018.csv", "data_phenotypes_2019.csv")
 
 # Reading from multiple years
@@ -19,14 +17,11 @@ for (filei in files){
   pData[[length(pData) + 1]] <- read.csv(filei, header=T, stringsAsFactors=F, na.strings=c(''))
 }
 
-# Add block column to 2019
-pData[[3]]$block <- 1
-
 # lower case all column names
 pData <- lapply(pData, function(x){colnames(x) <- tolower(colnames(x));x})
 
 # Load function to rename columns
-source(paste0('https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Code/Functions.R', ftoken))
+source('https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Code/Functions.R')
 
 # Renaming columns
 rep_matrix <- matrix(c('(field.*location)', 'location',
@@ -38,6 +33,7 @@ rep_matrix <- matrix(c('(field.*location)', 'location',
                      '(Row.*Spacing)', 'row_spacing',
                      '(Plot.*Area)', 'plot_area',
                      '(Rows.*Plot)', 'rows',
+                     'block', NA,
                      '(Packet.*Plot)', NA,
                      '(Kernels.*Packet)', NA,
                      'Seed', NA,
@@ -79,7 +75,6 @@ The resulting file has the following columns:
 |Column|Description|
 |------|-----------|
 |alley_length| (feet) Length of alley|
-|block| (integer) Rep and plot combination (not a statistical block) |
 |date_anthesis| (mm/dd/yy) Date when 50% of plants exhibit another exertion on more than half of the main tassel spike |
 |date_harvest| (mm/dd/yy) Date the plot was harvested |
 |date_plant| (mm/dd/yy) Sowing date |
