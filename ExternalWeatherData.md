@@ -114,3 +114,4 @@ save(wdata_ASOS, info_loc, file = '../Data/OutputFiles/wdata_ASOS.rdata')
 inventory <- read.table('https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-inventory.txt')
 plot(inventory$V3, inventory$V2, xlab = 'lon', ylab = 'lat', main = 'All weather stations in the network')
 ```
+![plot](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/NOAAstations.png)
