@@ -32,7 +32,18 @@ for (i in 1:length(states)){
   print(states[i])
 }
 ASOSstations <- do.call(rbind, stations_list)
+# Remove NAs in lat-long
+ASOSstations <- ASOSstations[rowSums(is.na(ASOSstations[c('lat', 'lon')])) == 0,]
 write.csv(ASOSstations, file='../OutputFiles/ASOS_Stations.csv')
+
+> head(ASOSstations)
+  X elevation              sname       county state country sid     lat      lon
+1 1   57.5938        Arkadelphia        Clark    AR      US ADF 34.0998 -93.0661
+3 3  141.0000  BATESVILLE (AWOS) Independence    AR      US BVX 35.7261 -91.6472
+5 5  395.0000 BENTONVILLE (AWOS)       Benton    AR      US VBT 36.3457 -94.2194
+6 6   78.0000        BLYTHEVILLE  Mississippi    AR      US HKA 35.9400 -89.8300
+7 7   39.6000             Camden      Calhoun    AR      US CDH 33.6228 -92.7634
+8 8  156.7000            Clinton    Van Buren    AR      US CCA 35.5978 -92.4516
 
 ```
 
@@ -49,6 +60,45 @@ for(i in 1:nrow(info_loc)){
     dist_matrix[j,i] <- distGeo(c(info_loc[i,'lon'], info_loc[i,'lat']), c(ASOSstations[j, 'lon'], ASOSstations[j, 'lat']))
   }
 }
+
+# Station with the minimum distance to trial
+info_loc$ASOSstation <- ASOSstations$sid[apply(dist_matrix, 2, which.min)]
+info_loc$ASOSdist <- apply(dist_matrix, 2, min) / 1000 # Distance in km
 ```
 
+#### Download weather data from ASOS/AWOS by location 
 
+```r
+wdata_ASOS <- list()
+for (i in 1:nrow(info_loc)){
+  loc <- info_loc[i,]
+  # Identify ASOS or AWOS network
+  if (length(grep('AWOS', loc$ASOSstation)) == 0){
+    network <- paste0(substr(loc$Location, 1, 2), '_ASOS')
+    w_loc <- loc$ASOSstation
+  } else {
+    network <- 'AWOS'
+    w_loc <- gsub('_AWOS', '', loc$ASOSstation)
+  }
+  # Download data
+  wdata_ASOS[[i]] <- getWeatherASOS(time_period=c(loc$sowing, loc$harvesting), network=network, sid=loc$ASOSstation)
+  
+  # if there is less than 80% of days with data, download from the next weather station
+  tmp_req_ndays <- floor(as.numeric(loc$harvesting - loc$sowing) * .8)
+  tmp_ndays <- length(unique(date(wdata_ASOS[[i]]$valid)))
+  
+  if (tmp_req_ndays > tmp_ndays) {
+    possible_stations <- sort(dist_matrix[,loc$Location])
+    w <- 2
+    while (tmp_req_ndays > tmp_ndays) {
+      w_loc <- names(possible_stations[w])
+      weather_ASOS[[i]] <- getWeather(time_period = c(loc$sowing, loc$harvesting), network = network, sid = w_loc)
+      w <- w + 1
+      tmp_ndays <- length(unique(date(wdata_ASOS[[i]]$valid)))
+    }
+  }
+  info_loc[i,'ASOSstation'] <- w_loc
+  info_loc[i,'ASOSdist_km'] <- possible_stations[w_loc] / 1000
+  print(loc$Location)
+}
+```
