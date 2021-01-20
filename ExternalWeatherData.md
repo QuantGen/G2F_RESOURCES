@@ -109,3 +109,8 @@ save(wdata_ASOS, info_loc, file = '../Data/OutputFiles/wdata_ASOS.rdata')
 
 #### Download weather data from the closest NOAA station 
 
+```r
+# Read table of weather stations around the world
+inventory <- read.table('https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-inventory.txt')
+plot(inventory$V3, inventory$V2, xlab = 'lon', ylab = 'lat', main = 'All weather stations in the network')
+```
