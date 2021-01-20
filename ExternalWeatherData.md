@@ -61,44 +61,51 @@ for(i in 1:nrow(info_loc)){
   }
 }
 
-# Station with the minimum distance to trial
-info_loc$ASOSstation <- ASOSstations$sid[apply(dist_matrix, 2, which.min)]
-info_loc$ASOSdist <- apply(dist_matrix, 2, min) / 1000 # Distance in km
 ```
 
-#### Download weather data from ASOS/AWOS by location 
+#### Download weather data from the closest ASOS/AWOS station 
 
 ```r
 wdata_ASOS <- list()
 for (i in 1:nrow(info_loc)){
   loc <- info_loc[i,]
-  # Identify ASOS or AWOS network
-  if (length(grep('AWOS', loc$ASOSstation)) == 0){
-    network <- paste0(substr(loc$Location, 1, 2), '_ASOS')
-    w_loc <- loc$ASOSstation
-  } else {
-    network <- 'AWOS'
-    w_loc <- gsub('_AWOS', '', loc$ASOSstation)
-  }
+  # Identify closest station
+  possible_stations <- sort(dist_matrix[, loc$Location])
+  w <- 1
+  w_loc <- names(possible_stations[w])
+  # Identify network
+  network <- switch (length(grep('AWOS', w_loc))+1, 
+                     paste0(substr(loc$Location, 1, 2), '_ASOS'),
+                     'AWOS')
+  # Remove AWOS identifier
+  w_loc <- gsub('_AWOS', '', w_loc)
   # Download data
-  wdata_ASOS[[i]] <- getWeatherASOS(time_period=c(loc$sowing, loc$harvesting), network=network, sid=loc$ASOSstation)
+  wdata_ASOS[[i]] <- getWeatherASOS(time_period=c(loc$sowing, loc$harvesting), network=network, sid=w_loc)
   
-  # if there is less than 80% of days with data, download from the next weather station
-  tmp_req_ndays <- floor(as.numeric(loc$harvesting - loc$sowing) * .8)
+  # download from the next closest weather station if there are missing days
+  tmp_req_ndays <- floor(as.numeric(loc$harvesting - loc$sowing))
   tmp_ndays <- length(unique(date(wdata_ASOS[[i]]$valid)))
   
-  if (tmp_req_ndays > tmp_ndays) {
-    possible_stations <- sort(dist_matrix[,loc$Location])
-    w <- 2
-    while (tmp_req_ndays > tmp_ndays) {
-      w_loc <- names(possible_stations[w])
-      weather_ASOS[[i]] <- getWeatherASOS(time_period = c(loc$sowing, loc$harvesting), network = network, sid = w_loc)
-      w <- w + 1
-      tmp_ndays <- length(unique(date(wdata_ASOS[[i]]$valid)))
-    }
+  while (tmp_req_ndays > tmp_ndays) {
+    w <- w + 1
+    w_loc <- names(possible_stations[w])
+    # Identify network
+    network <- switch (length(grep('AWOS', w_loc))+1, 
+                       paste0(substr(loc$Location, 1, 2), '_ASOS'),
+                       'AWOS')
+    # Remove AWOS identifier
+    w_loc <- gsub('_AWOS', '', w_loc)
+    wdata_ASOS[[i]] <- getWeatherASOS(time_period = c(loc$sowing, loc$harvesting), network = network, sid = w_loc)
+    tmp_ndays <- length(unique(date(wdata_ASOS[[i]]$valid)))
   }
+  
   info_loc[i,'ASOSstation'] <- w_loc
-  info_loc[i,'ASOSdist_km'] <- possible_stations[w_loc] / 1000
+  info_loc[i,'ASOSdist'] <- possible_stations[w] / 1000 # Distance in km
   print(loc$Location)
 }
+
+save(wdata_ASOS, info_loc, file = '../Data/OutputFiles/wdata_ASOS.rdata')
 ```
+
+#### Download weather data from the closest NOAA station 
+
