@@ -92,7 +92,7 @@ for (i in 1:nrow(info_loc)){
     w <- 2
     while (tmp_req_ndays > tmp_ndays) {
       w_loc <- names(possible_stations[w])
-      weather_ASOS[[i]] <- getWeather(time_period = c(loc$sowing, loc$harvesting), network = network, sid = w_loc)
+      weather_ASOS[[i]] <- getWeatherASOS(time_period = c(loc$sowing, loc$harvesting), network = network, sid = w_loc)
       w <- w + 1
       tmp_ndays <- length(unique(date(wdata_ASOS[[i]]$valid)))
     }
