@@ -87,3 +87,25 @@ getStationASOS <- function(network){
   }
   stations[,c('elevation', 'sname', 'county', 'state', 'country', 'sid', 'lat', 'lon')]
 }
+
+# Get weather data from NOAA
+
+getWeatherNOAA <- function(time_period = c('2018-01-01', '2018-12-31'), sid = 'ZI000067983', dataid = 'GHCND') {
+  sid2 <- paste0(dataid, ':', sid)
+  weather <- list()
+  tmp_offset <- 0
+  while(T){
+    tmp <- ncdc(datasetid = dataid, stationid = sid2, startdate = time_period[1], enddate = time_period[2], limit = 1000, offset = tmp_offset)$data
+    tmp_offset <- tmp_offset + 1000
+    weather[[length(weather) + 1]] <- tmp
+    if (nrow(tmp) < 1000) break
+  }
+  weather <- as.data.frame(do.call(rbind, weather))
+  dtypes <- grep('PRCP|TMAX|TMIN|TOBS', unique(weather$datatype), value = T)
+  dweather <- data.frame(date = unique(weather$date))
+  for (ty in dtypes){
+    tmpw <- weather[weather$datatype == ty, c('date', 'value')]
+    dweather[,ty] <- tmpw$value[match(dweather$date, tmpw$date)] / 10
+  }
+  return(dweather)
+}
