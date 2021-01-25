@@ -11,12 +11,6 @@ This repository provides resources (data and pipelines) linked to data generated
 |G2F weather data|[G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/EnvironmentalCovariates)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/G2FWeatherData.md)|Reads G2F weather data and calculates daily data|
 |External weather data|[wdaily_external.rdata](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_external.rdata)|[location_coordenates.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Metadata/location_coordenates.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExternalWeatherData.md)|Gets daily weather data from external sources|
 
-|Data type|Output|Source|Script|Comments|
-|---------------------------------------|
-|hola|
-|---------|------|------|------|--------|
-|a|a|a|a|a|
-
 
 
 ## Analysis pipelines
