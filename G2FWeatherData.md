@@ -92,6 +92,6 @@ rownames(daily_rf) <- NULL
 # Merge daily rainfall with temperature
 wdaily_G2F <- merge(daily_rf, daily_temp, by = c('date', 'location'))
 
-write.csv(wdaily_G2F, file = '../OutputFiles/G2F_daily.csv', quote = F, row.names = F)
+write.csv(wdaily_G2F, file = '../OutputFiles/G2Fdaily.csv', quote = F, row.names = F)
 ```
-
+The resulting file is [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)
