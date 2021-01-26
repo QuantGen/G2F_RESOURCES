@@ -65,9 +65,19 @@ pheno <- do.call(rbind, lapply(pData, function(x) x[myCols]))
 # Remove empty and discarded rows
 pheno <- pheno[rowSums(is.na(pheno)) != ncol(pheno),]
 pheno <- pheno[!pheno$discarded %in% c('Yes', 'yes'),]
+pheno <- pheno[!pheno$location == 'GEH1',] # Remove Germany
 
+# Rename locations
+pheno$location[pheno$location == 'NEH3'] <- 'NEH2'
+pheno$location[pheno$location == 'NEH4'] <- 'NEH2'
+pheno$location[pheno$location == 'TXH1-Dry'] <- 'TXH1'
+pheno$location[pheno$location == 'TXH1-Early'] <- 'TXH1'
+pheno$location[pheno$location == 'TXH1-Late'] <- 'TXH1'
+pheno$location[pheno$location == 'TXH3'] <- 'TXH1'
+pheno$location[pheno$location == 'ONH1'] <- 'ONH2'
+pheno$location[pheno$location == 'NEH1'] <- 'NEH2'
 
-write.csv(pheno, file = '../OutputFiles/phenotypes.csv')
+write.csv(pheno, file = '../OutputFiles/phenotypes.csv', quote = F, row.names = F)
 ```
 
 The resulting file has the following columns:
