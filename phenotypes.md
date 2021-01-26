@@ -79,6 +79,7 @@ pheno$location[pheno$location == 'NEH1'] <- 'NEH2'
 
 write.csv(pheno, file = '../OutputFiles/phenotypes.csv', quote = F, row.names = F)
 ```
+The resulting file is [phenotypes.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)
 
 The resulting file has the following columns:
 
