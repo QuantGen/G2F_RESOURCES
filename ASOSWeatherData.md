@@ -135,7 +135,7 @@ wdaily_ASOS <- do.call(rbind, wdaily_ASOS)
 }
 ```
 
-The resulting files are [info_loc.csv]() and [ASOSdaily.csv]()
+The resulting files are [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv) and [ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)
 
 ```r
 write.csv(info_loc, file = '../Data/OutputFiles/info_loc.csv', quote = F, row.names = F)
