@@ -80,9 +80,9 @@ for (i in 1:length(wdata_NOAA)) {
 wdaily_NOAA <- do.call(rbind, wdaily_NOAA)
 ```
 
-Files are [info_loc.csv]() and [NOAAdaily.csv]()
+Files are [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv) and [NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv)
 
 ```r
 write.csv(info_loc, file = '../Data/OutputFiles/info_loc.csv', quote = F, row.names = F)
-write.csv(wdaily_ASOS, file = '../Data/OutputFiles/NOAAdaily.csv', quote = F, row.names = F)
+write.csv(wdaily_NOAA, file = '../Data/OutputFiles/NOAAdaily.csv', quote = F, row.names = F)
 ```
