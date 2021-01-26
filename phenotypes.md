@@ -77,6 +77,9 @@ pheno$location[pheno$location == 'TXH3'] <- 'TXH1'
 pheno$location[pheno$location == 'ONH1'] <- 'ONH2'
 pheno$location[pheno$location == 'NEH1'] <- 'NEH2'
 
+# Change yield measure to kg/ha
+pheno$yield <- pheno$yield * 62.77
+
 write.csv(pheno, file = '../OutputFiles/phenotypes.csv', quote = F, row.names = F)
 ```
 The resulting file is [phenotypes.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)
