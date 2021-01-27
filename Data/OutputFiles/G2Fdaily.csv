@@ -1,4 +1,4 @@
-date,location,rainfall,temp_mean,temp_min,temp_max
+date,location,rainfall,temp,temp_min,temp_max
 2018-03-08,TXH1,0,13.1604166666667,7.78,19.39
 2018-03-09,TXH1,0,17.00875,9.39,22.22
 2018-03-10,TXH1,0,22.4725,18.28,28.28
