@@ -17,14 +17,18 @@ To access these data one have to request a web service token on this site: https
 
 ```r
 options(noaakey = "Insert your token here")
-# Load rnoaa library
+# Load libraries
 library(rnoaa)
+library(geosphere)
 
 # Load functions
 source('https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Code/Functions.R')
 
 # Load location coordenates
 info_loc <- read.csv('../Data/OutputFiles/info_loc.csv')
+# Read characters as date format
+info_loc$sowing <- strptime(info_loc$sowing, "%m/%d/%y")
+info_loc$harvesting <- strptime(info_loc$harvesting, "%m/%d/%y")
 
 # Download by trial
 wdata_NOAA <- list()
@@ -33,8 +37,8 @@ for (i in 1:nrow(info_loc)){
   # Get weather stations close to the trial
   iinv <- inventory[loc$lat + 1 > inventory$V2 & inventory$V2 > loc$lat - 1 
                     & loc$lon + 1 > inventory$V3 & inventory$V3 > loc$lon - 1,]
-  # Filter for stations with information after 2016 and active today
-  iinv <- iinv[iinv$V5 < 2017 & iinv$V6 == max(iinv$V6),]
+  # Filter for stations with information after 2016 and active in 2020
+  iinv <- iinv[iinv$V5 < 2017 & iinv$V6 > 2020,]
   # Remove duplicated
   iinv <- iinv[!duplicated(iinv$V1),]
   
@@ -43,22 +47,26 @@ for (i in 1:nrow(info_loc)){
   
   # Identify closest station
   possible_stations <- sort(setNames(iinv$NOAAdist, nm = iinv$V1))
-
+  
   w <- 1
   w_loc <- names(possible_stations[w])
   wdata_NOAA[[i]] <- try(getWeatherNOAA(time_period=c(info_loc[i, 'sowing'], info_loc[i, 'harvesting']), sid=w_loc), silent=T)
-
+  while (class(wdata_NOAA[[i]])[1] == 'try-error')
+    wdata_NOAA[[i]] <- try(getWeatherNOAA(time_period=c(info_loc[i, 'sowing'], info_loc[i, 'harvesting']), sid=w_loc), silent=T)
+  
   # Download from the next closest weather station if there are missing days
   while (ncol(wdata_NOAA[[i]]) < 4 & length(possible_stations) > w) {
     w <- w + 1
     w_loc <- names(possible_stations[w])
     wdata_NOAA[[i]] <- try(getWeatherNOAA(time_period = c(info_loc[i, 'sowing'], info_loc[i, 'harvesting']), sid=w_loc), silent=T)
+    while (class(wdata_NOAA[[i]])[1] == 'try-error')
+      wdata_NOAA[[i]] <- try(getWeatherNOAA(time_period = c(info_loc[i, 'sowing'], info_loc[i, 'harvesting']), sid=w_loc), silent=T)
   }
-  
   info_loc[i,'NOAAstation'] <- w_loc
   info_loc[i,'NOAAdist'] <- possible_stations[w]
   print(info_loc[i, 'Location'])
 }
+
 
 ```
 
