@@ -82,7 +82,7 @@ wdf_G2F$rainfall <- as.numeric(wdf_G2F$rainfall)
 # Calculate daily temperature
 temp <- aggregate(temp ~ valid + location, data = wdf_G2F, FUN = function(x) c(mean(x, na.rm=T), min(x, na.rm=T), max(x, na.rm=T)))
 daily_temp <-  data.frame(date = temp$valid, location = temp$location, 
-                          temp_mean = temp$temp[,1], temp_min = temp$temp[,2], temp_max = temp$temp[,3])
+                          temp = temp$temp[,1], temp_min = temp$temp[,2], temp_max = temp$temp[,3])
 
 # Calculate daily rainfall
 daily_rf <- do.call(rbind, by(wdf_G2F, paste0(wdf_G2F$location, '_', wdf_G2F$year), calculate_daily))
