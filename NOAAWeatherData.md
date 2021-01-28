@@ -80,9 +80,8 @@ for (i in 1:length(wdata_NOAA)) {
   temp_min <- switch(as.numeric(is.null(x$TMIN))+1, x$TMIN, NA)
   temp_max <- switch(as.numeric(is.null(x$TMAX))+1, x$TMAX, NA)
   temp <- (temp_max + temp_min) / 2
-  wdaily_NOAA[[i]] <- data.frame(year=info_loc$year[i],
-                                 location=info_loc$Location[i],
-                                 date=date(wdata_NOAA[[i]]$date), 
+  wdaily_NOAA[[i]] <- data.frame(date=date(wdata_NOAA[[i]]$date),
+                                 location=info_loc$Location[i], 
                                  rainfall, temp, temp_min, temp_max)
 }
 wdaily_NOAA <- do.call(rbind, wdaily_NOAA)
