@@ -16,6 +16,7 @@ This repository provides resources (data and pipelines) linked to data generated
 ## Analysis pipelines
 
  - [Tools to examine environmental data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)
+       - Final weather data: [wdaily_final.pdf](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)
  - [Baseline model with lme4]()
  - [Genomic relationships and DNA-derived PCs]()
  - [Genomic Regession using BGLR]()
