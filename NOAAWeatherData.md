@@ -1,10 +1,10 @@
-### External weather data
+### Download external weather data from NOAA networks.
 
-Here we provide functions to download weather data from ASOS/AWOS and NOAA networks. 
+Here we provide functions to download weather data from NOAA networks. 
 The following code gets daily accumulated rainfall and temperature from the closest weather station to a given trial location.
-Provided location coordinates and time period of interest, the code can be adapted to download weather data for any location (preferably within the US).
+Provided location coordinates and time period of interest, the code can be adapted to download weather data for any location using the function getWeatherNOAA.
 
-#### Download weather data from the closest NOAA station 
+#### All weather stations available 
 
 ```r
 # Read table of weather stations around the world
@@ -87,9 +87,11 @@ for (i in 1:length(wdata_NOAA)) {
 wdaily_NOAA <- do.call(rbind, wdaily_NOAA)
 ```
 
-Files are [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv) and [NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv)
+This file is overwritten with new NOAA information: [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv)
+The file that contains daily weather data from NOAA is: [NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv)
 
 ```r
 write.csv(info_loc, file = '../Data/OutputFiles/info_loc.csv', quote = F, row.names = F)
 write.csv(wdaily_NOAA, file = '../Data/OutputFiles/NOAAdaily.csv', quote = F, row.names = F)
 ```
+
