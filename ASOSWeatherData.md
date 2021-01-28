@@ -1,8 +1,8 @@
-### External weather data
+### Download external weather data from ASOS/AWOS networks.
 
-Here we provide functions to download weather data from ASOS/AWOS and NOAA networks. 
+Here we provide functions to download weather data from ASOS/AWOS networks. 
 The following code gets daily accumulated rainfall and temperature from the closest weather station to a given trial location.
-Provided location coordinates and time period of interest, the code can be adapted to download weather data for any location (preferably within the US).
+Provided location coordinates and time period of interest, the code can be adapted to download weather data for any location (preferably within the US) using the function getWeatherASOS.
 
 #### Read location information
 
