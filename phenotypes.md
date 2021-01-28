@@ -82,9 +82,9 @@ pheno$yield <- pheno$yield * 62.77
 
 write.csv(pheno, file = '../OutputFiles/phenotypes.csv', quote = F, row.names = F)
 ```
-The resulting file is [phenotypes.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)
+A link to the resulting file: [phenotypes.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)
 
-The resulting file has the following columns:
+These data as the following columns:
 
 |Column|Description|
 |------|-----------|
@@ -115,7 +115,4 @@ The resulting file has the following columns:
 |yield| (bushels per acre at 15.5% moisture assuming 56 lbs per bushel) Grain yield using plot area without alley |
 
 
-
-
-
-[main](https://github.com/QuantGen/G2F_RESOURCES)
+[Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
