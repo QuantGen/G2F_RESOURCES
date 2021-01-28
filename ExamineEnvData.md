@@ -3,7 +3,6 @@ The following code produces a series of plots to examine the different sources o
 
 ```r
 # Read and format data
-
 wdaily_ASOS <- read.csv('OutputFiles/ASOSdaily.csv')
 wdaily_NOAA <- read.csv('OutputFiles/NOAAdaily.csv')
 wdaily_G2F <- read.csv('OutputFiles/G2Fdaily.csv')
@@ -33,6 +32,9 @@ info_loc$source[sG2F] <- 'G2F'
 info_loc$source[sASOS] <- 'ASOS'
 info_loc$source[sNOAA] <- 'NOAA'
 
+# Final weather data
+wdaily_final <- list()
+
 # 3 panels plot
 for (i in 1:nrow(info_loc)) {
   iloc <- info_loc[i,]
@@ -40,6 +42,7 @@ for (i in 1:nrow(info_loc)) {
   idata <- list(G2F = wdaily_G2F[wdaily_G2F$date %in% idate & wdaily_G2F$location == iloc$Location,],
                 ASOS = wdaily_ASOS[wdaily_ASOS$date %in% idate & wdaily_ASOS$location == iloc$Location,],
                 NOAA = wdaily_NOAA[wdaily_NOAA$date %in% idate & wdaily_NOAA$location == iloc$Location,])
+  wdaily_final[[i]] <- idata[[switch(iloc$source, 'G2F' = 1, 'ASOS' = 2, 'NOAA' = 3)]]
   ipheno <- pheno[pheno$location == iloc$Location & pheno$year == iloc$year,]
   layout(matrix(c(1,2,2,1,3,3), ncol = 2))
   # yield plot
@@ -126,6 +129,10 @@ for (i in 1:nrow(info_loc)) {
 }
 dev.off()
 
+# overwrite info_loc.csv with changes
 write.csv(info_loc, file = '../Data/OutputFiles/info_loc.csv', quote = F, row.names = F)
 
+# Save final weather data
+wdaily_final <- do.call(rbind, wdaily_final)
+write.csv(wdaily_final, file = '../Data/OutputFiles/wdaily_final.csv', quote = F, row.names = F)
 ```
