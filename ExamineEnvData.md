@@ -146,3 +146,4 @@ wdaily_final <- do.call(rbind, wdaily_final)
 write.csv(wdaily_final, file = '../Data/OutputFiles/wdaily_final.csv', quote = F, row.names = F)
 ```
 
+[Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
