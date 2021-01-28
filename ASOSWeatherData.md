@@ -118,7 +118,7 @@ for (i in 1:length(wdata_ASOS)) {
   # get date from time variable
   wtmp$valid <- date(wtmp$valid)
   # Calculate daily accumulated rainfall
-  dpp <- cbind(year=info_loc$year[i], location=info_loc$Location[i], calculate_daily(wtmp))
+  dpp <- cbind(location=info_loc$Location[i], calculate_daily(wtmp))
   # Transform temperature to celsius
   wtmp$tmpc <- (as.numeric(wtmp$tmpf) - 32) * 5/9
   # Calculate daily temperature
