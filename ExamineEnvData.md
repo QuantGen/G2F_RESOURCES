@@ -1,6 +1,6 @@
 The following code produces a series of plots to examine the different sources of weather data. All plots are collected into a pdf file: [plots_collection.pdf](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/plots_collection.pdf)
 
-After visual examination, we selected the best source of data for each location-year combination and save it in [wdaily_final.csv]()
+After visual examination, we selected the best source of data for each location-year combination and save it in [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)
 
 ```r
 # Read and format data
