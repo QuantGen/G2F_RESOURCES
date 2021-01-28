@@ -1,6 +1,6 @@
 ### G2F weather data
 
-The following script allows to read G2F weather data for the locations that were evaluated in 2018 and 2019.
+The following script reads G2F weather data from the locations that were evaluated in 2018 and 2019.
 It also calculates daily mean temperature and daily accumulated rainfall.
 
 ```r
@@ -95,3 +95,6 @@ wdaily_G2F <- merge(daily_rf, daily_temp, by = c('date', 'location'))
 write.csv(wdaily_G2F, file = '../OutputFiles/G2Fdaily.csv', quote = F, row.names = F)
 ```
 The resulting file is [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)
+
+
+[Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
