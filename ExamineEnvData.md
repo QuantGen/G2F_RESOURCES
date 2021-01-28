@@ -1,3 +1,4 @@
+The following code produces a series of plots to examine the different sources of weather data. All plots are collected into a pdf file: [plots_collection.pdf](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/plots_collection.pdf)
 
 
 ```r
@@ -128,5 +129,3 @@ dev.off()
 write.csv(info_loc, file = '../Data/OutputFiles/info_loc.csv', quote = F, row.names = F)
 
 ```
-
-The output pdf file is [plots_collection.pdf]()
