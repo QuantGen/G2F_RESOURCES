@@ -32,7 +32,7 @@ abline(0, 1, col = 2, lwd = 2)
 with(info_loc, points(ASOSdist, NOAAdist, pch = 19, col = 4, cex = .7))
 with(info_loc, text(ASOSdist, NOAAdist + 2, Location, cex = .8))
 
-# Selected source
+# Selected source based on visual assessment
 info_loc$source <- NA
 sASOS <- c(1,3,18,21,25,26,37,39,40,41,43,52)
 sG2F <- c(2,6,7,9,14,15,16,17,19,20,24,27,28,30,32,33,34,35,44,45,48,49,50,51)
