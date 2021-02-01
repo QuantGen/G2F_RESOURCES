@@ -5,7 +5,7 @@ This repository provides resources (data and pipelines) linked to data generated
 
 ## Data and data pre-procesing
 
-|Data type|Output|Source|Script|Comments|
+|Data type|Output|Input|Script|Comments|
 |---------|------|------|------|--------|
 |G2F weather data|[G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/EnvironmentalCovariates)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/G2FWeatherData.md)|Reads G2F weather data and calculates daily data|
 |ASOS/AWOS weather data|[ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)|[location_coordinates.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Metadata/location_coordinates.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ASOSWeatherData.md)|Gets daily weather data from ASOS/AWOS networks|
