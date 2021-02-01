@@ -14,9 +14,9 @@ This repository provides resources (data and pipelines) linked to data generated
 
 ## Analysis pipelines
 
- - [Tools to examine environmental data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)
-       - Consensus weather data: [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)
-
+ - [Tools to examine weather data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)
+       - Consensus data: [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)
+ - [Linking weather with phenotypic data to calculate GDD and predict flowering date]()
 <!-- 
  - [Baseline model with lme4]()
  - [Genomic relationships and DNA-derived PCs]()
