@@ -74,10 +74,9 @@ pheno$location[pheno$location == 'NEH4'] <- 'NEH2'
 pheno$location[pheno$location == 'TXH1-Dry'] <- 'TXH1'
 pheno$location[pheno$location == 'TXH1-Early'] <- 'TXH1'
 pheno$location[pheno$location == 'TXH1-Late'] <- 'TXH1'
-pheno$location[pheno$location == 'TXH3'] <- 'TXH1'
+pheno$location[pheno$location %in% c('TXH2', 'TXH3')] <- 'TXH1'
 pheno$location[pheno$location == 'ONH1'] <- 'ONH2'
 pheno$location[pheno$location == 'NEH1'] <- 'NEH2'
-pheno$location[pheno$location == 'TXH2'] <- 'TXH1'
 
 # Change yield measure to kg/ha
 pheno$yield <- as.numeric(pheno$yield) * 62.77
