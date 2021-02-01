@@ -66,6 +66,7 @@ pheno <- do.call(rbind, lapply(pData, function(x) x[myCols]))
 pheno <- pheno[rowSums(is.na(pheno)) != ncol(pheno),]
 pheno <- pheno[!pheno$discarded %in% c('Yes', 'yes'),]
 pheno <- pheno[!pheno$location == 'GEH1',] # Remove Germany
+pheno$discarded <- NULL
 
 # Rename locations
 pheno$location[pheno$location == 'NEH3'] <- 'NEH2'
@@ -78,8 +79,12 @@ pheno$location[pheno$location == 'ONH1'] <- 'ONH2'
 pheno$location[pheno$location == 'NEH1'] <- 'NEH2'
 
 # Change yield measure to kg/ha
-pheno$yield <- pheno$yield * 62.77
+pheno$yield <- as.numeric(pheno$yield) * 62.77
 
+# Change date format
+for (i in grep('date', colnames(pheno)))
+  pheno[,i] <- as.Date(strptime(pheno[,i], "%m/%d/%y"))
+ 
 write.csv(pheno, file = '../OutputFiles/phenotypes.csv', quote = F, row.names = F)
 ```
 A link to the resulting file: [phenotypes.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)
@@ -89,10 +94,10 @@ These data as the following columns:
 |Column|Description|
 |------|-----------|
 |alley_length| (feet) Length of alley|
-|date_anthesis| (mm/dd/yy) Date when 50% of plants exhibit another exertion on more than half of the main tassel spike |
-|date_harvest| (mm/dd/yy) Date the plot was harvested |
-|date_plant| (mm/dd/yy) Sowing date |
-|date_silking| (mm/dd/yy) Silking date |
+|date_anthesis| (yyyy-mm-dd) Date when 50% of plants exhibit another exertion on more than half of the main tassel spike |
+|date_harvest| (yyyy-mm-dd) Date the plot was harvested |
+|date_plant| (yyyy-mm-dd) Sowing date |
+|date_silking| (yyyy-mm-dd) Silking date |
 |grain_moisture| (%) Grain water content at harvest |
 |local_check| Name of the check used at each location |
 |location| G2F field location name |
