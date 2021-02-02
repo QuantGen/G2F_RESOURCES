@@ -16,7 +16,7 @@ This repository provides resources (data and pipelines) linked to data generated
 
  - [Tools to examine weather data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)
        - Consensus data: [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)
-  - [Calculate growing degree days (GDD) and predict flowering date]()
+  - [Calculate growing degree days (GDD) and predict flowering date](https://github.com/QuantGen/G2F_RESOURCES/blob/main/GDDPredictFlowering.md)
 <!-- 
  - [Baseline model with lme4]()
  - [Genomic relationships and DNA-derived PCs]()
