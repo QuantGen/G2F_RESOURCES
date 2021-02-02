@@ -96,5 +96,16 @@ write.csv(wdaily_G2F, file = '../OutputFiles/G2Fdaily.csv', quote = F, row.names
 ```
 The resulting file is [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)
 
+This file has the following columns:
+
+|Column|Description|
+|------|-----------|
+|date| (yyyy-mm-dd) Sowing date |
+|location| G2F field location name |
+|rainfall| (mm) Daily rainfall |
+|temp| (°C) Daily mean temperature |
+|temp_min| (°C) Daily minimum temperature |
+|temp_max| (°C) Daily maximum temperature |
+
 
 [Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
