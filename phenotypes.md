@@ -89,7 +89,7 @@ write.csv(pheno, file = '../OutputFiles/phenotypes.csv', quote = F, row.names = 
 ```
 A link to the resulting file: [phenotypes.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)
 
-These data as the following columns:
+This file has the following columns:
 
 |Column|Description|
 |------|-----------|
