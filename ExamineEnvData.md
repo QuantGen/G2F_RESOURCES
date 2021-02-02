@@ -146,4 +146,15 @@ wdaily_final <- do.call(rbind, wdaily_final)
 write.csv(wdaily_final, file = '../Data/OutputFiles/wdaily_final.csv', quote = F, row.names = F)
 ```
 
+The file wdaily_final.csv has the following columns:
+
+|Column|Description|
+|------|-----------|
+|date| (yyyy-mm-dd) Sowing date |
+|location| G2F field location name |
+|rainfall| (mm) Daily rainfall |
+|temp| (°C) Daily mean temperature |
+|temp_min| (°C) Daily minimum temperature |
+|temp_max| (°C) Daily maximum temperature |
+
 [Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
