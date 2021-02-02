@@ -1,4 +1,6 @@
 
+The following code reads the consensus weather data and the phenotype data to calculate growing degree days (GDD) and predict the average GDD needed to flowering.
+
 ```r
 # Load consensus weather data
 wdaily <- read.csv('https://raw.githubusercontent.com/QuantGen/G2F_RESOURCES/main/Data/OutputFiles/wdaily_final.csv?')
