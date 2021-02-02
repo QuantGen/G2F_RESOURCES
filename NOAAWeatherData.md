@@ -95,4 +95,34 @@ write.csv(info_loc, file = '../Data/OutputFiles/info_loc.csv', quote = F, row.na
 write.csv(wdaily_NOAA, file = '../Data/OutputFiles/NOAAdaily.csv', quote = F, row.names = F)
 ```
 
+
+The file info_loc.csv has the following columns:
+
+|Column|Description|
+|------|-----------|
+|year| Trial year |
+|Location| G2F field location name |
+|city| Closest city/town to trial |
+|lat| (decimal degrees) latitude of the G2F weather station location or south-west corner of trial |
+|lon| (decimal degrees) longitude of the G2F weather station location or south-west corner of trial |
+|sowing| (yyyy-mm-dd) Sowing date |
+|harvesting| (yyyy-mm-dd) Harvest date |
+|ASOSstation| ID of the closest ASOS station with data|
+|ASOSdist| (km) Distance between ASOS station and trial (or G2F weather station) |
+|NOAAstation| ID of the closest NOAA station with data|
+|NOAAdist| (km) Distance between NOAA station and trial (or G2F weather station)|
+|source| Selected source of data after quality check|
+
+The file NOAAdaily.csv has the following columns:
+
+|Column|Description|
+|------|-----------|
+|date| (yyyy-mm-dd) Sowing date |
+|location| G2F field location name |
+|rainfall| (mm) Daily rainfall |
+|temp| (°C) Daily mean temperature |
+|temp_min| (°C) Daily minimum temperature |
+|temp_max| (°C) Daily maximum temperature |
+
+
 [Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
