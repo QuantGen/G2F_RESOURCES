@@ -16,7 +16,7 @@ This repository provides resources (data and pipelines) linked to data generated
 
 |Output |Output-file|Input|Script|Contributors|
 |---------|------|------|------|--------|
-| Growind degree days   |  [?]()  |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.  | [Calculate growing degree days (GDD) and predict flowering date](https://github.com/QuantGen/G2F_RESOURCES/blob/main/GDDPredictFlowering.md)   | matiasfe@msu.edu |
+| Growind degree days   |  [?]()  |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final)  | [Calculate growing degree days (GDD) and predict flowering date](https://github.com/QuantGen/G2F_RESOURCES/blob/main/GDDPredictFlowering.md)   | matiasfe@msu.edu |
 
 ## Phenotypes
 
