@@ -5,6 +5,7 @@ It also calculates daily mean temperature and daily accumulated rainfall.
 
 
 **Developers**: Fernando Aguate (matiasfe@msu.edu)
+
 **Maintainers**: Fernando Aguate (matiasfe@msu.edu) & Gustavo de los Campos (gustavoc@msu.edu)
 
 ```r
