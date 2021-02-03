@@ -3,6 +3,10 @@
 The following script reads G2F weather data from the locations that were evaluated in 2018 and 2019.
 It also calculates daily mean temperature and daily accumulated rainfall.
 
+
+**Developers**: Fernando Aguate (matiasfe@msu.edu)
+**Maintainers**: Fernando Aguate (matiasfe@msu.edu) & Gustavo de los Campos (gustavoc@msu.edu)
+
 ```r
 # Download G2F data
 
