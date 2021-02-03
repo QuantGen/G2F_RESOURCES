@@ -5,9 +5,9 @@ This repository provides resources (data and pipelines) linked to data generated
 
 ## Data and data pre-procesing
 
-|Data type|Output|Input|Script|Comments|
+|Data type|Output|Input|Script|Contributors|
 |---------|------|------|------|--------|
-|G2F weather data|[G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/EnvironmentalCovariates)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/G2FWeatherData.md)|Reads G2F weather data and calculates daily data|
+|Daily Temperature and Precipitation (derived from G2F-GxE data)|[G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/EnvironmentalCovariates)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/G2FWeatherData.md)|  matiasfe@msu.edu |
 |ASOS/AWOS weather data|[ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)|[location_coordinates.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Metadata/location_coordinates.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ASOSWeatherData.md)|Gets daily weather data from ASOS/AWOS networks|
 |NOAA weather data|[NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv)|[info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/NOAAWeatherData.md)|Gets daily weather data from NOAA networks|
 |Phenotype|[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) - [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/phenotypes.md)|Formats the phenotype data into a friendly dataset|
