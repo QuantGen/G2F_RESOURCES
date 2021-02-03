@@ -22,7 +22,7 @@ This repository provides resources (data and pipelines) linked to data generated
 
 |Output |Output-file|Input|Script|Contributors|
 |---------|------|------|------|--------|
-|Phenotype|[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) `|` [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/phenotypes.md)|Formats the phenotype data into a friendly dataset|
+|Phenotype|[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) &#124 [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/phenotypes.md)|Formats the phenotype data into a friendly dataset|
 
 ## Analysis pipelines
 
