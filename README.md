@@ -7,20 +7,20 @@ This repository provides resources (data and pipelines) linked to data generated
 
 |What? |Output-file|Inputs|Script|Developers|
 |---------|------|------|------|--------|
-|Daily Temperature and Precipitation (derived from G2F-GxE data)|[G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/EnvironmentalCovariates)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/G2FWeatherData.md)|  matiasfe@msu.edu |
-|ASOS/AWOS weather data|[ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)|[location_coordinates.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Metadata/location_coordinates.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ASOSWeatherData.md)|matiasfe@msu.edu|
-|NOAA weather data|[NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv)|[info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/NOAAWeatherData.md)|matiasfe@msu.edu|
-|Concensus Temperature and Rainfall data |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)  | [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv) ; [NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv) ; [ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)   | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)  |  matiasfe@msu.edu |
+|Temp. & rainfall (daily summaries derived from G2F-GxE data)|[G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/EnvironmentalCovariates)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/G2FWeatherData.md)|  matiasfe@msu.edu |
+|Temp. & rainfall (daily summaries derived from ASOS/AWOS) |[ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)|[location_coordinates.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Metadata/location_coordinates.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ASOSWeatherData.md)|matiasfe@msu.edu|
+|Temp. & rainfall (daily summaries derived from NOAA) |[NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv)|[info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/NOAAWeatherData.md)|matiasfe@msu.edu|
+|Temp. & rainfall (concensus daily sumaries) |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)  | [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv) ; [NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv) ; [ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)   | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)  |  matiasfe@msu.edu |
 
 ## Calculation of growing degree days per year-location
 
 |What? |Output-file|Inputs|Script|Contributors|
 |---------|------|------|------|--------|
-| Growind degree days   |  [?]()  |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final)  | [Calculate growing degree days (GDD) and predict flowering date](https://github.com/QuantGen/G2F_RESOURCES/blob/main/GDDPredictFlowering.md)   | matiasfe@msu.edu |
+| Growing degree days (GDD) and predicted flowering date   |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)   |  ?  | [script](https://github.com/QuantGen/G2F_RESOURCES/blob/main/GDDPredictFlowering.md)   | matiasfe@msu.edu |
 
 ## Phenotypes
 
-|What|Output-file|Inputs|Script|Contributors|
+|What?|Output-file|Inputs|Script|Contributors|
 |---------|------|------|------|--------|
 |Fortmatted phenotype data|[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) ; [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/phenotypes.md)|matiasfe@msu.edu|
 
