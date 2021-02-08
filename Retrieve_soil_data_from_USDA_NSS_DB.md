@@ -1,23 +1,20 @@
----
-title: "query soils DB"
-author: "Jim Holland"
-date: "6/24/2020"
-output: html_document
----
-#```{r}
-install.packages("httr", dep=TRUE)
-install.packages("aqp", dep=TRUE)
-install.packages("soilDB", dep=TRUE)
-install.packages("rgdal", dep = TRUE)
-install.packages("raster", dep = TRUE)
-install.packages("rgeos", dep = TRUE)
-#```
+**Author: Jim Holland**
+
+
+```r
+ install.packages("httr", dep=TRUE)
+ install.packages("aqp", dep=TRUE)
+ install.packages("soilDB", dep=TRUE)
+ install.packages("rgdal", dep = TRUE)
+ install.packages("raster", dep = TRUE)
+ install.packages("rgeos", dep = TRUE)
+```
 
 
 Simple Queries
 
 Now that you have the required packages, load them into the current R session.
-```{r}
+```r
 library(aqp)
 library(soilDB)
 library(sp)
