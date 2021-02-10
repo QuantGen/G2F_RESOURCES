@@ -52,7 +52,7 @@ We can get lots of information on particle size, water holding capacity (awc), s
 https://data.nal.usda.gov/system/files/SSURGO_Metadata_-_Table_Column_Descriptions.pdf
 
 implement in a function.
-```{r}
+```r
 rm(list = ls()) #remove all the objects made previously, so there is no chance of conflict
 soil_data = function(env_name, lat, long){
   print(env_name)
@@ -110,21 +110,21 @@ return(db_sum)
 ```
 
 Now read in the list of G2F environments and extract the data for each. This dropped two environments with identical GPS coordinates. They can be added back in later.
-```{r}
+```r
 envs = read.csv("Q:/My Drive/Anna/Weather Data G2F/G2F_Locations.csv", stringsAsFactors = F) %>%
   filter(!grepl("^ON", Env)) #for now have to filter out Ontario 
 ```
 
-```{r}
+```r
 soil_info = apply(envs[,c("Env", "Latitude", "Longitude")], 1, function(x) soil_data(x['Env'], x['Latitude'], x['Longitude']))
 ```
 Unpack the lists into a common data frame
-```{r}
+```r
 soil_df = do.call(bind_rows, soil_info)
 ```
 
 Now summarize each variable for percent that is missing and also for the variation. We can drop variables that are missing a lot of data or have little variance
-```{r}
+```r
 variable.summary = 
   soil_df %>% summarise_at(vars(slope_r, tfact, sieveno4_r, sieveno10_r, sieveno40_r, sieveno200_r, sandvc_r, sandco_r, sandmed_r, sandfine_r, sandvf_r, siltco_r, siltfine_r, claytotal_r, partdensity, ksat_r, awc_r, wtenthbar_r, wthirdbar_r, wfifteenbar_r, kwfact, caco3_r, gypsum_r, sar_r, cec7_r, ecec_r, ph01mcacl2_r, sumbases_r, freeiron_r, extracid_r, extral_r, pbray1_r, resdepb_r), funs(missing = mean(is.na(.)), CV = (sd(.,na.rm = T))/mean(.,na.rm = T)) )
                             
@@ -152,20 +152,20 @@ sieveno4_r
 sieveno10_r
 
 Drop these variables, input the proper zeroes
-```{r}
+```r
 soil_df = soil_df %>%
   select(-c(wtenthbar_r, ecec_r, ph01mcacl2_r, freeiron_r, extral_r, pbray1_r, partdensity, sieveno4_r, sieveno10_r)) %>%
   replace_na(replace = list(siltco_r = 0, siltfine_r = 0))
 ```
 
 Impute the few missing values with MICE
-```{r}
+```r
 library(mice)
 traits.to.impute = c('cec7_r', 'sumbases_r', 'extracid_r')
 mice.imp = mice(soil_df, m = 10, print = F)
 ```
 Compute the imputed values as averages over the 10 imputations
-```{r}
+```r
 
 imp.list = list()
 for (rep in 1:10){
@@ -181,17 +181,17 @@ imp.mean = imp.sum/10
 
 
 Make sure the data that already existing have not been changed from the imputation
-```{r}
+```r
 plot(imp.mean$cec7_r, soil_df$cec7_r)
 ```
-```{r}
+```r
 plot(imp.mean$sumbases_r, soil_df$sumbases_r)
 ```
-```{r}
+```r
 plot(imp.mean$extracid_r, soil_df$extracid_r)
 ```
 OK, they look fine. Now replace the columns of original data with imputed data
-```{r}
+```r
 soil_df2 = soil_df 
 soil_df2$cec7_r = imp.mean$cec7_r
 soil_df2$sumbases_r = imp.mean$sumbases_r
@@ -199,14 +199,14 @@ soil_df2$extracid_r = imp.mean$extracid_r
 ```
 
 Check for missing data in soil_df2
-```{r}
+```r
 any(is.na(soil_df2[,]))
 ```
-```{r}
+```r
 soil_df2 = soil_df2 %>% select(Env, lat, long, everything())
 ```
 
-```{r}
+```r
 write.csv(soil_df2, "Q:/My Drive/Anna/Weather Data G2F/Soil Data/G2F2014_16_SoilData.csv", row.names = F, quote = F)
 ```
 
