@@ -11,7 +11,7 @@ This repository provides resources (data and pipelines) linked to data generated
 |Temp. & rainfall (daily, ASOS/AWOS) |[ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)|[location_coordinates.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Metadata/location_coordinates.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ASOSWeatherData.md)|matiasfe@msu.edu|
 |Temp. & rainfall (daily, NOAA) |[NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv)|[info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/NOAAWeatherData.md)|matiasfe@msu.edu|
 |Temp. & rainfall (daily, concensus ) |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)  | [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv) ; [NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv) ; [ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)   | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)  |  matiasfe@msu.edu |
-|Soil data (USDA) | | | |
+|Soil data (USDA) | | [link]() | jim.holland@usda.gov |
 
 ## Calculation of growing degree days per year-location
 
