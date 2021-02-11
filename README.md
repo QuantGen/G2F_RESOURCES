@@ -5,7 +5,7 @@ This repository provides resources (data and pipelines) linked to data generated
 
 ### Daily temperature and rainfall data
 
-|Source |Output-file|Inputs|Script|Developers|
+|Source |Output-file|Inputs|Script|Contact|
 |---------|------|------|------|--------|
 | G2F-GxE data|[G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/EnvironmentalCovariates)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/G2FWeatherData.md)| matiasfe@msu.edu |
 | ASOS/AWOS |[ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)|[location_coordinates.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Metadata/location_coordinates.csv)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ASOSWeatherData.md)|matiasfe@msu.edu|
@@ -15,19 +15,19 @@ This repository provides resources (data and pipelines) linked to data generated
 
 ### Soil data data
 
-|Source |Output-file|Inputs|Script|Developers|
+|Source |Output-file|Inputs|Script|Contact|
 |---------|------|------|------|--------|
 | USDA | | | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Retrieve_soil_data_from_USDA_NSS_DB.md) | jim.holland@usda.gov |
 
 ### Growing degree days (GDD) and predicted flowering date (FD) per year-location
 
-|What? |Output-file|Inputs|Script|Contributors|
+|What? |Output-file|Inputs|Script|Contact|
 |---------|------|------|------|--------|
 | GDD & FDD   |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)   |  ?  | [script](https://github.com/QuantGen/G2F_RESOURCES/blob/main/GDDPredictFlowering.md)   | matiasfe@msu.edu |
 
 ## Phenotypes
 
-|What?|Output-file|Inputs|Script|Contributors|
+|What?|Output-file|Inputs|Script|Contact|
 |---------|------|------|------|--------|
 |Fortmatted phenotypes |[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) ; [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/phenotypes.md)|matiasfe@msu.edu|
 
