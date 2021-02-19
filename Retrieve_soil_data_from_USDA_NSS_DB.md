@@ -111,12 +111,12 @@ return(db_sum)
 
 Now read in the list of G2F environments and extract the data for each. This dropped two environments with identical GPS coordinates. They can be added back in later.
 ```r
-envs = read.csv("Q:/My Drive/Anna/Weather Data G2F/G2F_Locations.csv", stringsAsFactors = F) %>%
-  filter(!grepl("^ON", Env)) #for now have to filter out Ontario 
+envs = read.csv('OutputFiles/info_loc.csv', stringsAsFactors = F) %>%
+  filter(!grepl("^ON", Location)) #for now have to filter out Ontario 
 ```
 
 ```r
-soil_info = apply(envs[,c("Env", "Latitude", "Longitude")], 1, function(x) soil_data(x['Env'], x['Latitude'], x['Longitude']))
+soil_info = apply(envs[,c('Location', 'lat', 'lon')], 1, function(x) soil_data(x['Location'], x['lat'], x['lon']))
 ```
 Unpack the lists into a common data frame
 ```r
@@ -207,7 +207,7 @@ soil_df2 = soil_df2 %>% select(Env, lat, long, everything())
 ```
 
 ```r
-write.csv(soil_df2, "Q:/My Drive/Anna/Weather Data G2F/Soil Data/G2F2014_16_SoilData.csv", row.names = F, quote = F)
+write.csv(soil_df2, 'OutputFiles/G2F2014_16_SoilData.csv', row.names = F, quote = F)
 ```
 
 get the data for Canada. They do not have a comparable data base. Best I could do was check the soil map for Ontario at the research station location. It indicated that the two dominant soils are Woolwhich Loam and Conestoga Loam. Both occur in USA as well, so I found their mukey in the USA database and got the soil info that way.
