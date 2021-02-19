@@ -17,7 +17,7 @@ This repository provides resources (data and pipelines) linked to data generated
 
 |Source |Output-file|Inputs|Script|Contact|
 |---------|------|------|------|--------|
-| USDA | | | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Retrieve_soil_data_from_USDA_NSS_DB.md) | jim.holland@usda.gov |
+| USDA |[G2F2014_16_SoilData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2F2014_16_SoilData.csv) | | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Retrieve_soil_data_from_USDA_NSS_DB.md) | jim.holland@usda.gov |
 
 ### Growing degree days (GDD) and predicted flowering date (FD) per year-location
 
