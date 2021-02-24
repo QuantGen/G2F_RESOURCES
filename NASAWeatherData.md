@@ -53,3 +53,15 @@ The file NASAdaily.csv has the following columns:
 |temp| (°C) Daily mean temperature |
 |temp_min| (°C) Daily minimum temperature |
 |temp_max| (°C) Daily maximum temperature |
+|allsky_sfc_lw_dwn| (kW-hr/m^2/day) Downward Thermal Infrared (Longwave) Radiative Flux|
+|allsky_sfc_sw_dwn| (kW-hr/m^2/day) All Sky Insolation Incident on a Horizontal Surface|
+|allsky_toa_sw_dwn| (kW-hr/m^2/day) Top-of-atmosphere Insolation|
+|ps|(kPa) Surface Pressure|
+|rh2m|(%) Relative Humidity at 2 Meters|
+|t2mdew|(°C) Dew/Frost Point at 2 Meters|
+|t2mwet|(°C) Wet Bulb Temperature at 2 Meters|
+|ts|(°C) Earth Skin Temperature|
+|ws10m| (m/s) Wind Speed at 10 Meters|
+
+
+
