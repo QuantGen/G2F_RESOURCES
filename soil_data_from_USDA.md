@@ -112,7 +112,7 @@ The file SoilData.cs has the following columns:
 
 |Column|Description|
 |------|-----------|
-|Location||      
+|location| Location G2F code|      
 |lat||
 |lon||
 |saverest||
