@@ -104,6 +104,8 @@ soil_df <- do.call(rbind, soil_info)
 # siltco_r and siltfine_r are actually zeroes not NA, so we can replace those
 soil_df$siltco_r[is.na(soil_df$siltco_r)] <- 0
 soil_df$siltfine_r[is.na(soil_df$siltfine_r)] <- 0
+# replace comma for period
+soil_df$muname <- gsub(',', '.', soil_df$muname)
 
 write.csv(soil_df, 'OutputFiles/SoilData.csv', row.names = F, quote = F)
 ```
