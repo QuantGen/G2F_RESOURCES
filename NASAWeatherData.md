@@ -1,7 +1,16 @@
-```r
-# NASA power
-library(nasapower)
+The Power project provides solar and meteorological data sets from NASA research for support of renewable energy, building energy efficiency and agricultural needs.
+The following script uses the "nasapower" package to download agroclimatic variables from The Power project.
 
+```r
+# Install package
+install.packages('nasapower')
+
+# Load library
+library(nasapower)
+```
+
+The package contains a list that describes each variable. We read that list and select variables that are of agroclimatic interest in daily format.
+```r
 allpars <- do.call(rbind, lapply(parameters, function(x){
   data.frame(description = x$longname, 
              daily = 'DAILY' %in% x$include, 
@@ -13,7 +22,23 @@ allpars <- do.call(rbind, lapply(parameters, function(x){
 AGvar <- allpars[allpars$AG & allpars$daily,]
 AGvar <- AGvar[rownames(AGvar) != 'WSC',] # Removing corrected wind speed because it's not available 
 AGvar
+```
+                                                          description daily   AG          unit
+ALLSKY_SFC_LW_DWN Downward Thermal Infrared (Longwave) Radiative Flux  TRUE TRUE kW-hr/m^2/day
+ALLSKY_SFC_SW_DWN All Sky Insolation Incident on a Horizontal Surface  TRUE TRUE kW-hr/m^2/day
+ALLSKY_TOA_SW_DWN                        Top-of-atmosphere Insolation  TRUE TRUE kW-hr/m^2/day
+PRECTOT                                                 Precipitation  TRUE TRUE      mm day-1
+PS                                                   Surface Pressure  TRUE TRUE           kPa
+RH2M                                    Relative Humidity at 2 Meters  TRUE TRUE             %
+T2M                                           Temperature at 2 Meters  TRUE TRUE             C
+T2MDEW                                    Dew/Frost Point at 2 Meters  TRUE TRUE             C
+T2MWET                               Wet Bulb Temperature at 2 Meters  TRUE TRUE             C
+T2M_MAX                               Maximum Temperature at 2 Meters  TRUE TRUE             C
+T2M_MIN                               Minimum Temperature at 2 Meters  TRUE TRUE             C
+TS                                             Earth Skin Temperature  TRUE TRUE             C
+WS10M                                         Wind Speed at 10 Meters  TRUE TRUE           m/s
 
+```r
 # Load location data
 info_loc <- read.csv('/OutputFiles/info_loc.csv')
 
@@ -33,6 +58,7 @@ for (i in 1:nrow(info_loc)) {
   message(i, ' loc = ', info_loc$Location[i], ' done.')
 }
 AGdata <- do.call(rbind, AGdata)
+# Format colnames
 AGdata <- AGdata[,c('YYYYMMDD', 'location', 'PRECTOT', 'T2M', 'T2M_MIN', 'T2M_MAX', 'ALLSKY_SFC_LW_DWN', 'ALLSKY_SFC_SW_DWN',
                     'ALLSKY_TOA_SW_DWN', 'PS', 'RH2M', 'T2MDEW', 'T2MWET', 'TS', 'WS10M')]
 colnames(AGdata)[c(1, 3:6)] <- c('date', 'rainfall', 'temp', 'temp_min', 'temp_max')
