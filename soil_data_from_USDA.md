@@ -1,4 +1,5 @@
-
+The following script gets data from the SSURGO database. This database contains information about soil as collected by the National Cooperative Soil Survey - USDA.
+We offer a function to download the data and, in the case of multiple horizons for a particular location, to combine horizons by a weighted mean of standard depths.
 
 ```r
 # Install packages needed
@@ -24,7 +25,7 @@ library(tidyverse)
 # https://data.nal.usda.gov/system/files/SSURGO_Metadata_-_Table_Column_Descriptions.pdf
 
 # Function to get soil data
-soil_data <- function(Location, lat, lon, standarize = T){
+soil_data <- function(Location, lat, lon, combineMultipleHorizons = T){
   print(Location)
   gps <- paste('point(', lon, lat, ')')
   q <- paste0("SELECT mukey, muname
@@ -51,7 +52,7 @@ FROM sacatalog sac
   db <- cbind(Location, lat, lon, SDA_query(query))
   
   # standarize horizons
-  if (standarize) {
+  if (combineMultipleHorizons) {
     db2 <- as.data.frame(db)
     soilvars <- c('sieveno4_r', 'sieveno10_r', 'sieveno40_r', 'sieveno200_r', 'sandtotal_r', 'sandvc_r', 'sandco_r', 'sandmed_r',
                   'sandfine_r', 'sandvf_r', 'silttotal_r', 'siltco_r', 'siltfine_r', 'claytotal_r', 'om_r', 'partdensity', 'ksat_r', 'awc_r', 'ksat_r awc_r',
