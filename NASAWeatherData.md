@@ -21,8 +21,7 @@ allpars <- do.call(rbind, lapply(parameters, function(x){
 # daily Agroclimatic variables
 AGvar <- allpars[allpars$AG & allpars$daily,]
 AGvar <- AGvar[rownames(AGvar) != 'WSC',] # Removing corrected wind speed because it's not available 
-AGvar
-```
+> AGvar
                                                           description daily   AG          unit
 ALLSKY_SFC_LW_DWN Downward Thermal Infrared (Longwave) Radiative Flux  TRUE TRUE kW-hr/m^2/day
 ALLSKY_SFC_SW_DWN All Sky Insolation Incident on a Horizontal Surface  TRUE TRUE kW-hr/m^2/day
@@ -37,6 +36,7 @@ T2M_MAX                               Maximum Temperature at 2 Meters  TRUE TRUE
 T2M_MIN                               Minimum Temperature at 2 Meters  TRUE TRUE             C
 TS                                             Earth Skin Temperature  TRUE TRUE             C
 WS10M                                         Wind Speed at 10 Meters  TRUE TRUE           m/s
+```
 
 ```r
 # Load location data
