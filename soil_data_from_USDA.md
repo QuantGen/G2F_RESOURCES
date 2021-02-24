@@ -1,4 +1,3 @@
-**Author: Jim Holland**
 
 
 ```r
@@ -107,3 +106,54 @@ soil_df$siltfine_r[is.na(soil_df$siltfine_r)] <- 0
 
 write.csv(soil_df, 'OutputFiles/SoilData.csv', row.names = F, quote = F)
 ```
+
+The file SoilData.cs has the following columns:
+
+|Column|Description|
+|------|-----------|
+|Location||      
+|lat||
+|lon||
+|saverest||
+|muname||
+|compname||
+|hz_dept||
+|hz_depb||
+|sieveno4_r||
+|sieveno10_r||
+|sieveno40_r||
+|sieveno200_r||
+|sandtotal_r||
+|sandvc_r||
+|sandco_r||
+|sandmed_r||
+|sandfine_r||
+|sandvf_r||
+|silttotal_r||
+|siltco_r||
+|siltfine_r||
+|claytotal_r||
+|om_r partdensity||
+|ksat_r||
+|awc_r||
+|wtenthbar_r||
+|wthirdbar_r||
+|wfifteenbar_r||
+|wsatiated_r||
+|kwfact||
+|caco3_r||
+|gypsum_r||
+|sar_r||
+|ec_r||
+|cec7_r||
+|ecec_r||
+|ph01mcacl2_r||
+|ptotal_r||
+|sumbases_r||
+|freeiron_r||
+|extracid_r||
+|extral_r||
+|pbray1_r||
+|resdepb_r||
+
+
