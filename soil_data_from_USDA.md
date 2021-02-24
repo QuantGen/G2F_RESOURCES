@@ -62,7 +62,7 @@ FROM sacatalog sac
     hz_dept <- c(0, 10, 25, 50, 80, 100)
     hz_depb <- c(10, 25, 50, 80, 100, 200)
     nhz <- length(unique(db2$compname))
-    db3 <- data.frame(Location = db2$Location[1], lat = db2$lat[1], lon = db2$lon[1], 
+    db3 <- data.frame(location = db2$Location[1], lat = db2$lat[1], lon = db2$lon[1], 
                       saverest = db2$saverest[1], muname = db2$muname[1], 
                       compname = paste(unique(db2$compname), collapse = ' - '),
                       hz_dept, hz_depb)
