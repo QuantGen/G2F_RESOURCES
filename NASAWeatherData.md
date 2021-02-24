@@ -33,8 +33,23 @@ for (i in 1:nrow(info_loc)) {
   message(i, ' loc = ', info_loc$Location[i], ' done.')
 }
 AGdata <- do.call(rbind, AGdata)
-colnames(AGdata)[grep("YYYYMMDD", colnames(AGdata))] <- 'date'
+AGdata <- AGdata[,c('YYYYMMDD', 'location', 'PRECTOT', 'T2M', 'T2M_MIN', 'T2M_MAX', 'ALLSKY_SFC_LW_DWN', 'ALLSKY_SFC_SW_DWN',
+                    'ALLSKY_TOA_SW_DWN', 'PS', 'RH2M', 'T2MDEW', 'T2MWET', 'TS', 'WS10M')]
+colnames(AGdata)[c(1, 3:6)] <- c('date', 'rainfall', 'temp', 'temp_min', 'temp_max')
+colnames(AGdata) <- casefold(colnames(AGdata))
 
 # Save data
 write.csv(AGdata, file = '/OutputFiles/NASAdaily.csv', quote = F, row.names = F)
 ```
+
+
+The file NASAdaily.csv has the following columns:
+
+|Column|Description|
+|------|-----------|
+|date| (yyyy-mm-dd) Sowing date |
+|location| G2F field location name |
+|rainfall| (mm) Daily rainfall |
+|temp| (°C) Daily mean temperature |
+|temp_min| (°C) Daily minimum temperature |
+|temp_max| (°C) Daily maximum temperature |
