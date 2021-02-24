@@ -1,5 +1,5 @@
 The following script gets data from the SSURGO database. This database contains information about soil as collected by the National Cooperative Soil Survey - USDA.
-We offer a function to download the data and, in the case of multiple horizons for a particular location, to combine horizons by a weighted mean of standard depths.
+We offer a function to download the data and, in the case of multiple horizons for a particular location, to combine horizons by a weighted mean of standard horizons by depth.
 
 ```r
 # Install packages needed
