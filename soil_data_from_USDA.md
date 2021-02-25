@@ -51,7 +51,7 @@ FROM sacatalog sac
   
   db <- cbind(Location, lat, lon, SDA_query(query))
   
-  # standarize horizons
+  # If true, does weighted averages of locations with multiple soil types
   if (combineMultipleHorizons) {
     db2 <- as.data.frame(db)
     soilvars <- c('sieveno4_r', 'sieveno10_r', 'sieveno40_r', 'sieveno200_r', 'sandtotal_r', 'sandvc_r', 'sandco_r', 'sandmed_r',
