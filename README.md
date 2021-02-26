@@ -14,7 +14,7 @@ This repository provides resources (data and pipelines) linked to data generated
 | Concensus |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)  | [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv) ; [NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv) ; [ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)   | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)  |  matiasfe@msu.edu |
 
 
-### Soil data data
+### Soil data
 
 |Source |Output-file|Inputs|Script|Contact|
 |---------|------|------|------|--------|
