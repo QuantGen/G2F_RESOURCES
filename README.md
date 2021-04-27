@@ -8,7 +8,7 @@ This repository provides resources (data and pipelines) linked to data generated
 |Source |Output-file|Inputs|Script|Contact|
 |---------|------|------|------|--------|
 | G2F-GxE data|[G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/EnvironmentalCovariates)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/G2FWeatherData.md)| matiasfe@msu.edu |
-| Concensus |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)  | [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv) ; [NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv) ; [ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)   | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/ExamineEnvData.md)  |  matiasfe@msu.edu |
+| Consensus |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)  | [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv) ; [NOAAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NOAAdaily.csv) ; [ASOSdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ASOSdaily.csv)   | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/ExamineEnvData.md)  |  matiasfe@msu.edu |
 
 * The Consensus weather data combine the best quality data of G2F, ASOS, NOAA, and NASA weather data. Guides on how to obtain information from these weather networks are in folder "mdfiles".
 
