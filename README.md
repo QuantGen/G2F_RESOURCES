@@ -24,7 +24,7 @@ This repository provides resources (data and pipelines) linked to data generated
 
 |What? |Output-file|Inputs|Script|Contact|
 |---------|------|------|------|--------|
-| GDD & FDD   |  [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)   |  ?  | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/GDDPredictFlowering.md)   | matiasfe@msu.edu |
+| GDD & FDD   | ? | [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv)  | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/GDDPredictFlowering.md)   | matiasfe@msu.edu |
 
 ## Phenotypes
 
