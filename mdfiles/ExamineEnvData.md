@@ -147,23 +147,23 @@ write.csv(wdaily_final, file = 'Data/OutputFiles/wdaily_final.csv', quote = F, r
 
 The file wdaily_final.csv has the following columns:
 
-|Column|Description|
-|------|-----------|
-|date| (yyyy-mm-dd) Sowing date |
-|location| G2F field location name |
-|rainfall| (mm) Daily rainfall |
-|temp| (°C) Daily mean temperature |
-|temp_min| (°C) Daily minimum temperature |
-|temp_max| (°C) Daily maximum temperature |
-|allsky_sfc_lw_dwn| (kW-hr/m^2/day) Downward Thermal Infrared (Longwave) Radiative Flux|
-|allsky_sfc_sw_dwn| (kW-hr/m^2/day) All Sky Insolation Incident on a Horizontal Surface|
-|allsky_toa_sw_dwn| (kW-hr/m^2/day) Top-of-atmosphere Insolation|
-|ps|(kPa) Surface Pressure|
-|rh2m|(%) Relative Humidity at 2 Meters|
-|t2mdew|(°C) Dew/Frost Point at 2 Meters|
-|t2mwet|(°C) Wet Bulb Temperature at 2 Meters|
-|ts|(°C) Earth Skin Temperature|
-|ws10m| (m/s) Wind Speed at 10 Meters|
-|eto (mm/day)| General theoretical evapotranspiration calculated using Blaney-Criddle method. 
+|Column|Description|Origin|
+|------|-----------|------|
+|date| (yyyy-mm-dd) Sowing date | |
+|location| G2F field location name | |
+|rainfall| (mm) Daily rainfall | G2F or NASA |
+|temp| (°C) Daily mean temperature | G2F or NASA |
+|temp_min| (°C) Daily minimum temperature | G2F or NASA |
+|temp_max| (°C) Daily maximum temperature | G2F or NASA |
+|allsky_sfc_lw_dwn| (kW-hr/m^2/day) Downward Thermal Infrared (Longwave) Radiative Flux| NASA |
+|allsky_sfc_sw_dwn| (kW-hr/m^2/day) All Sky Insolation Incident on a Horizontal Surface| NASA |
+|allsky_toa_sw_dwn| (kW-hr/m^2/day) Top-of-atmosphere Insolation| NASA |
+|ps|(kPa) Surface Pressure| NASA |
+|rh2m|(%) Relative Humidity at 2 Meters| NASA |
+|t2mdew|(°C) Dew/Frost Point at 2 Meters| NASA |
+|t2mwet|(°C) Wet Bulb Temperature at 2 Meters| NASA |
+|ts|(°C) Earth Skin Temperature| NASA |
+|ws10m| (m/s) Wind Speed at 10 Meters| NASA |
+|eto (mm/day)| General theoretical evapotranspiration calculated using Blaney-Criddle method.| NASA |
 
 [Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
