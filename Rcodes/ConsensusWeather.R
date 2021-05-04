@@ -1,4 +1,3 @@
-setwd('~/OneDrive/NewWorks/G2F_RESOURCES/')
 
 # Read and format data
 wdaily_G2F <- read.csv('Data/OutputFiles/G2Fdaily.csv')
