@@ -11,3 +11,6 @@
 
  **Gustavo**
   - Review radiation variables
+
+ **Meeting pending**
+  - Request soil samples analysis
