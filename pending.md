@@ -8,3 +8,6 @@
   - Rename Consensus file 
   - Remove script from the mdfiles (this will just hold a data dictionary).
   - Check the code to calculate eto (missing in the md file)
+
+ **Gustavo**
+  - Review radiation variables
