@@ -9,8 +9,6 @@ wdata_G2F <- list()
 # wdata_G2F[[1]] <- read.csv(unz(urlg2f2018, filename = 'G2F_weather_2018.csv'))
 # wdata_G2F[[2]] <- read.csv(unz(urlg2f2019, filename = 'G2F_weather_2019.csv'))
 
-setwd('~/OneDrive/NewWorks/G2F_RESOURCES')
-
 wdata_G2F[[1]] <- read.csv('Data/EnvironmentalCovariates/G2F_weather_2018.csv')
 wdata_G2F[[2]] <- read.csv('Data/EnvironmentalCovariates/G2F_weather_2019.csv')
 
