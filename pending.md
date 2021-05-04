@@ -4,6 +4,7 @@
  
  **Fernando**
   - Move contacts to a note below the table
-  - Replace contacts in table with data dictoionary 
+  - Replace contacts in table with data dictionary
+  - Rename Consensus file 
   - Remove script from the mdfiles (this will just hold a data dictionary).
   - Check the code to calculate eto (missing in the md file)
