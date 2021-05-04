@@ -3,7 +3,7 @@
 The following code produces a series of plots to examine the different sources of weather data. 
 Each plot by trial (year-location combination) consists of 3 panels: 
 1) Upper boxplot with yield for all trials and average yield for the trial of interest.
-2) left scatter plot of temperature by weather station (red: G2F, green: ASOS, blue: NOAA). The title contains the G2F-ASOS distance and G2F-NOAA distance.
+2) left scatter plot of temperature by weather station (red: G2F, green: NASA).
 3) right bar plot of monthly accumulated rainfall by weather station. The title contains the number of days from sowing to harvesting and the final source of weather data selected based on visual assessment.
 
 All plots are collected into a pdf file: [plots_collection.pdf](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/plots_collection.pdf)
