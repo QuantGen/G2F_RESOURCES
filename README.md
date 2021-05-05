@@ -8,7 +8,7 @@ This repository provides resources (data and pipelines) linked to data generated
 |Source |Output-file|Inputs|Script|Data dictionary|
 |---------|------|------|------|--------|
 | G2F-GxE data|[G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/EnvironmentalCovariates)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/G2FWeatherData.md)|   |
-| Consensus |  [ConsensusData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ConsensusData.csv)  | [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv) ; [NASAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NASAdaily.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/ConsensusWeather.R)  |   |
+| Consensus |  [ConsensusData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ConsensusData.csv)  | [G2Fdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/G2Fdaily.csv) ; [NASAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NASAdaily.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/ConsensusWeather.R)  | [link](https://github.com/QuantGen/G2F_RESOURCES/edit/main/mdfiles/ExamineEnvData.md) |
 
 The Consensus weather data combines data from G2F with data from NASA. NASA data was used for variables not recorded by G2F and to fill records from G2F that were either missing or appeared to be wrong. For further information about each of these networsk please see the corresponding "mdfiles".
 * Weather data maintained by Fernando Aguate (matiasfe@msu.edu)
