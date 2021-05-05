@@ -130,5 +130,5 @@ write.csv(info_loc, file = 'Data/OutputFiles/info_loc.csv', quote = F, row.names
 wdaily_final <- do.call(rbind, wdaily_final)
 
 
-write.csv(wdaily_final, file = 'Data/OutputFiles/wdaily_final.csv', quote = F, row.names = F)
+write.csv(wdaily_final, file = 'Data/OutputFiles/ConsensusData.csv', quote = F, row.names = F)
 
