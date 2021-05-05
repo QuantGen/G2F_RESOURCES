@@ -3,7 +3,7 @@ The script uses the "nasapower" package to download agroclimatic variables from 
 
 It also calculates a theoretical evapotranspiration using the ClimMobTools package. To derive the crop factor (Kc) needed by growth stage, we used Tables 7 and 8 of the following documentation: http://www.fao.org/3/s2022e/s2022e07.htm
 
-The resulting file is [NASAdaily.csv](), which has the following data dictionary:
+The resulting file is [NASAdaily.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/NASAdaily.csv), which has the following data dictionary:
 
 |Column|Description|
 |------|-----------|
