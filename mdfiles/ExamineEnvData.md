@@ -8,10 +8,7 @@ Each plot by trial (year-location combination) consists of 3 panels:
 
 All plots are collected into a pdf file: [plots_collection.pdf](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/plots_collection.pdf)
 
-After visual examination, we selected the best source of data for each trial and save it in [ConsensusData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ConsensusData.csv)
-
-
-The file ConsensusData.csv has the following columns:
+After visual examination, we selected the best source of data for each trial and save it in [ConsensusData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ConsensusData.csv):
 
 |Column|Description|Origin|
 |------|-----------|------|
