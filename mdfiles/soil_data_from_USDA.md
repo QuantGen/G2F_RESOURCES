@@ -50,4 +50,4 @@ Results are saved in [SoilData.csv](https://github.com/QuantGen/G2F_RESOURCES/bl
 |extral_r| aluminum extracted in 1 normal potassium chloride |
 |pbray1_r| amount of phosphorous in the less than 2mm fraction, that is extractable using the Bray1 method |
 
-
+[Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
