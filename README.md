@@ -29,11 +29,11 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 
 ## Analysis pipelines
 
-### Predicted flowering date (FD) per year-location using Growing Degree Days (GDD)
+### Predicting Growing Degree Days (GDD) needed to silking for each hybrid
 
 |What? |Output-file|Inputs|Script|Data dictionary|
 |---------|------|------|------|--------|
-| GDD & FDD   | none | [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv) | [link]() | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/GDDPredictFlowering.md) |
+| GDD to silking | none | [ConsensusData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ConsensusData.csv) ; [phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/GDDPredictFlowering.md) | NA |
 
 
 <!-- 
