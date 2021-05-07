@@ -1,6 +1,6 @@
-### Calculate GDD and predict flowering date
+### Calculate GDD and predict GDD needed to flowering
 
-The following code reads the consensus weather data and the phenotype data to calculate growing degree days (GDD) and predict the average GDD needed to flowering.
+The following code uses the "calcGDD" function (in tools) to calculate growing degree days (GDD) and fits a linear mixed model to predict GDD to flowering for the hybrids tested by the G2F project.
 
 ```r
 # Load function to calculate GDD
@@ -16,7 +16,7 @@ phen1 <- read.csv('Data/OutputFiles/phenotypes.csv')
 phen1 <- phen1[phen1$year %in% c(2018, 2019),]
 
 # Install package for reading dates
-install.packages('lubridate')
+#install.packages('lubridate')
 library(lubridate)
 
 # Create environment
@@ -26,62 +26,49 @@ consensus$env <- paste0(year(consensus$date), consensus$location)
 # Use the GDD function to calculate the GDD needed from sowing to flowering
 phen <- calcGDD(consensus, phen1)
 
-# Plot GDD vs Flowering date by hybrid
-colors <- as.factor(phen$source)
-levels(colors) <- rainbow(length(levels(colors)))
-plot(phen$GDD, phen$date_silking, col = as.character(colors), xlab = 'accumulated GDD', ylab = 'Flowering date', main = 'colors by hybrid')
-```
-![](/Data/PredictFlowering/Plot1.png)
-
-```r
 # Plot GDD vs Flowering date by location
 colors <- as.factor(phen$location)
 levels(colors) <- rainbow(length(levels(colors)))
 plot(phen$GDD, phen$date_silking, col = as.character(colors), xlab = 'accumulated GDD', ylab = 'Flowering date', main = 'colors by location')
-
-# There is no hybrid effect
-# There is a strong environmental effect on the intercept, but the slope is the same
-
+```
+![](/Data/GDDtoFlowering/Plot1.png)
+```r
 # Install lme4 package for linear mixed models
-install.packages('lme4')
+# install.packages('lme4')
 library(lme4)
-phen$numFlowering <- as.numeric(phen$date_silking)
-# centering flowering
-phen$numFlowering <- scale(phen$numFlowering, scale = F)
 
-# Model to predict Flowering
-mod1 <- lmer(numFlowering ~ GDD + (1 | env), data = phen)
-summary(mod1)
+# remove NAs in source (hybrid)
+phen <- phen[!is.na(phen$source),]
+# year as factor
+phen$fyear <- as.factor(phen$year)
 
-# Linear mixed model fit by REML ['lmerMod']
-# Formula: numFlowering ~ GDD + (1 | env)
-# Data: phen
+# Model to predict GDD to flowering
+mod1 <- lmer(GDD ~  -1 + fyear + (1|source) + (1 | location) + (1| source:location) + (1| env:rep), data = phen)
 
-# REML criterion at convergence: 139267.5
-
-# Scaled residuals: 
-#    Min      1Q  Median      3Q     Max 
-#-5.8343 -0.2709 -0.0175  0.2793 10.4979 
-
-# Random effects:
-#   Groups   Name        Variance  Std.Dev.
-#   env      (Intercept) 36964.617 192.262 
-#   Residual                 2.798   1.673 
-#   Number of obs: 35837, groups:  env, 43
-
-# Fixed effects:
-#             Estimate    Std. Error  t value
-# (Intercept) -6.354e+01  2.932e+01   -2.167
-# GDD          9.725e-02  1.218e-04   798.126
-
-# Correlation of Fixed Effects:
-# (Intr)
-# GDD -0.003
 
 # Check observed vs predicted data
 phen$pred <- predict(mod1)
-plot(phen$numFlowering, phen$pred, col = colors, xlab = 'Observed data', ylab = 'Predicted data')
-
-# Save results
-save(mod1, phen, file = 'Data/PredictFlowering/PredictFlowering.rdata')
+plot(phen$GDD, phen$pred, col = colors, xlab = 'Observed data', ylab = 'Predicted data')
 ```
+![](/Data/GDDtoFlowering/Plot2.png)
+```r
+# Example with one hybrid in different locations (on an average year)
+hybrid <- unique(phen$source)[10] # hybrid = 17SGTF:LH195:0983
+locs <- unique(phen$location)
+# GDD needed to flowering on each environment
+eff_sf <- ranef(mod1)$'source:location'[paste0(hybrid, ':', locs),]
+eff_sf[is.na(eff_sf)] <- 0
+eff_s <- ranef(mod1)$source[hybrid,]
+eff_f <- ranef(mod1)$location[locs,]
+hGDD <- mean(fixef(mod1)) + eff_s + eff_f + eff_sf
+
+plot(hGDD, xaxt = 'n', xlab = 'location', ylab = 'GDD to silking', main = paste('hybrid =', hybrid, 'on an average year'))
+axis(1, at = 1:length(locs), labels = locs, las = 2, cex.axis = .8)
+```
+![](/Data/GDDtoFlowering/Plot3.png)
+```r
+# Save results
+save(mod1, phen, file = 'Data/GDDtoFlowering/data_model.rdata')
+```
+
+
