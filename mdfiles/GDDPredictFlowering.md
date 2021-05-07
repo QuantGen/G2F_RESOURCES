@@ -1,6 +1,6 @@
 ### Calculate GDD and predict GDD needed to flowering
 
-The following code uses the "calcGDD" function (in tools) to calculate growing degree days (GDD) and fits a linear mixed model to predict GDD to flowering for the hybrids tested by the G2F project.
+The following code uses the "calcGDD" function (in tools) to calculate growing degree days (GDD) and fits a linear mixed model to predict GDD needed to silking of the hybrids tested by the G2F project.
 
 ```r
 # Load function to calculate GDD
