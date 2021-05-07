@@ -109,3 +109,37 @@ getWeatherNOAA <- function(time_period = c('2018-01-01', '2018-12-31'), sid = 'Z
   }
   return(dweather)
 }
+
+################
+
+# Function to calculate GDD from weather data
+
+calcGDD <- function(wdata, phenotype, envCol = 'env', intCol = c('date_plant', 'date_silking'), basetemp = 10) {
+  # works with celsius degrees only
+  if (!(envCol %in% colnames(wdata) & envCol %in% colnames(phenotype))) stop('envCol must be in colnames of wdata and phenotype')
+  
+  phenotype <- phenotype[order(phenotype$env),]
+  phenotype$GDD <- NA
+  phenotype[,intCol[1]] <- as.Date(phenotype[,intCol[1]])
+  phenotype[,intCol[2]] <- as.Date(phenotype[,intCol[2]])
+  # Remove missing dates and environments
+  phenotype <- phenotype[!is.na(phenotype[,intCol[1]]),]
+  phenotype <- phenotype[!is.na(phenotype[,intCol[2]]),]
+  phenotype <- phenotype[phenotype[,envCol] %in% unique(wdata[,envCol]),]
+  
+  for (env in unique(phenotype$env)) {
+    envi <- wdata[wdata$env == env, c('date', 'temp')]
+    if (nrow(envi) > 0){
+      # missing mean temperature is filled in with the environment's mean temp
+      envi$temp[is.na(envi$temp)] <- mean(envi$temp, na.rm = T)
+      envi$temp[envi$temp > 30] <- 30
+      envi$temp[envi$temp < basetemp] <- basetemp
+      envi$gdd <- envi$temp - basetemp
+    }
+    for (i in which(phenotype$env == env)){
+      envrows <- match(as.Date(phenotype[i, intCol[1]]:phenotype[i, intCol[2]], '1970-1-1'), as.Date(envi$date))
+      phenotype$GDD[i] <- sum(envi$gdd[envrows], na.rm = T)
+    }
+  }
+  return(phenotype)
+}
