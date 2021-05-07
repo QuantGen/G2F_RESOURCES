@@ -21,17 +21,18 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 | USDA |[SoilData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/SoilData.csv) | [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/SoilDataCode.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/soil_data_from_USDA.md) |
 * Weather data maintained by Jim Holland (jim.holland@usda.gov)
 
+## Phenotypes
+
+|What?|Output-file|Inputs|Script|Data dictionary|
+|---------|------|------|------|--------|
+|Fortmatted phenotypes |[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) ; [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/Phenotypes.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/phenotypes.md)|
+
 ### Predicted flowering date (FD) per year-location using Growing Degree Days (GDD)
 
 |What? |Output-file|Inputs|Script|Data dictionary|
 |---------|------|------|------|--------|
 | GDD & FDD   | none | [wdaily_final.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/wdaily_final.csv) | [link]() | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/GDDPredictFlowering.md) |
 
-## Phenotypes
-
-|What?|Output-file|Inputs|Script|Data dictionary|
-|---------|------|------|------|--------|
-|Fortmatted phenotypes |[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) ; [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/Phenotypes.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/phenotypes.md)|
 
 ## Analysis pipelines
 
