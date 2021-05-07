@@ -31,7 +31,7 @@ colors <- as.factor(phen$source)
 levels(colors) <- rainbow(length(levels(colors)))
 plot(phen$GDD, phen$date_silking, col = as.character(colors), xlab = 'accumulated GDD', ylab = 'Flowering date', main = 'colors by hybrid')
 ```
-![](Data/PredictFlowering/Plot1.pdf)
+![](Data/PredictFlowering/Plot1.png)
 
 ```r
 # Plot GDD vs Flowering date by location
