@@ -19,7 +19,7 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 |Source |Output-file|Inputs|Script|Data dictionary|
 |---------|------|------|------|--------|
 | USDA |[SoilData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/SoilData.csv) | [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/SoilDataCode.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/soil_data_from_USDA.md) |
-* Weather data maintained by Jim Holland (jim.holland@usda.gov)
+* Soil data maintained by Jim Holland (jim.holland@usda.gov)
 
 ### Phenotypes
 
