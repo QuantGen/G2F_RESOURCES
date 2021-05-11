@@ -1,4 +1,4 @@
-The Power project provides solar and meteorological data sets from NASA research for support of renewable energy, building energy efficiency and agricultural needs.
+The Power project (https://power.larc.nasa.gov/) provides solar and meteorological data sets from NASA research for support of renewable energy, building energy efficiency and agricultural needs.
 The script uses the "nasapower" package to download agroclimatic variables from The Power project.
 
 It also calculates a theoretical evapotranspiration using the ClimMobTools package. To derive the crop factor (Kc) needed by growth stage, we used Tables 7 and 8 of the following documentation: http://www.fao.org/3/s2022e/s2022e07.htm
