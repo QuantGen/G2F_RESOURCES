@@ -18,7 +18,7 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 
 |Source |Output-file|Inputs|Script|Data dictionary|
 |---------|------|------|------|--------|
-| G2F |[g2f_soil.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/g2f_soil.csv) | - | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/g2f_SoilData.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/g2f_soil_data.md) |
+| G2F |[g2f_soil.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/g2f_soil.csv) | [g2f_2018_soil_data.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Metadata/g2f_2018_soil_data.csv) ; [g2f_2019_soil_data.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Metadata/g2f_2019_soil_data.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/g2f_SoilData.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/g2f_soil_data.md) |
 | USDA |[SoilData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/SoilData.csv) | [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/SoilDataCode.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/soil_data_from_USDA.md) |
 * Soil data maintained by Jim Holland (jim.holland@usda.gov)
 
