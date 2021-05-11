@@ -129,6 +129,11 @@ write.csv(info_loc, file = 'Data/OutputFiles/info_loc.csv', quote = F, row.names
 # Save final weather data
 wdaily_final <- do.call(rbind, wdaily_final)
 
+# GDD calculation
+wdaily_final$GDD <- wdaily_final$temp
+wdaily_final$GDD[wdaily_final$GDD > 30] <- 30
+wdaily_final$GDD[wdaily_final$GDD < 10] <- 10
+wdaily_final$GDD <- wdaily_final$GDD - 10
 
 write.csv(wdaily_final, file = 'Data/OutputFiles/ConsensusData.csv', quote = F, row.names = F)
 
