@@ -1,6 +1,6 @@
  **Marco**:
- - Summary statistics to compare within, season, across locations precipitation from NASA and G2F 
- - Create a script to add pennman evapotranspiration to weather daily
+ - Comparing precipitation between NASA and G2F (eliminate locations in G2F that 
+ - Create a script to add pennman evapotranspiration to weather daily.
  
  **Fernando**
   - Move contacts to a note below the table
