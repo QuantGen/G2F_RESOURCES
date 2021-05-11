@@ -1,5 +1,3 @@
-setwd('c:/Users/fmagu/OneDrive/NewWorks/G2F_RESOURCES/')
-
 # Format G2F soil data
 
 soil18 <- read.csv('Data/Metadata/g2f_2018_soil_data.csv')
