@@ -4,11 +4,10 @@
  
  **Fernando**
   - Add GDD to the Concensus file.
-  - 
-  - Tools folder: Function to calculate GDD from weather data
+  - Add files with soil data (merged)
 
  **Gustavo**
-  - Review radiation variables
-
+  - Look at metadata
+  
  **Meeting pending**
   - Request soil samples analysis
