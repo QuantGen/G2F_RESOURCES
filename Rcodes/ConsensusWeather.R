@@ -140,4 +140,7 @@ wd_final$GDD[wd_final$GDD > 30] <- 30
 wd_final$GDD[wd_final$GDD < 10] <- 10
 wd_final$GDD <- wd_final$GDD - 10
 
+# Reorder columns
+wd_final <- wd_final[,c(1:13,16,14:15)]
+
 write.csv(wd_final, file = 'Data/OutputFiles/ConsensusData.csv', quote = F, row.names = F)
