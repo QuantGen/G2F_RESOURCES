@@ -18,15 +18,15 @@ After visual examination, we selected the best source of data for each trial and
 |temp| (°C) Daily mean temperature | G2F or NASA |
 |temp_min| (°C) Daily minimum temperature | G2F or NASA |
 |temp_max| (°C) Daily maximum temperature | G2F or NASA |
-|allsky_sfc_lw_dwn| (kW-hr/m^2/day) Downward Thermal Infrared (Longwave) Radiative Flux| NASA |
 |allsky_sfc_sw_dwn| (kW-hr/m^2/day) All Sky Insolation Incident on a Horizontal Surface| NASA |
-|allsky_toa_sw_dwn| (kW-hr/m^2/day) Top-of-atmosphere Insolation| NASA |
 |ps|(kPa) Surface Pressure| NASA |
 |rh2m|(%) Relative Humidity at 2 Meters| NASA |
 |t2mdew|(°C) Dew/Frost Point at 2 Meters| NASA |
 |t2mwet|(°C) Wet Bulb Temperature at 2 Meters| NASA |
-|ts|(°C) Earth Skin Temperature| NASA |
-|ws10m| (m/s) Wind Speed at 10 Meters| NASA |
-|eto (mm/day)| General theoretical evapotranspiration calculated using Blaney-Criddle method.| NASA |
+|ws2m| (m/s) Wind Speed at 2 Meters| NASA |
+|dnr| (kW-hr/m^2/day) Monthly Direct Normal Radiation| NASA |
+|GDD| Daily Growing degree days with base temperature of 10 celsius degrees| - |
+|source_temp| Source of temperature information| - |
+|source_rain| Source of rainfall information| - |
 
 [Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
