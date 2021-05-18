@@ -1,7 +1,6 @@
-
 # Read and format data
-wdaily_G2F <- read.csv('Data/OutputFiles/G2Fdaily.csv')
-wdaily_NASA <- read.csv('Data/OutputFiles/NASAdaily.csv')
+wd_G2F <- read.csv('Data/OutputFiles/G2Fdaily.csv')
+wd_NASA <- read.csv('Data/OutputFiles/NASAdaily.csv')
 pheno <- read.csv('Data/OutputFiles/phenotypes.csv')
 info_loc <- read.csv('Data/OutputFiles/info_loc.csv')
 
@@ -14,15 +13,15 @@ info_loc$source_rain <- c('G2F', 'NASA')[c(2,2,2,2,2,1,1,2,1,2,2,2,2,1,1,1,2,2,1
 
 
 # Final weather data
-wdaily_final <- list()
+wd_final <- list()
 pdf('Data/OutputFiles/plots_collection.pdf')
 
 # 3 panels plot
 for (i in 1:nrow(info_loc)) {
   iloc <- info_loc[i,]
   idate <- as.character(seq(date(iloc$sowing), date(iloc$harvesting), 1))
-  idata <- list(G2F = wdaily_G2F[wdaily_G2F$date %in% idate & wdaily_G2F$location == iloc$Location,],
-                NASA = wdaily_NASA[wdaily_NASA$date %in% idate & wdaily_NASA$location == iloc$Location,])
+  idata <- list(G2F = wd_G2F[wd_G2F$date %in% idate & wd_G2F$location == iloc$Location,],
+                NASA = wd_NASA[wd_NASA$date %in% idate & wd_NASA$location == iloc$Location,])
   ipheno <- pheno[pheno$location == iloc$Location & pheno$year == iloc$year,]
   layout(matrix(c(1,2,2,1,3,3), ncol = 2))
   # yield plot
@@ -33,7 +32,7 @@ for (i in 1:nrow(info_loc)) {
   itemp_min <- min(unlist(lapply(idata, function(x)x$temp_min)), na.rm = T)
   itemp_max <- max(unlist(lapply(idata, function(x)x$temp_max)), na.rm = T) * 1.2
   plot(as.Date(idate), rep(0, length(idate)), ylim = c(itemp_min, itemp_max),
-       cex = 0, xlab = 'Time (days)', ylab = 'Temperature (°C)',
+       cex = 0, xlab = 'Time (days)', ylab = 'Temperature (Â°C)',
        main = 'G2F and NASA data')
   for (j in 1:2){
     lines(as.Date(idata[[j]]$date), idata[[j]]$temp, col = j + 1, cex = .7)
@@ -111,29 +110,34 @@ for (i in 1:nrow(info_loc)) {
   }
   
   ######
-  wdaily_final[[i]] <- idata[['NASA']]
+  wd_final[[i]] <- idata[['NASA']]
   if(iloc$source_temp == 'G2F') {
-    wdaily_final[[i]]$temp <- NA
-    wdaily_final[[i]]$temp_min <- NA
-    wdaily_final[[i]]$temp_max <- NA
-    wdaily_final[[i]][match(idata[['G2F']]$date, wdaily_final[[i]]$date),c('temp','temp_min','temp_max')] <- idata[['G2F']][,c('temp','temp_min','temp_max')]
+    wd_final[[i]]$temp <- NA
+    wd_final[[i]]$temp_min <- NA
+    wd_final[[i]]$temp_max <- NA
+    wd_final[[i]][match(idata[['G2F']]$date, wd_final[[i]]$date),c('temp','temp_min','temp_max')] <- idata[['G2F']][,c('temp','temp_min','temp_max')]
+    wd_final[[i]]$source_temp <- 'G2F'
+  } else {
+    wd_final[[i]]$source_temp <- 'NASA'
   }
   if(iloc$source_rain == 'G2F') {
-    wdaily_final[[i]]$rainfall <- NA
-    wdaily_final[[i]][match(idata[['G2F']]$date, wdaily_final[[i]]$date),'rainfall'] <- idata[['G2F']]$rainfall
+    wd_final[[i]]$rainfall <- NA
+    wd_final[[i]][match(idata[['G2F']]$date, wd_final[[i]]$date),'rainfall'] <- idata[['G2F']]$rainfall
+    wd_final[[i]]$source_rain <- 'G2F'
+  } else {
+    wd_final[[i]]$source_rain <- 'NASA'
   }
 }
 dev.off()
 
 write.csv(info_loc, file = 'Data/OutputFiles/info_loc.csv', quote = F, row.names = F)
-# Save final weather data
-wdaily_final <- do.call(rbind, wdaily_final)
+# Save weather data
+wd_final <- do.call(rbind, wd_final)
 
 # GDD calculation
-wdaily_final$GDD <- wdaily_final$temp
-wdaily_final$GDD[wdaily_final$GDD > 30] <- 30
-wdaily_final$GDD[wdaily_final$GDD < 10] <- 10
-wdaily_final$GDD <- wdaily_final$GDD - 10
+wd_final$GDD <- wd_final$temp
+wd_final$GDD[wd_final$GDD > 30] <- 30
+wd_final$GDD[wd_final$GDD < 10] <- 10
+wd_final$GDD <- wd_final$GDD - 10
 
-write.csv(wdaily_final, file = 'Data/OutputFiles/ConsensusData.csv', quote = F, row.names = F)
-
+write.csv(wd_final, file = 'Data/OutputFiles/ConsensusData.csv', quote = F, row.names = F)
