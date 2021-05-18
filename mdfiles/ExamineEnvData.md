@@ -25,8 +25,8 @@ After visual examination, we selected the best source of data for each trial and
 |t2mwet|(°C) Wet Bulb Temperature at 2 Meters| NASA |
 |ws2m| (m/s) Wind Speed at 2 Meters| NASA |
 |dnr| (kW-hr/m^2/day) Monthly Direct Normal Radiation| NASA |
-|GDD| Daily Growing degree days with base temperature of 10 celsius degrees| - |
-|source_temp| Source of temperature information| - |
-|source_rain| Source of rainfall information| - |
+|GDD| Daily Growing degree days with base temperature of 10 celsius degrees|  |
+|source_temp| Source of temperature information|  |
+|source_rain| Source of rainfall information|  |
 
 [Go back to main](https://github.com/QuantGen/G2F_RESOURCES)
