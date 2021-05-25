@@ -1,14 +1,13 @@
-### Generate a pdf with plots of weather data by trial
+### Format and quality assessment of G2F weather data
 
-The code produces a series of plots to examine the different sources of weather data. 
-Each plot by trial (year-location combination) consists of 3 panels: 
-1) Upper boxplot with yield for all trials and average yield for the trial of interest.
-2) left scatter plot of temperature by weather station (red: G2F, green: NASA).
-3) right bar plot of monthly accumulated rainfall by weather station.
+The code reads the original G2F weather files and completes the missing or corrupted datapoints with NASA data. To decide which source of data to use, we made plots for each trial (year-location combination) consisting of 3 panels:
+1) Upper panel: boxplot with yield for all trials and average yield for the trial of interest.
+2) left panel: scatter plot of temperature by weather station (red: G2F, green: NASA).
+3) right panel: bar plot of monthly accumulated rainfall by weather station.
 
 All plots are collected into a pdf file: [plots_collection.pdf](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/plots_collection.pdf)
 
-After visual examination, we selected the best source of data for each trial and save it in [ConsensusData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ConsensusData.csv):
+The resulting file is [g2f_WeatherData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/g2f_WeatherData.csv):
 
 |Column|Description|Origin|
 |------|-----------|------|
