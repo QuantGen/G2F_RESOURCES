@@ -1,18 +1,107 @@
-# Read and format data
-wd_G2F <- read.csv('Data/OutputFiles/G2Fdaily.csv')
+# Read original files
+wdata_G2F <- list()
+wdata_G2F[[1]] <- read.csv('Data/EnvironmentalCovariates/G2F_weather_2018.csv')
+wdata_G2F[[2]] <- read.csv('Data/EnvironmentalCovariates/G2F_weather_2019.csv')
+
+# Remove imputed from weather networks
+wdata_G2F[[1]] <- wdata_G2F[[1]][wdata_G2F[[1]]$Cleaning.Method != 'Imputed',]
+wdata_G2F[[2]] <- wdata_G2F[[2]][wdata_G2F[[2]]$Cleaning.Method != 'Imputed',]
+
+# Load function to rename columns
+source('Tools/Functions.R')
+
+# Lowercase for all column names
+wdata_G2F <- lapply(wdata_G2F, function(x){colnames(x) <- tolower(colnames(x));x})
+
+# Rename columns
+rep_matrix <- matrix(c('(record.*number)', NA,
+                       '(field.*location)', 'location',
+                       '(station.*id)', 'station_id',
+                       'date_local', NA,
+                       'nws.*network', NA,
+                       'nws.*station', NA,
+                       '^temperature', 'temp',
+                       '(dew.*point)', 'dew_point',
+                       '(relative.*humidity)', 'rel_humidity',
+                       '(solar.*radiation)', 'solar_rad',
+                       'rainfall', 'rainfall',
+                       '(wind.*speed)', 'wind_speed',
+                       '(wind.*direction)', 'wind_dir',
+                       '(wind.*gust)', 'wind_gust',
+                       '(soil.*temperature)', 'soil_temp',
+                       '(soil.*moisture)', 'soil_moist',
+                       '(soil.*ec)', NA,
+                       '(uv.*um)', NA,
+                       '(par.*um)', NA,
+                       '(co2.*ppm)', NA,
+                       'photoperiod', NA,
+                       '(column.*altered)', NA,
+                       '(altered.*column)', NA,
+                       '(cleaning.*method)', NA,
+                       'comment', NA,
+                       '^X$', NA), ncol=2, byrow=T)
+
+# Ignore warnings
+for (i in 1:nrow(rep_matrix)) 
+  wdata_G2F <- rename_columns(rep_matrix[i,1], rep_matrix[i,2], mydata=wdata_G2F)
+
+# Install and load package to manipulate dates
+install.packages('lubridate')
+library(lubridate)
+
+# Create a valid date variable
+wdata_G2F <- lapply(wdata_G2F, function(data){
+  if(lengths(regmatches(data$time[1], gregexpr(":", data$time[1]))) == 1)
+    data$time <- paste0(data$time, ':00') # add if missing seconds
+  tmp <- matrix(unlist(strsplit(data$time, ':')), ncol=3, byrow=T)
+  data$valid <- with(data,
+                     date(ISOdate(year, month, day,
+                                  hour = as.numeric(tmp[,1]),
+                                  min = as.numeric(tmp[,2]),
+                                  sec = as.numeric(tmp[,3])
+                     )))
+  return(data)
+})
+
+# Transform weather list to data frame
+wdf_G2F <- do.call(rbind, wdata_G2F)
+
+# Remove locations without data
+wdf_G2F <- wdf_G2F[wdf_G2F$location %in% names(which(table(wdf_G2F$location) > 10)),]
+
+# Rainfall as numeric
+wdf_G2F$rainfall <- as.numeric(wdf_G2F$rainfall)
+
+# Calculate daily temperature
+temp <- aggregate(temp ~ valid + location, data = wdf_G2F, FUN = function(x) c(mean(x, na.rm=T), min(x, na.rm=T), max(x, na.rm=T)))
+daily_temp <-  data.frame(date = temp$valid, location = temp$location, 
+                          temp = temp$temp[,1], temp_min = temp$temp[,2], temp_max = temp$temp[,3])
+
+# Install and load package used to calculate daily rainfall
+install.packages('tidyverse')
+library(tidyverse)
+
+# Calculate daily rainfall (ignore time zone warnings)
+daily_rf <- do.call(rbind, by(wdf_G2F, paste0(wdf_G2F$location, '_', wdf_G2F$year), calculate_daily))
+daily_rf$location <- sapply(strsplit(rownames(daily_rf), '_'), function(x) x[1])
+rownames(daily_rf) <- NULL
+
+# Merge daily rainfall with temperature
+wdaily_G2F <- merge(daily_rf, daily_temp, by = c('date', 'location'))
+
+# Save intermediate file
+write.csv(wdaily_G2F, file = 'Data/OutputFiles/G2Fdaily.csv', quote = F, row.names = F)
+
+# Read NASA data and other datasets needed
 wd_NASA <- read.csv('Data/OutputFiles/NASAdaily.csv')
 pheno <- read.csv('Data/OutputFiles/phenotypes.csv')
 info_loc <- read.csv('Data/OutputFiles/info_loc.csv')
 
-# load library
-library(lubridate)
-
-# Selected source
+# After quality assessment, NASA data is used in cases of missing or corrupted G2F data 
 info_loc$source_temp <- c('G2F', 'NASA')[c(2,2,2,2,1,1,1,1,1,2,1,2,2,1,1,1,2,1,1,1,2,1,2,2,2,1,2,2,1,1,2,1,1,1,1,2,1,1,2,1,2,2,2,1,1,2,2,1,1,1,2,2)]
 info_loc$source_rain <- c('G2F', 'NASA')[c(2,2,2,2,2,1,1,2,1,2,2,2,2,1,1,1,2,2,1,1,2,1,2,2,2,2,2,2,2,1,2,1,1,1,1,2,2,2,1,1,2,2,2,2,2,2,1,1,1,2,2,2)]
 
-
-# Final weather data
+# Plots for quality assessment
 wd_final <- list()
 pdf('Data/OutputFiles/plots_collection.pdf')
 
@@ -32,7 +121,7 @@ for (i in 1:nrow(info_loc)) {
   itemp_min <- min(unlist(lapply(idata, function(x)x$temp_min)), na.rm = T)
   itemp_max <- max(unlist(lapply(idata, function(x)x$temp_max)), na.rm = T) * 1.2
   plot(as.Date(idate), rep(0, length(idate)), ylim = c(itemp_min, itemp_max),
-       cex = 0, xlab = 'Time (days)', ylab = 'Temperature (Â°C)',
+       cex = 0, xlab = 'Time (days)', ylab = 'Temperature (°C)',
        main = 'G2F and NASA data')
   for (j in 1:2){
     lines(as.Date(idata[[j]]$date), idata[[j]]$temp, col = j + 1, cex = .7)
@@ -52,7 +141,7 @@ for (i in 1:nrow(info_loc)) {
   leg_xali <- 1.11 # left indentation
   legcex <- 1 # legend size
   legxline <- 8 # line length
-
+  
   leglow <- (legylim[2] - legylim[1]) * legpos[2] + legylim[1]
   legran <- seq(legylim[2], leglow, length.out = length(leglab))
   legxran <- seq(legxlim[1], legxlim[2], length.out = as.numeric(legxlim[2] - legxlim[1]))
@@ -130,7 +219,6 @@ for (i in 1:nrow(info_loc)) {
 }
 dev.off()
 
-write.csv(info_loc, file = 'Data/OutputFiles/info_loc.csv', quote = F, row.names = F)
 # Save weather data
 wd_final <- do.call(rbind, wd_final)
 
@@ -143,4 +231,4 @@ wd_final$GDD <- wd_final$GDD - 10
 # Reorder columns
 wd_final <- wd_final[,c(1:13,16,14:15)]
 
-write.csv(wd_final, file = 'Data/OutputFiles/ConsensusData.csv', quote = F, row.names = F)
+write.csv(wd_final, file = 'Data/OutputFiles/G2Fdaily.csv', quote = F, row.names = F)
