@@ -3,7 +3,7 @@
 **Soil**: (**Fernando?**)
 Merge USDA and G2F. We will prioritize G2F data. We will use USDA primarily by adding to the G2F data variables that are in USDA but not in G2F. We should first identify those variables and discuss how usefult those could be. If we identify some, then we will need to discuss how to create a summary that is appropiate for the horizon being reported in G2F. 
 
-**Meta data**: request 2019 to Natalia. (**Marco?**)
+**Meta data**: request 2019 to Dayane. (**Fernando?**)
  
 **Fertilization**: complete file witn N/P/K total. (**Fernando ?**)
 
