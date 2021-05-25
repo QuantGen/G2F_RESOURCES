@@ -56,8 +56,8 @@ FROM sacatalog sac
                   'wtenthbar_r', 'wthirdbar_r', 'wfifteenbar_r', 'wsatiated_r', 'kwfact', 'caco3_r', 'gypsum_r', 'sar_r', 'ec_r', 'cec7_r',
                   'ecec_r', 'ph01mcacl2_r', 'ptotal_r', 'sumbases_r', 'freeiron_r', 'extracid_r', 'extral_r', 'pbray1_r')
     
-    hz_dept <- c(0, 10, 25, 50, 80, 100)
-    hz_depb <- c(10, 25, 50, 80, 100, 200)
+    hz_dept <- c(0, 10, 20, 30, 50, 80)
+    hz_depb <- c(10, 20, 30, 50, 80, 200)
     nhz <- length(unique(db2$compname))
     db3 <- data.frame(location = db2$Location[1], lat = db2$lat[1], lon = db2$lon[1], 
                       saverest = db2$saverest[1], muname = db2$muname[1], 
@@ -92,8 +92,11 @@ FROM sacatalog sac
 }
 
 # Read in the list of G2F environments and extract the data for each.
-envs <- read.csv('Data/OutputFiles/info_loc.csv', stringsAsFactors = F) %>% filter(!grepl("^ON", Location)) #for now have to filter out Ontario 
+envs <- read.csv('Data/OutputFiles/info_loc.csv', stringsAsFactors = F) 
+# For now have to filter out Ontario 
+envs <- envs[envs$Location != 'ONH2',]
 
+# Ignore warnings
 soil_info <- apply(envs[,c('Location', 'lat', 'lon')], 1, function(x) soil_data(x['Location'], x['lat'], x['lon']))
 
 soil_df <- do.call(rbind, soil_info)
