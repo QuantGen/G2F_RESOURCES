@@ -15,4 +15,4 @@ colnames(soil) <- c('location','year','hz_depb','ph','buffer_ph',
 # format year column
 soil$year <- sapply(strsplit(soil$year, '/'), function(x)x[3])
 
-write.csv(soil, file = 'Data/OutputFiles/g2f_soil.csv', quote = F, row.names = F)
+write.csv(soil, file = 'Data/OutputFiles/g2f_SoilData.csv', quote = F, row.names = F)
