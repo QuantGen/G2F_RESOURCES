@@ -93,7 +93,7 @@ wdaily_G2F <- merge(daily_rf, daily_temp, by = c('date', 'location'))
 write.csv(wdaily_G2F, file = 'Data/OutputFiles/G2Fdaily.csv', quote = F, row.names = F)
 
 # Read NASA data and other datasets needed
-wd_NASA <- read.csv('Data/OutputFiles/NASAdaily.csv')
+wd_NASA <- read.csv('Data/OutputFiles/NASA_WeatherData.csv')
 pheno <- read.csv('Data/OutputFiles/phenotypes.csv')
 info_loc <- read.csv('Data/OutputFiles/info_loc.csv')
 
@@ -231,4 +231,4 @@ wd_final$GDD <- wd_final$GDD - 10
 # Reorder columns
 wd_final <- wd_final[,c(1:13,16,14:15)]
 
-write.csv(wd_final, file = 'Data/OutputFiles/G2Fdaily.csv', quote = F, row.names = F)
+write.csv(wd_final, file = 'Data/OutputFiles/g2f_WeatherData.csv', quote = F, row.names = F)
