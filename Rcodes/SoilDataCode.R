@@ -107,4 +107,4 @@ soil_df$siltfine_r[is.na(soil_df$siltfine_r)] <- 0
 # replace comma for period
 soil_df$muname <- gsub(',', '.', soil_df$muname)
 
-write.csv(soil_df, 'Data/OutputFiles/SoilData.csv', row.names = F, quote = F)
+write.csv(soil_df, 'Data/OutputFiles/USDA_SoilData.csv', row.names = F, quote = F)
