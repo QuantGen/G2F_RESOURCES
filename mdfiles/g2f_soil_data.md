@@ -1,6 +1,6 @@
 The script reads and formats G2F soil data.
 
-Results are saved in [g2f_soil.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/g2f_soil.csv). Data dictionary for this file:
+Results are saved in [g2f_SoilData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/g2f_SoilData.csv). Data dictionary for this file:
 
 |Column|Description|
 |------|-----------|
