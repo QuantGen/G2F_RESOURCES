@@ -50,4 +50,4 @@ colnames(data2)[c(1, 3:6)] <- c('date', 'rainfall', 'temp', 'temp_min', 'temp_ma
 colnames(data2) <- casefold(colnames(data2))
 
 # Save data
-write.csv(data2, file = 'Data/OutputFiles/NASAdaily.csv', quote = F, row.names = F)
+write.csv(data2, file = 'Data/OutputFiles/NASA_WeatherData.csv', quote = F, row.names = F)
