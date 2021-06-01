@@ -1,4 +1,18 @@
- #### Pending from Meeting May 21, 2021
+#### Pending from Meeting Jun 1, 2021
+
+Generating a dataset with predictions of **GDD needed to flowering** by hybrid
+
+Extending the weather data with at least **two months before sowing**.
+
+Exploring the R package to implement **APSIM** (apsimx)
+
+Exploring **DSSAT**
+
+Quality checking and formatting of the **management data**, primarily fertilization time, source, and quantity.
+
+Creating a **dataset with a friendly format** ready to run the crop model. To work on this, we will need your help on defining which is the best format.
+
+#### Pending from Meeting May 21, 2021
  
 **Soil**: (**Fernando?**)
 Merge USDA and G2F. We will prioritize G2F data. We will use USDA primarily by adding to the G2F data variables that are in USDA but not in G2F. We should first identify those variables and discuss how usefult those could be. If we identify some, then we will need to discuss how to create a summary that is appropiate for the horizon being reported in G2F. 
