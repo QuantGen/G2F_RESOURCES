@@ -12,9 +12,7 @@ Quality checking and formatting of the **management data**, primarily fertilizat
 
 Creating a **dataset with a friendly format** ready to run the crop model. To work on this, we will need your help on defining which is the best format.
 
-
-
-
+---------------------------------------------------------------------------------
 
 #### Pending from Meeting May 21, 2021
  
