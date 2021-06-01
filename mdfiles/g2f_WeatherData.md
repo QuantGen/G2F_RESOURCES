@@ -24,6 +24,7 @@ The resulting file is [g2f_WeatherData.csv](https://github.com/QuantGen/G2F_RESO
 |t2mwet|(°C) Wet Bulb Temperature at 2 Meters| NASA |
 |ws2m| (m/s) Wind Speed at 2 Meters| NASA |
 |dnr| (kW-hr/m^2/day) Monthly Direct Normal Radiation| NASA |
+|dni| (kW-hr/m^2/day) Monthly Direct Normal Iradiation| NSRDB |
 |GDD| Daily Growing degree days with base temperature of 10 celsius degrees|  |
 |source_temp| Source of temperature information|  |
 |source_rain| Source of rainfall information|  |
