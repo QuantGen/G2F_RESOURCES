@@ -1,3 +1,16 @@
+#### Pending from Meeting Jun 8, 2021
+
+
+Check create new genotype in APSIM (Hybrid)
+
+Implement soil data
+
+Compare yield between simulation and real data
+
+
+---------------------------------------------------------------------------------
+
+
 #### Pending from Meeting Jun 1, 2021
 
 Generating a dataset with predictions of **GDD needed to flowering** by hybrid
