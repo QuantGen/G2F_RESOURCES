@@ -1,12 +1,12 @@
 #### Pending from Meeting Jun 8, 2021
 
+v0: Simulation with Clock, Soil, Weather
+
+v0: Check the results and compare with real data
 
 Check create new genotype in APSIM (Hybrid)
 
-Implement soil data
-
-Compare yield between simulation and real data
-
+Include weather data from G2F
 
 ---------------------------------------------------------------------------------
 
