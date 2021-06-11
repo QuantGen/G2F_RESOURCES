@@ -5,6 +5,7 @@ Results are saved in [USDA_SoilData.csv](https://github.com/QuantGen/G2F_RESOURC
 
 |Column|Description|
 |------|-----------|
+|year| G2F field year of trial |
 |location| G2F field location name |
 |lat| (decimal degrees) latitude of the location, used to get soil data |
 |lon| (decimal degrees) longitude of the location, used to get soil data |
