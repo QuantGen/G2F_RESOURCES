@@ -97,8 +97,7 @@ envs <- read.csv('Data/OutputFiles/info_loc.csv', stringsAsFactors = F)
 envs <- envs[envs$Location != 'ONH2',]
 
 # Ignore warnings
-soil_info <- apply(envs[,c('Location', 'lat', 'lon')], 1, function(x) soil_data(x['Location'], x['lat'], x['lon']))
-
+soil_info <- apply(envs[,c('year', 'Location', 'lat', 'lon')], 1, function(x) cbind(year = x['year'], soil_data(x['Location'], x['lat'], x['lon'])))
 soil_df <- do.call(rbind, soil_info)
 
 # siltco_r and siltfine_r are actually zeroes not NA, so we can replace those
