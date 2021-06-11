@@ -56,8 +56,8 @@ FROM sacatalog sac
                   'wtenthbar_r', 'wthirdbar_r', 'wfifteenbar_r', 'wsatiated_r', 'kwfact', 'caco3_r', 'gypsum_r', 'sar_r', 'ec_r', 'cec7_r',
                   'ecec_r', 'ph01mcacl2_r', 'ptotal_r', 'sumbases_r', 'freeiron_r', 'extracid_r', 'extral_r', 'pbray1_r')
     
-    hz_dept <- c(0, 10, 20, 30, 50, 80)
-    hz_depb <- c(10, 20, 30, 50, 80, 200)
+    hz_dept <- c(0, 15, 30, 60, 90, 120, 150)
+    hz_depb <- c(15, 30, 60, 90, 120, 150, 180)
     nhz <- length(unique(db2$compname))
     db3 <- data.frame(location = db2$Location[1], lat = db2$lat[1], lon = db2$lon[1], 
                       saverest = db2$saverest[1], muname = db2$muname[1], 
