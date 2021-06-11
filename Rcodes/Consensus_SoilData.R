@@ -2,6 +2,7 @@
 g2fsoil <- read.csv('Data/OutputFiles/g2f_SoilData.csv')
 usdasoil <- read.csv('Data/OutputFiles/USDA_SoilData.csv')
 
+
 # Prepare G2F data before merging
 g2fsoil$hz_depb <- g2fsoil$E.Depth * 2.5
 g2fsoil <- g2fsoil[g2fsoil$Field.ID != 'ONH1',]
@@ -11,16 +12,19 @@ g2fsoil$Field.ID <- gsub('W1H1', 'WIH1', g2fsoil$Field.ID)
 g2fsoil$Field.ID <- gsub('W1H2', 'WIH2', g2fsoil$Field.ID)
 g2fsoil <- g2fsoil[g2fsoil$Field.ID %in% unique(usdasoil$location),]
 g2fsoil$year <- sapply(strsplit(g2fsoil$Date.Reported, '/'), function(x) x[3])
+# Prepare USDA data
+usdasoil$year_loc <- paste0(usdasoil$year, '_', usdasoil$location)
+
 
 # Create Consensus data
 res <- list()
-for (loc in unique(usdasoil$location)) {
-  usda_in <- usdasoil$location == loc
-  g2f_in <- g2fsoil$Field.ID == loc
+for (year_loc in unique(usdasoil$year_loc)) {
+  year <- unlist(strsplit(year_loc, '_'))[1]
+  loc <- unlist(strsplit(year_loc, '_'))[2]
+  usda_in <- usdasoil$year_loc == year_loc 
+  g2f_in <- g2fsoil$Field.ID == loc & g2fsoil$year == year
   g2f_any <- rep(any(g2f_in), sum(usda_in))
-  year <- ifelse(any(g2f_any), max(g2fsoil$year[g2f_in]), NA)
-  if(!is.na(year)) g2f_in <- g2fsoil$Field.ID == loc & g2fsoil$year == year
-  
+
   res[[length(res) + 1]] <- data.frame(
     'location' = loc,
     'year' = year,
