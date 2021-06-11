@@ -2,7 +2,6 @@
 g2fsoil <- read.csv('Data/OutputFiles/g2f_SoilData.csv')
 usdasoil <- read.csv('Data/OutputFiles/USDA_SoilData.csv')
 
-
 # Prepare G2F data before merging
 g2fsoil$hz_depb <- g2fsoil$E.Depth * 2.5
 g2fsoil <- g2fsoil[g2fsoil$Field.ID != 'ONH1',]
@@ -11,50 +10,54 @@ g2fsoil$Field.ID <- gsub('NEHDry', 'NEH2', g2fsoil$Field.ID)
 g2fsoil$Field.ID <- gsub('W1H1', 'WIH1', g2fsoil$Field.ID)
 g2fsoil$Field.ID <- gsub('W1H2', 'WIH2', g2fsoil$Field.ID)
 g2fsoil <- g2fsoil[g2fsoil$Field.ID %in% unique(usdasoil$location),]
-
-# Prepare USDA data before merging
-usdanew <- usdasoil[0,]
-
-for (i in 1:nrow(g2fsoil)) {
-  tmp <- usdasoil[usdasoil$hz_depb <= g2fsoil$hz_depb[i] & usdasoil$location == g2fsoil$Field.ID[i],]
-  for (j in 1:ncol(tmp))
-    usdanew[i,j] <- ifelse(class(tmp[,j]) == 'character', tmp[1,j], mean(tmp[,j], na.rm = T))
-}
+g2fsoil$year <- sapply(strsplit(g2fsoil$Date.Reported, '/'), function(x) x[3])
 
 # Create Consensus data
-soil_data <- data.frame('location' = g2fsoil$Field.ID,
-                        'year' = sapply(strsplit(g2fsoil$Date.Reported, '/'), function(x)x[3]),
-                        'dept' = g2fsoil$hz_depb,
-                        'ph' = g2fsoil$X1.1.Soil.pH,
-                        'OM' = g2fsoil$Organic.Matter.LOI..,
-                        'N' = g2fsoil$Nitrate.N.ppm.N,
-                        'K' = g2fsoil$Potassium.ppm.K,
-                        'S' = g2fsoil$Sulfate.S.ppm.S,
-                        'Ca' = g2fsoil$Calcium.ppm.Ca,
-                        'Mg' = g2fsoil$Magnesium.ppm.Mg,
-                        'Na' = g2fsoil$Sodium.ppm.Na,
-                        'CEC' = g2fsoil$CEC.Sum.of.Cations.me.100g,
-                        'P' = g2fsoil$Mehlich.P.III.ppm.P,
-                        'sand' = g2fsoil$X..Sand,
-                        'silt' = g2fsoil$X..Silt,
-                        'clay' = g2fsoil$X..Clay,
-                        'sandvc' = usdanew$sandvc_r,
-                        'sandco' = usdanew$sandco_r,
-                        'sandmed' = usdanew$sandmed_r,
-                        'sandfine' = usdanew$sandfine_r,
-                        'sandvf' = usdanew$sandvf_r,
-                        'siltco' = usdanew$siltco_r,
-                        'siltfine' = usdanew$siltfine_r,
-                        'ksat' = usdanew$ksat_r,
-                        'awc' = usdanew$awc_r,
-                        'wthirdbar' = usdanew$wthirdbar_r,
-                        'wfifteenbar' = usdanew$wfifteenbar_r,
-                        'wsatiated' = usdanew$wsatiated_r,
-                        'kwfact' = usdanew$kwfact,
-                        'caco3' = usdanew$caco3_r,
-                        'sar' = usdanew$sar_r,
-                        'ec' = usdanew$ec_r,
-                        'cec7' = usdanew$cec7_r)
+res <- list()
+for (loc in unique(usdasoil$location)) {
+  usda_in <- usdasoil$location == loc
+  g2f_in <- g2fsoil$Field.ID == loc
+  g2f_any <- rep(any(g2f_in), sum(usda_in))
+  year <- ifelse(any(g2f_any), max(g2fsoil$year[g2f_in]), NA)
+  if(!is.na(year)) g2f_in <- g2fsoil$Field.ID == loc & g2fsoil$year == year
+  
+  res[[length(res) + 1]] <- data.frame(
+    'location' = loc,
+    'year' = year,
+    'dept' = paste(usdasoil$hz_dept,'-', usdasoil$hz_depb)[usda_in],
+    'ph' = ifelse(g2f_any, g2fsoil$X1.1.Soil.pH[g2f_in], usdasoil$ph01mcacl2_r[usda_in]),
+    'OM' = ifelse(g2f_any, g2fsoil$Organic.Matter.LOI..[g2f_in], usdasoil$om_r[usda_in]),
+    'N' = ifelse(g2f_any, g2fsoil$Nitrate.N.ppm.N[g2f_in], NA),
+    'K' = ifelse(g2f_any, g2fsoil$Potassium.ppm.K[g2f_in], NA),
+    'S' = ifelse(g2f_any, g2fsoil$Sulfate.S.ppm.S[g2f_in], NA),
+    'Ca' = ifelse(g2f_any, g2fsoil$Calcium.ppm.Ca[g2f_in], NA),
+    'Mg' = ifelse(g2f_any, g2fsoil$Magnesium.ppm.Mg[g2f_in], NA),
+    'Na' = ifelse(g2f_any, g2fsoil$Sodium.ppm.Na[g2f_in], NA),
+    'CEC' = ifelse(g2f_any, g2fsoil$CEC.Sum.of.Cations.me.100g[g2f_in], usdasoil$cec7_r[usda_in]),
+    'P' = ifelse(g2f_any, g2fsoil$Mehlich.P.III.ppm.P[g2f_in], usdasoil$ptotal_r[usda_in]),
+    'sand' = ifelse(g2f_any, g2fsoil$X..Sand[g2f_in], usdasoil$sandtotal_r[usda_in]),
+    'silt' = ifelse(g2f_any, g2fsoil$X..Silt[g2f_in], usdasoil$silttotal_r[usda_in]),
+    'clay' = ifelse(g2f_any, g2fsoil$X..Clay[g2f_in], usdasoil$claytotal_r[usda_in]),
+    'sandvc' = usdasoil$sandvc_r[usda_in],
+    'sandco' = usdasoil$sandco_r[usda_in],
+    'sandmed' = usdasoil$sandmed_r[usda_in],
+    'sandfine' = usdasoil$sandfine_r[usda_in],
+    'sandvf' = usdasoil$sandvf_r[usda_in],
+    'siltco' = usdasoil$siltco_r[usda_in],
+    'siltfine' = usdasoil$siltfine_r[usda_in],
+    'ksat' = usdasoil$ksat_r[usda_in],
+    'awc' = usdasoil$awc_r[usda_in],
+    'wthirdbar' = usdasoil$wthirdbar_r[usda_in],
+    'wfifteenbar' = usdasoil$wfifteenbar_r[usda_in],
+    'wsatiated' = usdasoil$wsatiated_r[usda_in],
+    'kwfact' = usdasoil$kwfact[usda_in],
+    'caco3' = usdasoil$caco3_r[usda_in],
+    'sar' = usdasoil$sar_r[usda_in],
+    'ec' = usdasoil$ec_r[usda_in],
+    'cec7' = usdasoil$cec7_r[usda_in])
+}
+
+res0 <- do.call(rbind, res)
 
 # Save consensus data
-write.csv(soil_data, file = 'Data/OutputFiles/SoilData.csv', quote = F, row.names = F)
+write.csv(res0, file = 'Data/OutputFiles/SoilData.csv', quote = F, row.names = F)
