@@ -6,7 +6,7 @@ The script merges G2F and USDA soil data to create a consensus [file](https://gi
 |------|-----------|
 |location| G2F field location name |
 |year| year when the record was saved |
-|dept| (cm) distance from the surface to the bottom of the soil sampled |
+|dept| (cm) distance from the surface to the bottom of the horizon |
 |ph| soil pH level |
 |OM| (%) Organic matter |
 |N| (ppm) Available nitrates |
