@@ -1,6 +1,3 @@
-setwd('c:/Users/fmagu/OneDrive/NewWorks/G2F_RESOURCES/')
-
-
 # Load functions
 source('Tools/Functions.R')
 
