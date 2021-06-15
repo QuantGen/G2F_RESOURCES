@@ -36,6 +36,12 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 |---------|------|------|------|
 | GDD to silking | [data_model.rdata](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/GDDtoFlowering/data_model.rdata) | [ConsensusData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ConsensusData.csv) ; [phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/GDDPredictFlowering.md) |
 
+### Run APSIM Crop model to generate environmental covariates
+
+| Version | Output | Input | Script | Description |
+|---------|--------|-------|--------|-------------|
+|   v0    | [v0Sim.csv]() | [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv) | [link]() | [link]() |
+| v0 Post hoc |        | [v0Sim.csv]() | [link]() | [link]() |
 
 <!-- 
  - [Tools to examine weather data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)
