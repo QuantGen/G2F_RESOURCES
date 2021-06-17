@@ -1,3 +1,11 @@
 <p align="center">
-<img src="https://latex.codecogs.com/gif.latex?%5Ctextbf%7By%7D_k%3D%5Cmu_k%5Ctextbf%7B1%7D&plus;%5Ctextbf%7Bg%7D_k&plus;%5Cboldsymbol%7B%5Cvarepsilon%7D_k">
+<img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/observed_VS_simulated_yield.png">
+</p>
+
+<p align="center">
+<img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/observed_VS_simulated_yield_2018.png">
+</p>
+
+<p align="center">
+<img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/observed_VS_simulated_yield_2019.png">
 </p>
