@@ -1,7 +1,7 @@
-rm(list=ls())
+
 library(ggplot2)
 
-setwd("/Users/marcolopez/Dropbox/projects/G2F")
+#setwd("/Users/marcolopez/Dropbox/projects/G2F")
 # Load functions
 source('Tools/Functions.R')
 
