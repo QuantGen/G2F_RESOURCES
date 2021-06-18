@@ -34,4 +34,4 @@ weather_data <- lapply(weather_data, function(x) {
   return(x)  
 })
 weather_data <- do.call(rbind, weather_data)
-write.csv(weather_data, file = 'APSIM_sim/Weather_data.csv', row.names = F, quote = F)
+write.csv(weather_data, file = 'Data/APSIM_sim/Weather_data.csv', row.names = F, quote = F)
