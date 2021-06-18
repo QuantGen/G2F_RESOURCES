@@ -94,4 +94,4 @@ for (i in 1:nrow(g2f_loc)) {
 }
 
 # Save simulation
-save(sim, file = 'APSIM_sim/v0Sim.rdata')
+save(sim, file = 'Data/APSIM_sim/v0Sim.rdata')
