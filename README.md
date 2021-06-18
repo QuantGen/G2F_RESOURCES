@@ -38,7 +38,7 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 
 ### Run APSIM Crop model to generate environmental covariates
 
-[Weather data]() with APSIM downloaded using [this script](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/APSIM_getWeather.R)
+[Weather data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/APSIM_sim/Weather_data.csv) with APSIM downloaded using [this script](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/APSIM_getWeather.R)
 
 | Version | Output | Input | Script | Description |
 |---------|--------|-------|--------|-------------|
