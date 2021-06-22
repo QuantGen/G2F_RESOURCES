@@ -1,4 +1,4 @@
-```
+```{r}
 source('Tools/Functions.R')
 
 library(lme4)
@@ -75,26 +75,28 @@ mean0 <- as.vector(fixef(mod1)["(Intercept)"])
 mod1_blup <- mean0 + ranef(mod1)$source
 VarCorr(mod1)
 ```
+```
 > VarCorr(mod1)
  Groups   Name        Std.Dev.
  source   (Intercept) 27.111  
  location (Intercept) 61.244  
  Residual             35.593  
- 
 ```
+```{r}
 ## Run LMER for GDD to harvesting
 mod2 <- lmer(gdd_harv ~ year + (1|location) + (1|source), data = pheno2)
 mean0 <- as.vector(fixef(mod2)["(Intercept)"])
 mod2_blup <- mean0 + ranef(mod2)$source
 VarCorr(mod2)
 ```
+```
 > VarCorr(mod2)
  Groups   Name        Std.Dev.  
  source   (Intercept) 4.3013e-04
  location (Intercept) 3.1328e+02
  Residual             3.8403e+01
- 
 ```
+```{r}
 dat2 <- aggregate(gdd_silk~source,data=pheno2,mean)
 dat3 <- aggregate(gdd_harv~source,data=pheno2,mean)
 if(sum(dat2$source != dat3$source) >0) stop("Matching error")
@@ -114,5 +116,7 @@ plot(dat2[,grep("gdd_harv",colnames(dat2))])
 <img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/trash2.png" width="450">
 </p>
 
+``
 write.csv(dat2,"Data/OutputFiles/GDD_hat_by_hybrids.csv",row.names=F)
+``
 
