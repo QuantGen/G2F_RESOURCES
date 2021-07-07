@@ -30,6 +30,7 @@ The resulting file is [phenotypes.csv](https://github.com/QuantGen/G2F_RESOURCES
 |rep| (integer) Replicate block |
 |row_spacing| (inches) Space between rows |
 |rows| (integer) Number of rows per plot |
+|seed_number| (integer) Number of seeds sown per plot |
 |source| Code assigned by project identifying hybrid or commercial hybrid name in case of local check |
 |test_weight| (lbs/bu) Shelled grain weight per bushel |
 |year| (integer) year of harvest |
