@@ -13,9 +13,9 @@ source('Tools/Functions.R')
 
 # Rename columns
 col_names <- data.frame(
-  old_names = c('year', '(field.*location)', 'replicate', '(plot.*area)', 'seed', '(date.*planted)', '(date.*harvest)',
+  old_names = c('year', '(field.*location)', 'pedigree', 'source', 'replicate', '(plot.*area)', 'seed', '(date.*planted)', '(date.*harvest)',
                 'anthesis', '(silking.*date)', '(stand.*plants)', '(grain.*moisture)', '(grain.*yield)'),
-  new_names = c('year', 'location', 'rep', 'plot_area', 'seed_number', 'date_plant', 'date_harvest', 'date_anthesis',
+  new_names = c('year', 'location', 'pedigree', 'source', 'rep', 'plot_area', 'seed_number', 'date_plant', 'date_harvest', 'date_anthesis',
                 'date_silking', 'plants_stand', 'grain_moisture', 'yield'))
 for (i in 1:nrow(col_names)) pData <- rename(col_names$old_names[i], col_names$new_names[i], pData)
 
