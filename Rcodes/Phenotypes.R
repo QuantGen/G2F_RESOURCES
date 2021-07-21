@@ -26,27 +26,28 @@ pheno <- do.call(rbind, lapply(pData, function(x) x[,col_names$new_names]))
 pheno <- pheno[rowSums(is.na(pheno)) != ncol(pheno),]
 pheno <- pheno[!is.na(pheno$yield) & !pheno$yield == 'NA',]
 
-# Remove Germany
+# Remove Germany and Ontario, Canada
 pheno <- pheno[!pheno$location == 'GEH1',]
+pheno <- pheno[!pheno$location == 'ONH1',]
+pheno <- pheno[!pheno$location == 'ONH2',]
 
 # Rename locations
-pheno$location[pheno$location == 'IAH1a'] <- 'IAH1'
-pheno$location[pheno$location == 'IAH1b'] <- 'IAH1'
-pheno$location[pheno$location == 'IAH1c'] <- 'IAH1'
-pheno$location[pheno$location == 'NEH3'] <- 'NEH2'
-pheno$location[pheno$location == 'NEH4'] <- 'NEH2'
+pheno$location[pheno$location == 'IAH1a'] <- 'IAH2'
+pheno$location[pheno$location == 'IAH1b'] <- 'IAH3'
+pheno$location[pheno$location == 'IAH1c'] <- 'IAH4'
 pheno$location[pheno$location == 'TXH1-Dry'] <- 'TXH1'
 pheno$location[pheno$location == 'TXH1-Early'] <- 'TXH1'
 pheno$location[pheno$location == 'TXH1-Late'] <- 'TXH1'
 pheno$location[pheno$location %in% c('TXH2', 'TXH3')] <- 'TXH1'
-pheno$location[pheno$location == 'ONH1'] <- 'ONH2'
-pheno$location[pheno$location == 'NEH1'] <- 'NEH2'
 
 # Change yield measure to kg/ha
 pheno$yield <- as.numeric(pheno$yield) * 62.77
 
-# Change date format
-for (i in grep('date', colnames(pheno)))
-  pheno[,i] <- as.Date(strptime(pheno[,i], "%m/%d/%y"))
+# Fix date format
+pheno$date_plant <- fix_date(pheno$date_plant)
+pheno$date_harvest <- fix_date(pheno$date_harvest)
+pheno$date_anthesis <- fix_date(pheno$date_anthesis)
+pheno$date_silking <- fix_date(pheno$date_silking)
 
+# Save file
 write.csv(pheno, file = 'Data/OutputFiles/phenotypes.csv', quote = F, row.names = F)
