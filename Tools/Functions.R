@@ -8,6 +8,28 @@ rename <- function(old_name, new_name, list) {
 
 #####
 
+# Fix date format
+fix_date <- function(date_as_character) {
+  tmp <- strsplit(date_as_character, '/')
+  nas <- sapply(tmp, length) != 3
+  tmp2 <- tmp[!nas]
+  
+  d1 <- sapply(tmp2, function(x) x[1])
+  d2 <- sapply(tmp2, function(x) x[2])
+  d3 <- sapply(tmp2, function(x) x[3])
+  d3[nchar(d3) == 2] <- paste0('20', d3[nchar(d3) == 2])
+  swap <- which(as.numeric(d1) > 12)
+  d1_swap <- d1[swap]
+  d1[swap] <- d2[swap]
+  d2[swap] <- d1_swap
+  res_dates <- as.Date(paste0(d1,'/', d2, '/', d3), format = '%m/%d/%Y')
+  res <- as.Date(rep(NA, length(date_as_character)))
+  res[!nas] <- res_dates
+  return(res)
+}
+
+#####
+               
 # Calculate daily rainfall from a dataset with columns 'valid' and 'rainfall'
 
 calculate_daily <- function(x) {
