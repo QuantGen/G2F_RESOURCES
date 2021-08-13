@@ -6,7 +6,7 @@ We want to generate environmental covariates that are informative of the non-gen
 
 #### V1 Simulation
 The V1 simulations is an improvement in terms of the input that goes into the simulation. As V0 downloads soil data and weather data, but V1 does it for the past 10 years. This reduces the dependancy on the initial water parameter, as it calculates the water balance for each year.  
-We formed 3 clusters of environments based on weather data for the past 10 years and calculated the GDD to flowering that a generic hybrid require on each cluster. This generic hybrid represents the environmental average. With this, the V1 code adjust the simulated flowering date to the average of the measured flowering date.  
+We formed 3 clusters of environments based on weather data for the past 10 years and calculated the GDD to flowering (a.k.a. silking) that a generic hybrid require on each cluster. This generic hybrid represents the environmental average. With this, the V1 code adjust the simulated flowering date to the average of the measured flowering date.  
 In APSIM NG we use the GDD required to juvenile state and convert this to GDD to flowering by multiplying by 0.4. Although this number is arbitrary, we found that it results in a good correlation between simulated flowering date and the environmental average of flowering date.   
 V1 also incorporates the average plant density used on each environment directly calculated from the phenotype data.
 
