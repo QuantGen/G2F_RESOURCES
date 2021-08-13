@@ -1,8 +1,5 @@
-
-library(ggplot2)
-
-#setwd("/Users/marcolopez/Dropbox/projects/G2F")
 # Load functions
+library(ggplot2)
 source('Tools/Functions.R')
 
 SimVersion <- "v0"
