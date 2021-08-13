@@ -1,4 +1,5 @@
-The simulation results were collapsed into 2 periods, the first starts at sowing and ends at harvesting and the second period starts -30 days before flowering and ends +15 days after flowering.
+The simulation results are in a daily format. We collapsed them into 2 periods, the first starts at sowing and ends at harvesting and the second period starts -30 days before flowering and ends +15 days after flowering.  
+For period 1 each environmental covariate was accumulated and for period 2 the average was computed.  
 
 
 Simulated flowering date vs environtmental average flowering date.
