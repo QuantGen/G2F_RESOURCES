@@ -1,11 +1,11 @@
 
-Simulated flowering date vs environtmental average flowering date
+Simulated flowering date vs environtmental average flowering date.
 
 <p align="center">
 <img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/simv1_image1.png" width="450">
 </p>
 
-Map of environment clusters and GDD to flowering for an average maize hybrid
+Map of environment clusters and GDD to flowering for an average maize hybrid.
 
 <p align="center">
 <img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/simv1_image2.png" width="450">
