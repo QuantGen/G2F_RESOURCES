@@ -4,31 +4,31 @@ The simulation results are in a daily format. We collapsed them into 2 periods, 
 For period 1 each environmental covariate was accumulated and for period 2 the average was computed.  
 
 
-Simulated flowering date vs environtmental average flowering date.
+Figure 1. Simulated flowering date vs environtmental average flowering date.
 
 <p align="center">
 <img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/simv1_image1.png" width="450">
 </p>
 
-Map of environment clusters and GDD to flowering for an average maize hybrid.
+Figure 2. Map of environment clusters and GDD to flowering for an average maize hybrid.
 
 <p align="center">
 <img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/simv1_image2.png" width="450">
 </p>
 
-Conditional scatterplot of simulated yield vs average yield by environment.
+Figure 3. Conditional scatterplot of simulated yield vs average yield by environment.
 
 <p align="center">
 <img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/simv1_image3.png" width="450">
 </p>
 
-First 10 environmental covariates colored by cluster. Period 1: sum from sowing to harvesting.
+Figure 4. First 10 environmental covariates colored by cluster. Period 1: sum from sowing to harvesting.
 
 <p align="center">
 <img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/simv1_image4.png" width="450">
 </p>
 
-First 10 environmental covariates colored by cluster. Period 2: average from around flowering (-30/+15 days).
+Figure 5. First 10 environmental covariates colored by cluster. Period 2: average from around flowering (-30/+15 days).
 
 <p align="center">
 <img src="https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/Images/simv1_image5.png" width="450">
