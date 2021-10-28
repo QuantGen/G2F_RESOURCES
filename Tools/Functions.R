@@ -13,7 +13,7 @@ fix_date <- function(date_as_character) {
   tmp <- strsplit(date_as_character, '/')
   nas <- sapply(tmp, length) != 3
   tmp2 <- tmp[!nas]
-  
+
   d1 <- sapply(tmp2, function(x) x[1])
   d2 <- sapply(tmp2, function(x) x[2])
   d3 <- sapply(tmp2, function(x) x[3])
@@ -38,9 +38,9 @@ calculate_daily <- function(x) {
   require(tidyverse)
   options(dplyr.summarise.inform = FALSE) # added
   if (!all(c('rainfall', 'valid') %in% colnames(x))) stop('columns named (rainfall) and (valid) are needed.')
-  precip <- x %>% 
-    filter(!is.na(rainfall)) %>% 
-    select(valid, rainfall) %>% 
+  precip <- x %>%
+    filter(!is.na(rainfall)) %>%
+    select(valid, rainfall) %>%
     mutate(date = with_tz(as.POSIXct(valid, tz='UCT'),
                           ""),
            date = date-dst(date)*3600,
@@ -48,18 +48,18 @@ calculate_daily <- function(x) {
            month = month(date),
            day = day(date),
            hour = hour(date),
-           minute = minute(date)) %>% 
-    group_by(year, month, day, hour) 
-  
+           minute = minute(date)) %>%
+    group_by(year, month, day, hour)
+
   modalminute <- precip %>%
-    arrange(desc(minute), .by_group=TRUE) %>% 
-    mutate(maxminute = minute[which.max(rainfall)]) %>% 
+    arrange(desc(minute), .by_group=TRUE) %>%
+    mutate(maxminute = minute[which.max(rainfall)]) %>%
     {which.max(tabulate(.$maxminute))}
-  
-  prec <- precip %>% 
-    filter(minute <= modalminute) %>% 
-    summarize(hourlyprecip = max(rainfall, na.rm=TRUE)) %>% 
-    group_by(year, month, day) %>% 
+
+  prec <- precip %>%
+    filter(minute <= modalminute) %>%
+    summarize(hourlyprecip = max(rainfall, na.rm=TRUE)) %>%
+    group_by(year, month, day) %>%
     summarize('rainfall' = sum(hourlyprecip, na.rm=TRUE))
   prec <- as.data.frame(prec)
   prec$date <- date(ISOdate(prec$year, prec$month, prec$day))
@@ -84,10 +84,10 @@ getWeatherASOS <- function(time_period = NA, network = "IA_ASOS", sid = NA) {
     service <- paste(service, "data=all&tz=Etc/UTC&format=comma&latlon=yes&", sep = "")
     service <- paste(service, "year1=", year(time_period)[1], "&month1=", month(time_period)[1], "&day1=", mday(time_period)[1], "&", sep = "")
     service <- paste(service, "year2=", year(time_period)[2], "&month2=", month(time_period)[2], "&day2=", mday(time_period)[2], "&", sep = "")
-    
+
     uri2 <- paste(service, "station=", sid, sep = '')
     data_table <- read.table(uri2, header = T, sep = ',')
-    
+
     return(data_table)
   }
 }
@@ -136,7 +136,7 @@ getWeatherNOAA <- function(time_period = c('2018-01-01', '2018-12-31'), sid = 'Z
 calcGDD <- function(wdata, phenotype, envCol = 'env', intCol = c('date_plant', 'date_silking'), basetemp = 10) {
   # works with celsius degrees only
   if (!(envCol %in% colnames(wdata) & envCol %in% colnames(phenotype))) stop('envCol must be in colnames of wdata and phenotype')
-  
+
   phenotype <- phenotype[order(phenotype$env),]
   phenotype$GDD <- NA
   phenotype[,intCol[1]] <- as.Date(phenotype[,intCol[1]])
@@ -145,7 +145,7 @@ calcGDD <- function(wdata, phenotype, envCol = 'env', intCol = c('date_plant', '
   phenotype <- phenotype[!is.na(phenotype[,intCol[1]]),]
   phenotype <- phenotype[!is.na(phenotype[,intCol[2]]),]
   phenotype <- phenotype[phenotype[,envCol] %in% unique(wdata[,envCol]),]
-  
+
   for (env in unique(phenotype$env)) {
     envi <- wdata[wdata$env == env, c('date', 'temp')]
     if (nrow(envi) > 0){
@@ -163,24 +163,57 @@ calcGDD <- function(wdata, phenotype, envCol = 'env', intCol = c('date_plant', '
   return(phenotype)
 }
 
+#===================================================================
 
+search_apsimx2 <- function(tmp, keyword, return_lvls = FALSE) {
+  lvls <- vector()
+  for (i in 1:5) {
+    sapp <- sapply(tmp$Children, function(x) length(grep(keyword, unlist(capture.output(str(x))))) > 0)
+    if (length(sapp) == 0) break
+    if (length(sapp) == 1) if (!sapp) break
+    lvls[i] <- which(sapp)
+    tmp <- tmp$Children[[lvls[i]]]
+  }
+  if (return_lvls) {
+    return(lvls)
+  } else {
+    return(tmp)
+  }
+}
+
+#search_apsimx <- function(tmp, keyword, return_lvls = FALSE) {
+#  lvls <- vector()
+#  for (i in 1:5) {
+#    sapp <- sapply(tmp$Children, function(x) length(grep(keyword, unlist(capture.output(str(x))))) > 0)
+#    if (length(sapp) == 0) break
+#    lvls[i] <- which(sapp)
+#    tmp <- tmp$Children[[lvls[i]]]
+#  }
+#  if (return_lvls) {
+#    return(lvls)
+#  } else {
+#    return(tmp)
+#  }
+#}
+
+#===================================================================
 # New version of edit APSIM
-
-
-edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL, 
+# file=simfile; src.dir=simdir; node = 'Cultivar'; overwrite = T; verbose = F; parm = 'Name'; value = 'Custom'
+# wrt.dir=NULL; soil.child="Metadata"; manager.child = NULL;  edit.tag = "-edited"; parm.path = NULL
+edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
                              node = c("Clock", 'Report', 'Cultivar',
-                                      "Weather", "Soil", "SurfaceOrganicMatter", 
-                                      "MicroClimate", "Crop", "Manager", "Other"), 
-                             soil.child = c("Metadata", "Water", "SoilWater", 
-                                            "Organic", "Physical", "Analysis", 
-                                            "Chemical", "InitialWater", "Sample"), 
-                             manager.child = NULL, parm = NULL, value = NULL, overwrite = FALSE, 
-                             edit.tag = "-edited", parm.path = NULL, root, verbose = TRUE) 
+                                      "Weather", "Soil", "SurfaceOrganicMatter",
+                                      "MicroClimate", "Crop", "Manager", "Other"),
+                             soil.child = c("Metadata", "Water", "SoilWater",
+                                            "Organic", "Physical", "Analysis",
+                                            "Chemical", "InitialWater", "Sample"),
+                             manager.child = NULL, parm = NULL, value = NULL, overwrite = FALSE,
+                             edit.tag = "-edited", parm.path = NULL, root, verbose = TRUE)
 {
   #.check_apsim_name(file)
-  if (missing(wrt.dir)) 
+  if (missing(wrt.dir))
     wrt.dir <- src.dir
-  file.names <- dir(path = src.dir, pattern = ".apsimx$", 
+  file.names <- dir(path = src.dir, pattern = ".apsimx$",
                     ignore.case = TRUE)
   if (length(file.names) == 0) {
     stop("There are no .apsimx files in the specified directory to edit.")
@@ -189,9 +222,9 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
   soil.child <- match.arg(soil.child)
   edited.child <- "none"
   file <- match.arg(file, file.names)
-  if (apsimx_filetype(file = file, src.dir = src.dir) != "json") 
+  if (apsimx_filetype(file = file, src.dir = src.dir) != "json")
     stop("This function only edits JSON files")
-  apsimx_json <- jsonlite::read_json(paste0(src.dir, "/", 
+  apsimx_json <- jsonlite::read_json(paste0(src.dir, "/",
                                             file))
   wcore <- grep("Core.Simulation", apsimx_json$Children)
   if (length(wcore) > 1) {
@@ -203,50 +236,33 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     else {
       if (length(root) == 1) {
         wcore1 <- grep(as.character(root), apsimx_json$Children)
-        if (length(wcore1) == 0 || length(wcore1) > 1) 
+        if (length(wcore1) == 0 || length(wcore1) > 1)
           stop("no root node label found or root is not unique")
         parent.node <- apsimx_json$Children[[wcore1]]$Children
       }
       else {
-        root.node.0.names <- sapply(apsimx_json$Children, 
+        root.node.0.names <- sapply(apsimx_json$Children,
                                     function(x) x$Name)
         wcore1 <- grep(as.character(root[1]), root.node.0.names)
         root.node.0 <- apsimx_json$Children[[wcore1]]
-        root.node.0.child.names <- sapply(root.node.0$Children, 
+        root.node.0.child.names <- sapply(root.node.0$Children,
                                           function(x) x$Name)
         wcore2 <- grep(as.character(root[2]), root.node.0.child.names)
         parent.node <- apsimx_json$Children[[wcore1]]$Children[[wcore2]]$Children
       }
     }
-  }
-  else {
+  }else {
     parent.node <- apsimx_json$Children[[wcore]]$Children
   }
-  
-  search_apsimx <- function(tmp, keyword, return_lvls = FALSE) {
-    lvls <- vector()
-    for (i in 1:5) {
-      sapp <- sapply(tmp$Children, function(x) length(grep(keyword, unlist(capture.output(str(x))))) > 0)
-      if (length(sapp) == 0) break
-      if (length(sapp) == 1) if (!sapp) break
-      lvls[i] <- which(sapp)
-      tmp <- tmp$Children[[lvls[i]]]
-    }
-    if (return_lvls) {
-      return(lvls)
-    } else {
-      return(tmp)
-    }
-  }
-  
+
   if (node == "Clock") {
     parm.choices <- c("Start", "End")
     parm <- match.arg(parm, choices = parm.choices, several.ok = TRUE)
     wlc <- function(x) grepl("Clock", x$Name)
     wlcl <- sapply(parent.node, FUN = wlc)
-    start <- grep("Start", names(parent.node[wlcl][[1]]), 
+    start <- grep("Start", names(parent.node[wlcl][[1]]),
                   ignore.case = TRUE, value = TRUE)
-    end <- grep("End", names(parent.node[wlcl][[1]]), 
+    end <- grep("End", names(parent.node[wlcl][[1]]),
                 ignore.case = TRUE, value = TRUE)
     if (length(parm) == 1) {
       if (parm == "Start") {
@@ -279,14 +295,14 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     soil.node0 <- soil.node[[1]]$Children
     if (soil.child == "Metadata") {
       edited.child <- soil.child
-      metadata.parms <- c("RecordNumber", "ASCOrder", 
-                          "ASCSubOrder", "SoilType", "LocalName", 
-                          "Site", "NearestTown", "Region", 
-                          "State", "Country", "NaturalVegetation", 
-                          "ApsoilNumber", "Latitude", "Longitude", 
-                          "LocationAccuracy", "DataSource", 
+      metadata.parms <- c("RecordNumber", "ASCOrder",
+                          "ASCSubOrder", "SoilType", "LocalName",
+                          "Site", "NearestTown", "Region",
+                          "State", "Country", "NaturalVegetation",
+                          "ApsoilNumber", "Latitude", "Longitude",
+                          "LocationAccuracy", "DataSource",
                           "Comments")
-      if (!all(parm %in% metadata.parms)) 
+      if (!all(parm %in% metadata.parms))
         stop("parm name(s) might be wrong")
       for (i in seq_along(parm)) {
         soil.node[[1]][[parm[i]]] <- value[i]
@@ -321,14 +337,14 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     }
     if (soil.child == "SoilWater") {
       edited.child <- soil.child
-      wswn <- grep("^SoilWater", sapply(soil.node[[1]]$Children, 
+      wswn <- grep("^SoilWater", sapply(soil.node[[1]]$Children,
                                         function(x) x$Name))
       soil.soilwater.node <- soil.node[[1]]$Children[[wswn]]
-      soilwat.parms <- c("SummerDate", "SummerU", 
-                         "SummerCona", "WinterDate", "WinterU", 
-                         "WinterCona", "DiffusConst", "DiffusSlope", 
-                         "Salb", "CN2Bare", "CNRed", 
-                         "CNCov", "Slope", "DischargeWidth", 
+      soilwat.parms <- c("SummerDate", "SummerU",
+                         "SummerCona", "WinterDate", "WinterU",
+                         "WinterCona", "DiffusConst", "DiffusSlope",
+                         "Salb", "CN2Bare", "CNRed",
+                         "CNCov", "Slope", "DischargeWidth",
                          "CatchmentArea")
       if (parm %in% soilwat.parms) {
         for (i in seq_along(parm)) {
@@ -336,7 +352,7 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
         }
       }
       else {
-        if (!parm %in% c("SWCON", "KLAT")) 
+        if (!parm %in% c("SWCON", "KLAT"))
           stop("parameter is likely incorrect")
         for (i in 1:length(soil.soilwater.node[[parm]])) {
           soil.soilwater.node[[parm]][[i]] <- value[i]
@@ -356,7 +372,7 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
       edited.child <- "Organic"
       wsomn <- grepl("Organic", soil.node0)
       soil.om.node <- soil.node0[wsomn][[1]]
-      som.parms1 <- c("RootCN", "EnrACoeff", 
+      som.parms1 <- c("RootCN", "EnrACoeff",
                       "EnrBCoeff")
       if (parm %in% som.parms1) {
         soil.om.node[[parm]] <- value
@@ -372,7 +388,7 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
       edited.child <- soil.child
       wan <- grepl(soil.child, soil.node0)
       soil.analysis.node <- soil.node0[wan][[1]]
-      #if (parm != "PH") 
+      #if (parm != "PH")
       #  stop("only PH can be edited, use 'edit_apsimx_replace_soil_profile instead")
       #if (parm == "PH") {
       for (i in 1:length(soil.analysis.node[[parm]])) {
@@ -385,7 +401,7 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
       edited.child <- "InitialWater"
       wiwn <- grepl("InitialWater", soil.node0)
       soil.initialwater.node <- soil.node0[wiwn][[1]]
-      siw.parms <- c("PercentMethod", "FractionFull", 
+      siw.parms <- c("PercentMethod", "FractionFull",
                      "DepthWetSoil")
       parm <- match.arg(parm, choices = siw.parms)
       soil.initialwater.node[[parm]] <- value
@@ -403,7 +419,7 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     core.zone.node[wsn] <- soil.node
   }
   if (node == "SurfaceOrganicMatter") {
-    wsomn <- grepl("Models.Surface.SurfaceOrganicMatter", 
+    wsomn <- grepl("Models.Surface.SurfaceOrganicMatter",
                    core.zone.node)
     som.node <- core.zone.node[wsomn][[1]]
     if (som.node$Name != "SurfaceOrganicMatter") {
@@ -436,27 +452,27 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
   if (node == "Other") {
     upp <- strsplit(parm.path, ".", fixed = TRUE)[[1]]
     upp.lngth <- length(upp)
-    if (upp.lngth < 5) 
+    if (upp.lngth < 5)
       stop("Parameter path too short?")
-    if (upp.lngth > 10) 
+    if (upp.lngth > 10)
       stop("Cannot handle this yet")
-    if (apsimx_json$Name != upp[2]) 
+    if (apsimx_json$Name != upp[2])
       stop("Simulation root name does not match")
     wl3 <- which(upp[3] == sapply(apsimx_json$Children, function(x) x$Name))
-    if (length(wl3) == 0) 
+    if (length(wl3) == 0)
       stop("Could not find parameter at level 3")
     n3 <- apsimx_json$Children[[wl3]]
     wl4 <- which(upp[4] == sapply(n3$Children, function(x) x$Name))
-    if (length(wl4) == 0) 
+    if (length(wl4) == 0)
       stop("Could not find parameter at level 4")
     if (upp.lngth == 5) {
       if (upp[5] %in% names(n3$Children[[wl4]])) {
         apsimx_json$Children[[wl3]]$Children[[wl4]][[upp[5]]] <- value
       }
       else {
-        wl5 <- which(upp[5] == sapply(n3$Children[[wl4]]$Children, 
+        wl5 <- which(upp[5] == sapply(n3$Children[[wl4]]$Children,
                                       function(x) x$Name))
-        if (length(wl5) == 0) 
+        if (length(wl5) == 0)
           stop("Could not find parameter at level 5")
         apsimx_json$Children[[wl3]]$Children[[wl4]]$Children[[wl5]][[upp[5]]] <- value
       }
@@ -464,7 +480,7 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     if (upp.lngth == 6) {
       n4 <- apsimx_json$Children[[wl3]]$Children[[wl4]]
       wl5 <- which(upp[5] == sapply(n4$Children, function(x) x$Name))
-      if (length(wl5) == 0) 
+      if (length(wl5) == 0)
         stop("Could not find parameter at level 5")
       if (upp[6] %in% names(n4$Children[[wl5]])) {
         apsimx_json$Children[[wl3]]$Children[[wl4]]$Children[[wl5]][[upp[6]]] <- value
@@ -472,14 +488,14 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
       else {
         if ("Parameters" %in% names(n4$Children[[wl5]])) {
           wp <- grep(upp[6], n4$Children[[wl5]]$Parameters)
-          if (length(wp) == 0) 
+          if (length(wp) == 0)
             stop("Could not find parameter at level 6 (Parameter)")
           apsimx_json$Children[[wl3]]$Children[[wl4]]$Children[[wl5]]$Parameters[[wp]]$Value <- value
         }
         else {
-          wl6 <- which(upp[6] == sapply(n4$Children[[wl5]]$Children, 
+          wl6 <- which(upp[6] == sapply(n4$Children[[wl5]]$Children,
                                         function(x) x$Name))
-          if (length(wl6) == 0) 
+          if (length(wl6) == 0)
             stop("Could not find parameter at level 6")
           apsimx_json$Children[[wl3]]$Children[[wl4]]$Children[[wl5]]$Children[[wl6]][[upp[6]]] <- value
         }
@@ -527,14 +543,14 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     }
   }
   if (node == 'Cultivar') {
-    lvls <- search_apsimx(apsimx_json, 'Models.PMF.Plant, Models', T)
-    
+    lvls <- search_apsimx2(apsimx_json, 'Models.PMF.Plant, Models', T)
+
     if(length(grep('Models.PMF.Cultivar, Models', capture.output(str(apsimx_json)), ignore.case = T)) == 0) {
       x <- list(list())
       x[[1]]$`$type` <- 'Models.PMF.Cultivar, Models'
       x[[1]]$Command <- list('[Phenology].Juvenile.Target.FixedValue = 110',
                              '[Phenology].GrainFilling.Target.FixedValue = 550')
-      x[[1]]$Name <- 'NewCultivar'
+      x[[1]]$Name <- value
       x[[1]]$Children <- list()
       x[[1]]$IncludeInDocumentation <- T
       x[[1]]$Enabled <- T
@@ -555,12 +571,12 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     wmmn <- grepl("Models.Manager", core.zone.node)
     manager.node <- core.zone.node[wmmn]
     manager.node.names <- sapply(manager.node, FUN = function(x) x$Name)
-    if (missing(manager.child)) 
+    if (missing(manager.child))
       stop("need to specify manager.child")
     edited.child <- manager.child
     wmc <- grep(manager.child, manager.node.names)
     if (length(wmc) == 0) {
-      manager.node.names <- sapply(manager.node[[1]]$Children, 
+      manager.node.names <- sapply(manager.node[[1]]$Children,
                                    FUN = function(x) x$Name)
       wmc2 <- grep(manager.child, manager.node.names)
       manager.child.node <- manager.node[[1]]$Children[[wmc2]]$Parameters
@@ -581,17 +597,17 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     }
     core.zone.node[wmmn] <- manager.node
   }
-  
+
   if (node == "Report") {
-    if (!parm %in% c("VariableNames", "EventNames")) 
+    if (!parm %in% c("VariableNames", "EventNames"))
       stop ('When node = "Report", parm must be either "VariableNames" or "EventNames".')
     if (class(value) != 'list') {
       warning('value should be a list. It will be coerced.')
       value <- as.list(value)
     }
-    tmp <- search_apsimx(apsimx_json, parm)
-    lvls <- search_apsimx(apsimx_json, parm, T) 
-    
+    tmp <- search_apsimx2(apsimx_json, parm)
+    lvls <- search_apsimx2(apsimx_json, parm, T)
+
     if (length(lvls) == 2)
       apsimx_json$Children[[lvls[1]]]$Children[[lvls[2]]][[parm]] <- value
     if (length(lvls) == 3)
@@ -600,12 +616,12 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
       apsimx_json$Children[[lvls[1]]]$Children[[lvls[2]]]$Children[[lvls[3]]]$Children[[lvls[4]]][[parm]] <- value
     if (length(lvls) == 5)
       apsimx_json$Children[[lvls[1]]]$Children[[lvls[2]]]$Children[[lvls[3]]]$Children[[lvls[4]]]$Children[[lvls[5]]][[parm]] <- value
-    
+
     node <- "Other"
     parm.path <- ""
     print.path <- F
   }
-  
+
   if (node != "Other") {
     parent.node[wcz][[1]]$Children <- core.zone.node
     if (length(wcore) > 1) {
@@ -621,13 +637,13 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     }
   }
   if (overwrite == FALSE) {
-    wr.path <- paste0(wrt.dir, "/", tools::file_path_sans_ext(file), 
+    wr.path <- paste0(wrt.dir, "/", tools::file_path_sans_ext(file),
                       edit.tag, ".apsimx")
   }
   else {
     wr.path <- paste0(wrt.dir, "/", file)
   }
-  jsonlite::write_json(apsimx_json, path = wr.path, pretty = TRUE, 
+  jsonlite::write_json(apsimx_json, path = wr.path, pretty = TRUE,
                        digits = NA, auto_unbox = TRUE, null = "null")
   if (verbose) {
     cat("Edited (node): ", node, "\n")
@@ -641,30 +657,30 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
 
 # New inspect_apsimx
 
-inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock", 
+inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
                                                                    "Weather", "Soil", "SurfaceOrganicMatter", "Cultivar",
-                                                                   "MicroClimate", "Crop", "Manager", "Other", "Report"), 
-                                soil.child = c("Metadata", "Water", "InitialWater", 
-                                               "Chemical", "Physical", "Analysis", 
-                                               "SoilWater", "InitialN", "CERESSoilTemperature", 
-                                               "Sample", "Nutrient", "Organic"), parm = NULL, 
-                                digits = 3, print.path = FALSE, root) 
+                                                                   "MicroClimate", "Crop", "Manager", "Other", "Report"),
+                                soil.child = c("Metadata", "Water", "InitialWater",
+                                               "Chemical", "Physical", "Analysis",
+                                               "SoilWater", "InitialN", "CERESSoilTemperature",
+                                               "Sample", "Nutrient", "Organic"), parm = NULL,
+                                digits = 3, print.path = FALSE, root)
 {
   apsimx:::.check_apsim_name(file)
-  file.names <- dir(path = src.dir, pattern = ".apsimx$", 
+  file.names <- dir(path = src.dir, pattern = ".apsimx$",
                     ignore.case = TRUE)
   if (length(file.names) == 0) {
     stop("There are no .apsimx files in the specified directory to inspect.")
   }
   node <- match.arg(node)
   soil.child <- match.arg(soil.child)
-  if (soil.child %in% c("Nutrient")) 
+  if (soil.child %in% c("Nutrient"))
     stop("Not implemented yet")
   file <- match.arg(file, file.names)
-  apsimx_json <- jsonlite::read_json(paste0(src.dir, "/", 
+  apsimx_json <- jsonlite::read_json(paste0(src.dir, "/",
                                             file))
   parm.path.0 <- paste0(".", apsimx_json$Name)
-  fcsn <- grep("Models.Core.Simulation", apsimx_json$Children, 
+  fcsn <- grep("Models.Core.Simulation", apsimx_json$Children,
                fixed = TRUE)
   if (length(fcsn) > 1) {
     if (missing(root)) {
@@ -674,25 +690,25 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     }
     else {
       if (length(root) == 1) {
-        nms <- vapply(apsimx_json$Children, FUN = function(x) x$Name, 
+        nms <- vapply(apsimx_json$Children, FUN = function(x) x$Name,
                       FUN.VALUE = "character")
         fcsn <- grep(as.character(root), nms)
-        parm.path.1 <- paste0(parm.path.0, ".", 
+        parm.path.1 <- paste0(parm.path.0, ".",
                               apsimx_json$Children[[fcsn]]$Name)
         parent.node <- apsimx_json$Children[[fcsn]]$Children
-        if (length(fcsn) == 0 || length(fcsn) > 1) 
+        if (length(fcsn) == 0 || length(fcsn) > 1)
           stop("no root node label found or root is not unique")
       }
       else {
-        nms1 <- vapply(apsimx_json$Children, FUN = function(x) x$Name, 
+        nms1 <- vapply(apsimx_json$Children, FUN = function(x) x$Name,
                        FUN.VALUE = "character")
         fcsn1 <- grep(as.character(root[1]), nms1)
         root.node.0 <- apsimx_json$Children[[fcsn1]]
-        root.node.0.child.names <- vapply(root.node.0$Children, 
+        root.node.0.child.names <- vapply(root.node.0$Children,
                                           function(x) x$Name, FUN.VALUE = "character")
         fcsn2 <- grep(as.character(root[2]), root.node.0.child.names)
         parent.node <- apsimx_json$Children[[fcsn1]]$Children[[fcsn2]]$Children
-        parm.path.1 <- paste0(parm.path.0, ".", 
+        parm.path.1 <- paste0(parm.path.0, ".",
                               apsimx_json$Children[[fcsn1]]$Children[[fcsn2]])
       }
     }
@@ -701,7 +717,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     parent.node <- apsimx_json$Children[[fcsn]]$Children
     parm.path.1 <- paste0(parm.path.0, ".", apsimx_json$Children[[fcsn]]$Name)
   }
-  
+
   search_apsimx <- function(tmp, keyword, return_lvls = FALSE) {
     lvls <- vector()
     for (i in 1:5) {
@@ -716,14 +732,14 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
       return(tmp)
     }
   }
-  
+
   if (node == "Clock") {
     wlc <- function(x) grepl("Clock", x$Name, ignore.case = TRUE)
     wlcl <- sapply(parent.node, FUN = wlc)
     clock.node <- as.list(parent.node[wlcl])[[1]]
-    start.name <- grep("start", names(clock.node), 
+    start.name <- grep("start", names(clock.node),
                        ignore.case = TRUE, value = TRUE)
-    end.name <- grep("end", names(clock.node), ignore.case = TRUE, 
+    end.name <- grep("end", names(clock.node), ignore.case = TRUE,
                      value = TRUE)
     cat("Start:", clock.node[[start.name]], "\n")
     cat("End:", clock.node[[end.name]], "\n")
@@ -734,7 +750,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     wlwl <- sapply(parent.node, FUN = wlw)
     weather.node <- parent.node[wlwl]
     gf1 <- function(x) grep(".met$", x, value = TRUE)
-    cat("Met file:", as.character(sapply(weather.node, 
+    cat("Met file:", as.character(sapply(weather.node,
                                          gf1)), "\n")
     parm.path <- paste0(parm.path.1, ".", parent.node[wlwl][[1]]$Name)
   }
@@ -748,63 +764,63 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     cat("Soil Type: ", soil.node[[1]]$SoilType, "\n")
     cat("Latitude: ", soil.node[[1]]$Latitude, "\n")
     cat("Longitude: ", soil.node[[1]]$Longitude, "\n")
-    if (length(soil.node) != 1) 
+    if (length(soil.node) != 1)
       stop("soil.node not equal to one")
-    soil.children.names <- sapply(soil.node[[1]]$Children, 
+    soil.children.names <- sapply(soil.node[[1]]$Children,
                                   function(x) x$Name)
     cat("Soil children:", soil.children.names, "\n")
     if (soil.child == "Metadata") {
       parm.path <- parm.path.2.1
       metadata <- NULL
       for (i in names(soil.node[[1]])) {
-        if (i %in% c("Name", "Children", 
-                     "IncludeInDocumentation", "Enabled", 
-                     "ReadOnly")) 
+        if (i %in% c("Name", "Children",
+                     "IncludeInDocumentation", "Enabled",
+                     "ReadOnly"))
           next
-        val <- as.character(ifelse(is.null(soil.node[[1]][[i]]), 
+        val <- as.character(ifelse(is.null(soil.node[[1]][[i]]),
                                    NA, soil.node[[1]][[i]]))
-        if (!is.na(val) && nchar(val) > options()$width - 
-            30) 
-          val <- paste(strtrim(val, options()$width - 
+        if (!is.na(val) && nchar(val) > options()$width -
+            30)
+          val <- paste(strtrim(val, options()$width -
                                  30), "...")
-        metadata <- rbind(metadata, data.frame(parm = i, 
+        metadata <- rbind(metadata, data.frame(parm = i,
                                                value = val))
       }
       if (missing(parm)) {
         print(knitr::kable(metadata, longtable = FALSE))
       }
       else {
-        if (!(parm %in% metadata[["parm"]])) 
+        if (!(parm %in% metadata[["parm"]]))
           stop("parm does not match a parameter in metadata")
-        print(knitr::kable(metadata[metadata$parm == 
+        print(knitr::kable(metadata[metadata$parm ==
                                       parm, ]))
       }
     }
     else {
       wsc <- grep(soil.child, soil.children.names)
-      if (length(wsc) == 0) 
+      if (length(wsc) == 0)
         stop("soil.child likely not present")
       selected.soil.node.child <- soil.node[[1]]$Children[wsc]
     }
-    first.level.soil <- c("Water", "Physical", 
-                          "Chemical", "Analysis", "InitialWater", 
-                          "InitialN", "SoilWater", "Analysis", 
+    first.level.soil <- c("Water", "Physical",
+                          "Chemical", "Analysis", "InitialWater",
+                          "InitialN", "SoilWater", "Analysis",
                           "CERESSoilTemperature", "Organic")
     if (soil.child %in% first.level.soil) {
       parm.path <- paste0(parm.path.2.1, ".", selected.soil.node.child[[1]]$Name)
-      enms <- c("IncludeInDocumentation", "Enabled", 
+      enms <- c("IncludeInDocumentation", "Enabled",
                 "ReadOnly", "Children", "Name")
-      cnms <- setdiff(names(selected.soil.node.child[[1]]), 
+      cnms <- setdiff(names(selected.soil.node.child[[1]]),
                       enms)
       soil.d1 <- NULL
       soil.d2 <- NULL
       col.nms <- NULL
       for (ii in cnms) {
         tmp <- selected.soil.node.child[[1]][ii][[1]]
-        if (length(tmp) == 0) 
+        if (length(tmp) == 0)
           next
         if (length(tmp) == 1) {
-          soil.d1 <- rbind(soil.d1, data.frame(parm = ii, 
+          soil.d1 <- rbind(soil.d1, data.frame(parm = ii,
                                                value = as.character(tmp)))
         }
         if (length(tmp) > 1) {
@@ -814,7 +830,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
         }
       }
       if (missing(parm)) {
-        if (!is.null(soil.d1)) 
+        if (!is.null(soil.d1))
           print(knitr::kable(soil.d1, digits = digits))
         if (!is.null(soil.d2)) {
           soil.d2 <- as.data.frame(soil.d2)
@@ -823,20 +839,20 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
         }
       }
       else {
-        if (!is.null(soil.d1)) 
-          print(knitr::kable(soil.d1[soil.d1$parm == 
+        if (!is.null(soil.d1))
+          print(knitr::kable(soil.d1[soil.d1$parm ==
                                        parm, ], digits = digits))
         if (!is.null(soil.d2)) {
           soil.d2 <- as.data.frame(soil.d2)
           names(soil.d2) <- col.nms
-          print(knitr::kable(soil.d2[soil.d2$parm == 
+          print(knitr::kable(soil.d2[soil.d2$parm ==
                                        parm, ], digits = digits))
         }
       }
     }
   }
   if (node == "SurfaceOrganicMatter") {
-    wsomn <- grepl("Models.Surface.SurfaceOrganicMatter", 
+    wsomn <- grepl("Models.Surface.SurfaceOrganicMatter",
                    core.zone.node)
     som.node <- core.zone.node[wsomn][[1]]
     parm.path <- paste0(parm.path.2, ".", som.node$Name)
@@ -847,7 +863,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     wmcn <- grepl("Models.MicroClimate", core.zone.node)
     microclimate.node <- core.zone.node[wmcn][[1]]
     parm.path <- paste0(parm.path.2, ".", microclimate.node$Name)
-    microclimate.d <- data.frame(parm = names(microclimate.node)[2:9], 
+    microclimate.d <- data.frame(parm = names(microclimate.node)[2:9],
                                  value = as.vector(unlist(microclimate.node)[2:9]))
     print(knitr::kable(microclimate.d, digits = digits))
   }
@@ -857,7 +873,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     wcn <- grepl("CultivarName", manager.node)
     crop.node <- manager.node[wcn][[1]]$Parameters
     parm.path <- paste0(parm.path.2, ".", manager.node[wcn][[1]]$Name)
-    mat <- matrix(NA, nrow = length(crop.node), ncol = 2, 
+    mat <- matrix(NA, nrow = length(crop.node), ncol = 2,
                   dimnames = list(NULL, c("parm", "value")))
     j <- 1
     for (i in 1:length(crop.node)) {
@@ -870,7 +886,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
   if (node == 'Cultivar') {
     if (length(grep('Models.PMF.Cultivar, Models', capture.output(str(apsimx_json)), ignore.case = T)) > 0) {
       # There is at least one edited cultivar
-      tmp <- search_apsimx(apsimx_json, keyword = 'Models.PMF.Cultivar, Models')
+      tmp <- search_apsimx2(apsimx_json, keyword = 'Models.PMF.Cultivar, Models')
       cat('Name = ', tmp$Name)
       cat("\n")
       print(knitr::kable(data.frame(Command = unlist(tmp$Command))))
@@ -886,7 +902,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     manager.node <- core.zone.node[wmmn]
     parm.path <- parm.path.2
     manager.node.names <- sapply(manager.node, FUN = function(x) x$Name)
-    cat("Management Scripts: ", manager.node.names, 
+    cat("Management Scripts: ", manager.node.names,
         "\n\n")
     if (!is.null(parm)) {
       parm1 <- parm[[1]]
@@ -896,9 +912,9 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
       parm.path <- paste0(parm.path.2, ".", selected.manager.node)
       if (is.na(position)) {
         ms.params <- manager.node[[find.manager]]$Parameters
-        if (length(ms.params) == 0) 
+        if (length(ms.params) == 0)
           warning("parameter not found")
-        mat <- matrix(NA, ncol = 2, nrow = length(ms.params), 
+        mat <- matrix(NA, ncol = 2, nrow = length(ms.params),
                       dimnames = list(NULL, c("parm", "value")))
         if (length(ms.params) > 0) {
           for (j in 1:length(ms.params)) {
@@ -912,9 +928,9 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
       }
       if (!is.na(position)) {
         ms.params <- manager.node[[find.manager]]$Parameters
-        if (length(ms.params) == 0) 
+        if (length(ms.params) == 0)
           warning("no parameters found")
-        mat <- matrix(NA, ncol = 2, nrow = length(position), 
+        mat <- matrix(NA, ncol = 2, nrow = length(position),
                       dimnames = list(NULL, c("parm", "value")))
         k <- 1
         for (j in 1:length(ms.params)) {
@@ -926,7 +942,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
         }
         cat("Name: ", selected.manager.node, "\n")
         parm2 <- ms.params[[position]]$Key
-        cat("Key:", ms.params[[position]]$Key, 
+        cat("Key:", ms.params[[position]]$Key,
             "\n")
         print(knitr::kable(as.data.frame(mat), digits = digits))
         cat("\n")
@@ -936,9 +952,9 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
   if (node == "Other") {
     tmp <- core.zone.node
     parm.path.2.1 <- parm.path.2
-    if (is.null(parm)) 
+    if (is.null(parm))
       stop("'parm' should be provided when node = 'Other'")
-    if (length(parm) == 1L) 
+    if (length(parm) == 1L)
       stop("'parm' should be a list of length 2 or more")
     for (i in 1:(length(parm) - 1)) {
       nms <- sapply(tmp, function(x) x$Name)
@@ -949,9 +965,9 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
         stop("Parameter not found")
       }
       tmp <- tmp[[wcp]]
-      if (!is.null(tmp$Children)) 
+      if (!is.null(tmp$Children))
         tmp <- tmp$Children
-      parm.path.2.1 <- paste0(parm.path.2.1, ".", 
+      parm.path.2.1 <- paste0(parm.path.2.1, ".",
                               nms[wcp])
     }
     if (!is.null(tmp$Parameters)) {
@@ -966,7 +982,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     }
   }
   if (node == "Report") {
-    tmp <- search_apsimx(apsimx_json, keyword = 'VariableNames')
+    tmp <- search_apsimx2(apsimx_json, keyword = 'VariableNames')
     print(knitr::kable(data.frame(VariableNames = unlist(tmp$VariableNames))))
     cat("\n")
     print(knitr::kable(data.frame(EventNames = unlist(tmp$EventNames))))
@@ -987,8 +1003,88 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     cat("Parm path:", parm.path, "\n")
   }
   else {
-    if (print.path) 
+    if (print.path)
       cat("Parm path:", parm.path, "\n")
   }
   invisible(parm.path)
+}
+
+# ========================
+# Plot Yield predictions with conditional probabilities
+# Function to plot
+plot_conditional <- function(x, y, quantiles = c(.2, .5, .8), xpos = .05, ypos = .05, cex.text=0.7, ...) {
+  index <- !is.na(x) & !is.na(y)
+  x <- x[index]
+  y <- y[index]
+  xq <- quantile(x, probs = quantiles)
+  yq <- quantile(y, probs = quantiles)
+  rho <- sprintf('%.3f', as.numeric(cor(x, y)))
+  plot(x, y, col = 'grey', ...)
+  abline(0,1, col = 2)
+  text(min(x), max(y) - 0.05*diff(range(y)), labels=bquote(rho * ' = ' * .(rho)), col = "green4", pos = 4)
+
+  for(i in 1:length(xq)) {
+    abline(h = yq[i], col = 4, lty = 3)
+    abline(v = xq[i], col = 4, lty = 3)
+    #
+    chr_x_space <- diff(par("usr")[1:2]) * xpos
+    chr_y_space <- diff(par("usr")[3:4]) * ypos
+    tmp_x_pos <- par("usr")[1] + nchar(names(yq)[i]) * chr_x_space
+    tmp_y_pos <- par("usr")[3] + chr_y_space
+    #
+    #rect(xleft = par("usr")[1] + chr_x_space * .3, xright = tmp_x_pos,
+    #     ybottom = yq[i] - chr_y_space, yq[i] + chr_y_space, col = 'white', border = NA)
+    text(tmp_x_pos, yq[i], labels = names(yq)[i], col = 4, pos = 2)
+    #
+    #rect(xleft = xq[i] - chr_x_space, xright = xq[i] + chr_x_space,
+    #     ybottom = tmp_y_pos - chr_y_space, tmp_y_pos + chr_y_space, col = 'white', border = NA)
+    text(xq[i], tmp_y_pos, labels = names(xq)[i], col = 4)
+  }
+  x_cut <- cut(x, c(min(x)-1, xq, max(x)))
+  y_cut <- cut(y, c(min(y)-1, yq, max(y)))
+  for (i in 1:length(levels(x_cut))) {
+    for (j in 1:length(levels(y_cut))) {
+      tmp <- x_cut == levels(x_cut)[i] & y_cut == levels(y_cut)[j]
+      tmp_x_lim <- as.numeric(gsub('\\[|\\]|[()]','', unlist(strsplit(levels(x_cut)[i], ','))))
+      tmp_y_lim <- as.numeric(gsub('\\[|\\]|[()]','', unlist(strsplit(levels(y_cut)[j], ','))))
+      text(mean(tmp_x_lim), mean(tmp_y_lim), round(sum(tmp) / table(x_cut)[i], 3),cex=cex.text)
+    }
+  }
+}
+
+#--------------
+make_heatmap <- function(ec, W, layer=NULL, cluster_rows=TRUE, cluster_cols=TRUE, ...)
+{
+  phase <- unlist(lapply(strsplit(colnames(W),"_"),function(x)x[1])) # Phases
+  Phases <- unique(phase)
+
+  ec0 <- unlist(lapply(strsplit(colnames(W),"_"),function(x)x[2])) # Phases
+  namesEC <- unlist(lapply(strsplit(ec0,"\\."),function(x)x[length(x)]))
+  namesEC <- gsub("Evaporation","Evap",namesEC)
+  namesEC <- gsub("Potential","Pot",namesEC)
+
+  ec <- grep(paste(ec,collapse="|"),namesEC,value=T)
+  drop <- grep("FlowNO3|PAWmm",ec)
+  if(length(drop)>0) ec <- ec[-drop]
+
+  if(!is.null(layer)){
+    tmp <- (1:10)[!(1:10) %in% layer]
+    drop <- grep(paste(paste0("(",tmp,")"),collapse="|"),ec)
+    if(length(drop)>0) ec <- ec[-drop]
+  }
+
+  index <- which(namesEC %in% ec)
+
+  namesPhases <- paste0("P",1:length(Phases)); names(namesPhases) <- Phases
+  ec2 <- paste0(namesPhases[phase][index],"-",namesEC[index])
+
+  W0 <- W[,index]
+  colnames(W0) <- ec2
+
+  annot <- data.frame(Phase=factor(namesPhases[phase][index],levels=namesPhases))
+  rownames(annot) <- colnames(W0)
+
+  pheatmap(cor(W0),cluster_rows = cluster_rows, cluster_cols = cluster_cols,
+            show_rownames = T, show_colnames = T,
+            annotation_col=annot, annotation_row=annot, ...)
 }
