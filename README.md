@@ -24,10 +24,10 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 
 ### Phenotypes
 
-|What?|Output-file|Inputs|Script|Data dictionary|
+|What?|Inputs|Script|Output-file|Data dictionary|
 |---------|------|------|------|--------|
-|Fortmatted phenotypes |[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) ; [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/Phenotypes.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/phenotypes.md)|
-|Fortmatted phenotypes |[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) ; [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/Phenotypes.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/phenotypes.md)|
+|Fortmatted phenotypes | [repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) ; [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/Phenotypes.R) |[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/phenotypes.md)|
+|Processed phenotypes |[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv) ; [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv) ; [loc_GDD_clusters.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/loc_GDD_clusters.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/prepare_pheno_data.R) | |[clean_pheno_yearloc_means.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_yearloc_means.csv) ; [clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv) | |
 
 ## Analysis pipelines
 
