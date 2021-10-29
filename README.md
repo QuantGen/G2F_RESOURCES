@@ -42,6 +42,8 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 
 [Weather data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/APSIM_sim/Weather_data.csv) for APSIM can be downloaded with [this script](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/APSIM_getWeather.R)
 
+Previous results can be found [here](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/APSIM_sim_old.md)
+
 | What? | Input | Script | Output | Description |
 |-------|-------|--------|--------|-------------|
 |   v0   | [info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/APSIM_v0_code.R) | [v0Sim.rdata](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/APSIM_sim/v0Sim.rdata) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/APSIM_v0.md) |
