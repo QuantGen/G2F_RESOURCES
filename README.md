@@ -24,8 +24,8 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 
 ### Phenotypes
 
-| What? | Input | Script | Output | Data dictionary |
-|-------|-------|--------|--------|-----------------|
+| What? | Input | Script | Output | Description |
+|-------|-------|--------|--------|-------------|
 |Fortmatted phenotypes | [repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) <br>[G2F site](https://www.genomes2fields.org/resources/)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/Phenotypes.R) | [phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/phenotypes.md) |
 |Processed phenotypes | [phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv) <br>[info_loc.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/info_loc.csv)<br/> [loc_GDD_clusters.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/loc_GDD_clusters.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/prepare_pheno_data.R) | [clean_pheno_yearloc_means.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_yearloc_means.csv)  <br>[clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv)<br/> | |
 
@@ -35,7 +35,7 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 
 | What? | Output | Inputs | Script |
 |-------|--------|--------|--------|
-| GDD to silking | [data_model.rdata](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/GDDtoFlowering/data_model.rdata) | [ConsensusData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ConsensusData.csv) ; [phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/GDDPredictFlowering.md) |
+| GDD to silking | [data_model.rdata](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/GDDtoFlowering/data_model.rdata) | [ConsensusData.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/ConsensusData.csv)  <br>[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/GDDPredictFlowering.md) |
 | GDD to silking/harvest| [GDD_hat_by_hybrids.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/GDD_hat_by_hybrids.csv) | [phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/GDDPredict_MM.md) |
 
 ### Run APSIM Crop model to generate environmental covariates
