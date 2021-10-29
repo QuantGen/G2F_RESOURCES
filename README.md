@@ -27,6 +27,7 @@ The Consensus weather data combines data from G2F with data from NASA. NASA data
 |What?|Output-file|Inputs|Script|Data dictionary|
 |---------|------|------|------|--------|
 |Fortmatted phenotypes |[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) ; [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/Phenotypes.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/phenotypes.md)|
+|Fortmatted phenotypes |[phenotype.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/phenotypes.csv)|[repository](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Data/Phenotypes) ; [G2F site](https://www.genomes2fields.org/resources/)|[link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/Phenotypes.R) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/phenotypes.md)|
 
 ## Analysis pipelines
 
