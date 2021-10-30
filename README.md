@@ -47,7 +47,7 @@ Previous results can be found [here](https://github.com/QuantGen/G2F_RESOURCES/b
 | What? | Input | Script | Output | Description |
 |-------|-------|--------|--------|-------------|
 |   Simulated EC   | [clean_pheno_yearloc_means.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_yearloc_means.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/APSIM_codeV1.R) | [simulated_EC_V1.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/simulated_EC_V1.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/APSIM_v0.md) |
-| EC by stage  | [simulation_V1.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/simulation_V1.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/APSIM_v0_posthoc.R) | [simulated_data_v0.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/simulated_data_v0.csv) | [plots](https://github.com/QuantGen/G2F_RESOURCES/blob/main/mdfiles/simulation_plots.md) |
+| EC by stage  | [simulated_EC_V1.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/simulated_EC_V1.csv) | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/get_EC_by_stage.Rmd) | [simulated_data_v0.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv) <br>[plots](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/get_EC_by_stage.pdf)<br/>| |
 
 <!-- 
  - [Tools to examine weather data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)
