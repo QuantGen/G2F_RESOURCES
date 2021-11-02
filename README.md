@@ -53,8 +53,17 @@ Previous results can be found [here](https://github.com/QuantGen/G2F_RESOURCES/b
 
 | What? | Input | Script | Output | Description |
 |-------|-------|--------|--------|-------------|
-|   ANOVA | [clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv)  <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model.R) | [output files](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model) |  |
-| Sequential ANOVA | [clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv)  <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model_seq.R) | [output files](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model_seq) | |
+|   ANOVA | [clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv)  <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model.R) | [files ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model) |  |
+| Sequential ANOVA | [clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv)  <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model_seq.R) | [files sequential ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model_seq) | |
+| Summary ANOVA | [files ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model)  <br>[files sequential ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model_seq)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/get_results_VC.Rmd) | [output](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/get_results_VC.pdf) | |
+
+### Validation
+
+| What? | Input | Script | Output | Description |
+|-------|-------|--------|--------|-------------|
+|   ANOVA | [clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv)  <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model.R) | [files ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model) |  |
+| Sequential ANOVA | [clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv)  <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model_seq.R) | [files sequential ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model_seq) | |
+| Summary ANOVA | [files ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model)  <br>[files sequential ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model_seq)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/get_results_VC.Rmd) | [output](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/get_results_VC.pdf) | |
 
 <!-- 
  - [Tools to examine weather data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)
