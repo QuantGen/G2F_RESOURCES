@@ -1,7 +1,7 @@
 # The clock is set to 1825 days (5 years) previous to the actual date by default.
 # To test:
-#site_name=tmp$location; coord=as.numeric(tmp[,c('lon', 'lat')]); sow_date = tmp$sowing;prefix=""
-#gdd_juvenile=round(tmp$gdd_silk*0.4); plant_density=round(tmp$plant_density); clock_before=1825; replace_file=F
+# site_name=tmp$location; coord=as.numeric(tmp[,c('lon', 'lat')]); sow_date = tmp$sowing; prefix=paste0(tmp$location,"_")
+# gdd_juvenile=round(tmp$gdd_silk*0.4); plant_density=round(tmp$plant_density); clock_before=1825; replace_file=T
 
 run_apsim <- function(simfile, simdir, site_name, coord, sow_date, gdd_juvenile,
             plant_density, clock_before = 1825, replace_file=T, prefix="")
@@ -23,7 +23,7 @@ run_apsim <- function(simfile, simdir, site_name, coord, sow_date, gdd_juvenile,
               overwrite = T, recursive = FALSE)
   }
   simfile <- paste0(prefix,simfile)
-  
+
   # Download weather data
   met_filename <- paste0(site_name, '_', year(sow_date), '.met')
   met_path <- paste0(simdir, '/',met_filename)
@@ -123,7 +123,12 @@ run_apsim <- function(simfile, simdir, site_name, coord, sow_date, gdd_juvenile,
   # Download soil data (US only)
   soil_table <- capture.output(inspect_apsimx(simfile, simdir, node = 'Soil'))[1:3]
   if (length(grep(coord[1], soil_table)) == 0 | length(grep(coord[2], soil_table)) == 0) {
-    sp0 <- get_ssurgo_soil_profile(coord)
+    sp0 <- get_ssurgo_soil_profile(round(coord,2))
+    index <- which(0 <= sp0[[1]]$soil$Carbon & sp0[[1]]$soil$Carbon < 0.01)
+    if(length(index) > 0){
+      cat("Carbon in layer(s)",paste(index,collapse=","),"was 0<= C <0.01 and was set to 0.01 \n")
+      sp0[[1]]$soil$Carbon[index] <- 0.01
+    }
     edit_apsimx_replace_soil_profile(simfile, simdir, overwrite = T,
                                      soil.profile = sp0[[1]], verbose = F)
   }
@@ -145,6 +150,7 @@ run_apsim <- function(simfile, simdir, site_name, coord, sow_date, gdd_juvenile,
   colnames(sim)[grep("Maize.Grain.Wt",colnames(sim))] <- "yield"
   colnames(sim)[grep("Maize.AboveGround.Wt",colnames(sim))] <- "AboveGround.Wt"
   colnames(sim)[grep("CurrentStageName",colnames(sim))] <- "Stage"
+  colnames(sim)[grep("Evaporation",colnames(sim))] <- "Evap"
   colnames(sim) <- gsub("SoilWater.","",colnames(sim))
   colnames(sim) <- gsub("Field.Maize.","",colnames(sim))
   colnames(sim) <- gsub("SoluteFlowEfficiency","SolFlowEff",colnames(sim))
@@ -163,5 +169,6 @@ run_apsim <- function(simfile, simdir, site_name, coord, sow_date, gdd_juvenile,
   if("HarvestRipe" %in% sim$Stage){
     sim <- sim[sim$Clock.Today <= sim$Clock.Today[sim$Stage == "HarvestRipe"],]
   }
+  rownames(sim) <- NULL
   return(sim)
 }

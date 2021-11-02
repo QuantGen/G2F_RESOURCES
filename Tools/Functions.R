@@ -1012,14 +1012,14 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
 # ========================
 # Plot Yield predictions with conditional probabilities
 # Function to plot
-plot_conditional <- function(x, y, quantiles = c(.2, .5, .8), xpos = .05, ypos = .05, cex.text=0.7, ...) {
+plot_conditional <- function(x, y, quantiles = c(.2, .5, .8), xpos = .05, ypos = .05, cex.text=0.7, cex.point=0.6, ...) {
   index <- !is.na(x) & !is.na(y)
   x <- x[index]
   y <- y[index]
   xq <- quantile(x, probs = quantiles)
   yq <- quantile(y, probs = quantiles)
   rho <- sprintf('%.3f', as.numeric(cor(x, y)))
-  plot(x, y, col = 'grey', ...)
+  plot(x, y, col = 'grey', cex=cex.point, ...)
   abline(0,1, col = 2)
   text(min(x), max(y) - 0.05*diff(range(y)), labels=bquote(rho * ' = ' * .(rho)), col = "green4", pos = 4)
 
@@ -1058,12 +1058,9 @@ make_heatmap <- function(ec, W, layer=NULL, cluster_rows=TRUE, cluster_cols=TRUE
   phase <- unlist(lapply(strsplit(colnames(W),"_"),function(x)x[1])) # Phases
   Phases <- unique(phase)
 
-  ec0 <- unlist(lapply(strsplit(colnames(W),"_"),function(x)x[2])) # Phases
-  namesEC <- unlist(lapply(strsplit(ec0,"\\."),function(x)x[length(x)]))
-  namesEC <- gsub("Evaporation","Evap",namesEC)
-  namesEC <- gsub("Potential","Pot",namesEC)
+  ec0 <- unlist(lapply(strsplit(colnames(W),"_"),function(x)x[2]))
 
-  ec <- grep(paste(ec,collapse="|"),namesEC,value=T)
+  ec <- grep(paste(ec,collapse="|"),ec0,value=T)
   drop <- grep("FlowNO3|PAWmm",ec)
   if(length(drop)>0) ec <- ec[-drop]
 
@@ -1073,10 +1070,10 @@ make_heatmap <- function(ec, W, layer=NULL, cluster_rows=TRUE, cluster_cols=TRUE
     if(length(drop)>0) ec <- ec[-drop]
   }
 
-  index <- which(namesEC %in% ec)
+  index <- which(ec0 %in% ec)
 
   namesPhases <- paste0("P",1:length(Phases)); names(namesPhases) <- Phases
-  ec2 <- paste0(namesPhases[phase][index],"-",namesEC[index])
+  ec2 <- paste0(namesPhases[phase][index],"-",ec0[index])
 
   W0 <- W[,index]
   colnames(W0) <- ec2
