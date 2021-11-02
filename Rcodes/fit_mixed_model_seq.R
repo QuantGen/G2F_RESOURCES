@@ -78,5 +78,3 @@ if(!file.exists(outfolder)) dir.create(outfolder,recursive=TRUE)
 
 fm <- BGLR(y=y, ETA=ETA, nIter=nIter, burnIn=burnIn,
       saveAt=paste0(outfolder,"/M",model,"_P",Pi,"_P",Pj,"_"))
-
-save(fm,file=paste0(outfolder,"/fm_M",model,"_",comp,"_P",Pi,"_P",Pj,".RData"))

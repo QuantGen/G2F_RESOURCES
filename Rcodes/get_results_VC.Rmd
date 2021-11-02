@@ -4,14 +4,13 @@ output: pdf_document
 ---
 
 ```{r setup, echo=FALSE}
-knitr::opts_knit$set(root.dir = "/mnt/research/quantgen/projects/lopezcru/G2F_RESOURCES/Rcode")
+#knitr::opts_knit$set(root.dir = "/mnt/research/quantgen/projects/lopezcru/G2F_RESOURCES/Rcode")
 
 library(ggplot2)
 library(reshape2)
 library(knitr)
 library(BGLR)
 library(ggpubr)
-library(viridis)
 library(xtable)
 
 my_plot <- function(dat,x,y,xlab="x",ylab="y")
@@ -194,7 +193,7 @@ pp3 <- my_plot(dat,x="Wb1",y="Wb2",xlab="Wb (BRR)",ylab="Wb (Bayes-C)")
 
 ```
 
-```{r fig.align = 'center', fig.width=4.5, fig.height=4.5}
+```{r fig.align = 'center', fig.width=4.2, fig.height=4}
 print(pp1)
 print(pp2)
 print(pp3)
