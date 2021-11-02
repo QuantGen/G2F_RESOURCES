@@ -1,0 +1,129 @@
+---
+title: "Summary G2F Validation"
+output: pdf_document
+---
+
+```{r setup, echo=FALSE}
+knitr::opts_knit$set(root.dir = "/mnt/research/quantgen/projects/lopezcru/G2F_RESOURCES/Rcode")
+
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(ggpubr)
+library(xtable)
+
+source("../Tools/Functions.R")
+dataW <- read.csv("../Data/OutputFiles/clean_EC_by_stage.csv", check.names=F)
+pheno <- read.csv("../Data/OutputFiles/clean_pheno_raw.csv")
+
+pheno <- pheno[pheno$year_loc %in% dataW$year_loc,]
+
+pheno0 <- dataW[,1:4]
+W0 <- as.matrix(dataW[,5:ncol(dataW)])
+W <- scale(W0)
+ZW <- scale(W0[match(pheno$year_loc,dataW$year_loc),])
+
+pheno$year <- factor(as.character(pheno$year))
+pheno$location <- factor(as.character(pheno$location))
+pheno$year_loc <- factor(as.character(pheno$year_loc))
+
+pheno0$year <- factor(as.character(pheno0$year))
+pheno0$loc <- factor(as.character(pheno0$loc))
+pheno0$year_loc <- factor(as.character(pheno0$year_loc))
+
+```
+
+## Leave-one-YL-out using models M1, M2a, and M2b
+
+```{r echo=FALSE}
+models01 <- c('M1'="YEAR+LOC+YL+G", 'M2a'="Wb+G", 'M2b'="Wb+G")
+models02 <- c('M1'="YEAR+LOC+YL", 'M2a'="Wb", 'M2b'="Wb", 'M3a'="LOC+Wb", 'M3b'="LOC+Wb")
+folds_lev <- levels(pheno$year_loc)
+YHat1 <- matrix(NA, nrow=nrow(pheno),ncol=length(models01))
+YHat2 <- matrix(NA, nrow=nrow(pheno0),ncol=length(models02))
+colnames(YHat1) <- names(models01)
+colnames(YHat2) <- names(models02)
+
+for(f0 in 1:length(folds_lev))
+{
+  for(mm in 1:length(models01))
+  {
+    filename <- paste0("../Output/run_LOO_YL/fm_YL_",folds_lev[f0],"_",names(models01)[mm],".RData")
+    if(file.exists(filename)){
+      load(filename)
+      YHat1[indexNA,names(models01)[mm]] <- yHat[indexNA]
+    }
+  }
+  for(mm in 1:length(models02))
+  {
+    filename <- paste0("../Output/run_LOO_YL_mean/fm_YL_",folds_lev[f0],"_",names(models02)[mm],".RData")
+    if(file.exists(filename)){
+      load(filename)
+      YHat2[indexNA,names(models02)[mm]] <- yHat[indexNA]
+    }
+  }
+
+}
+YHat1 <- data.frame(YL=pheno$year_loc,yield=pheno$yield,YHat1)
+YHat2 <- data.frame(YL=pheno0$year_loc,yield=pheno0$yield,YHat2)
+
+# head(YHat1)
+# head(YHat2)
+```
+
+### Using replicates
+```{r fig.align = 'center', fig.width=5.1, fig.height=5.5}
+for(k in 1:length(models01)){
+  tmp <- ifelse(length(grep("a",names(models01)[k]))>0," (BRR)",
+                ifelse(length(grep("b",names(models01)[k]))>0," (Bayes-C)",""))
+  xlab <- paste0("Predicted ~ ",models02[k], tmp)
+  plot_conditional(YHat1[,names(models01)[k]],YHat1$yield,xlab=xlab,ylab="Observed",cex=0.5)
+}
+
+```
+
+### Using year-location means
+```{r fig.align = 'center', fig.width=5.1, fig.height=5.5}
+for(k in 1:length(models02)){
+  tmp <- ifelse(length(grep("a",names(models02)[k]))>0," (BRR)",
+                ifelse(length(grep("b",names(models02)[k]))>0," (Bayes-C)",""))
+  xlab <- paste0("Predicted ~ ",models02[k], tmp)
+  plot_conditional(YHat2[,names(models02)[k]],YHat2$yield,xlab=xlab,ylab="Observed",cex=0.5)
+}
+
+```
+
+## Leave-one-YEAR-out using models M1, M2a, M2b, M3a, and M3b
+
+```{r echo=FALSE}
+folds_lev <- levels(pheno$year)
+YHat3 <- matrix(NA, nrow=nrow(pheno0),ncol=length(models02))
+colnames(YHat3) <- names(models02)
+
+for(f0 in 1:length(folds_lev))
+{
+  indexNA1 <- as.character(pheno0$year) == folds_lev[f0]
+  for(mm in 1:length(models02))
+  {
+    filename <- paste0("../Output/run_LOO_YEAR_mean/fm_YEAR_",folds_lev[f0],"_",names(models02)[mm],".RData")
+    if(file.exists(filename)){
+      load(filename)
+      YHat3[indexNA,names(models02)[mm]] <- yHat[indexNA]
+    }
+  }
+}
+YHat3 <- data.frame(YEAR=pheno0$year, yield=pheno0$yield, YHat3)
+
+# head(YHat3)
+```
+
+```{r fig.align = 'center', fig.width=5.1, fig.height=5.5}
+for(k in 1:length(models02)){
+  tmp <- ifelse(length(grep("a",names(models02)[k]))>0," (BRR)",
+                ifelse(length(grep("b",names(models02)[k]))>0," (Bayes-C)",""))
+  xlab <- paste0("Predicted ~ ",models02[k], tmp)
+  plot_conditional(YHat3[,names(models02)[k]],YHat3$yield,xlab=xlab,ylab="Observed",cex=0.5)
+
+}
+
+```

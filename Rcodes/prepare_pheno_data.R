@@ -109,5 +109,5 @@ if(length(index) >0) pheno2$plant_density[index] <- mean(pheno2$plant_density[-i
 head(pheno1)
 head(pheno2)
 
-write.csv(pheno1,file="Data/clean_pheno_raw.csv",row.names=FALSE)
-write.csv(pheno2,file="Data/clean_pheno_yearloc_means.csv",row.names=FALSE)
+write.csv(pheno1,file="Data/OutputFiles/clean_pheno_raw.csv",row.names=FALSE)
+write.csv(pheno2,file="Data/OutputFiles/clean_pheno_yearloc_means.csv",row.names=FALSE)

@@ -1,0 +1,300 @@
+---
+title: "Summary G2F Variance Components analyses"
+output: pdf_document
+---
+
+```{r setup, echo=FALSE}
+knitr::opts_knit$set(root.dir = "/mnt/research/quantgen/projects/lopezcru/G2F_RESOURCES/Rcode")
+
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(BGLR)
+library(ggpubr)
+library(viridis)
+library(xtable)
+
+my_plot <- function(dat,x,y,xlab="x",ylab="y")
+{
+  rg <- range(dat[,x],dat[,y])
+  ggplot(dat,aes_string(x,y)) + geom_point(shape=21,fill="tan1",size=1.9) +
+     geom_vline(xintercept = 0,linetype="dashed",color="red",size=0.2) +
+     geom_hline(yintercept = 0,linetype="dashed",color="red",size=0.2) +
+     labs(x=xlab,y=ylab) + theme_bw() + # lims(x=rg, y=rg) +
+     geom_smooth(method='lm', formula= y~x, size=0.5,se=FALSE) +
+     stat_regline_equation(label.y=max(dat[,y]),aes(label= ..rr.label..),size=3.8)
+}
+
+my_plot2 <- function(COV,xlab="Phase j",ylab="Phase i",title="model",
+                     show.legend=FALSE,show.value=FALSE,prefix="P")
+{
+  namesGp <- paste0(prefix,1:ncol(COV))
+
+  dat <- melt(t(COV))
+  dat<- dat[!is.na(dat$value),]
+  dat$x <- as.numeric(dat$Var1)
+  dat$y <- max(as.numeric(dat$Var2)) - as.numeric(dat$Var2) +1
+
+  pp <- ggplot(dat,aes(x,y)) + theme_bw() + geom_tile(aes(fill=value)) +
+    scale_fill_gradientn(colours = rev(heat.colors(10))) +
+    scale_y_continuous(breaks=1:nrow(COV),labels=rev(namesGp)) +
+    scale_x_continuous(sec.axis=sec_axis(~.+0,xlab,breaks=1:ncol(COV),labels=namesGp)) +
+    labs(x=NULL,y=ylab,title=title) +
+    theme(axis.ticks.x.bottom = element_blank(),axis.text.x.bottom = element_blank(),
+          panel.grid = element_blank())
+   if(show.value) pp <- pp + geom_text(aes(label=sprintf('%.3f',value)),size=3)
+   if(!show.legend) pp <- pp + theme(legend.position="none")
+   pp
+}
+
+get_VC_partition <- function(ng,hc,W=W,B=B)
+{
+  group <- cutree(hc, k=ng)
+  Groups <- unique(group)
+
+  # Get variances and covariances
+  COV <- matrix(NA,nrow=length(Groups),ncol=length(Groups))
+  dimnames(COV) <- list(Groups,Groups)
+
+  for(i in 1:length(Groups)){
+    index <- which(group %in% Groups[i])
+    ffi <- W[,index] %*% t(as.matrix(B[,index]))
+
+    for(j in i:length(Groups)){
+      index <- which(group %in% Groups[j])
+      ffj <- W[,index] %*% t(as.matrix(B[,index]))
+
+      tmp <- unlist(lapply(1:nrow(B),function(k)cov(ffi[,k],ffj[,k])))
+      COV[i,j] <- COV[j,i] <- mean(tmp)
+    }
+  }
+  COV
+}
+```
+
+```{r echo=FALSE}
+source("../Tools/Functions.R")
+dataW <- read.csv("../Data/OutputFiles/clean_EC_by_stage.csv", check.names=F)
+pheno <- read.csv("../Data/OutputFiles/clean_pheno_raw.csv")
+
+pheno <- pheno[pheno$year_loc %in% dataW$year_loc,]
+
+pheno0 <- dataW[,1:4]
+W0 <- as.matrix(dataW[,5:ncol(dataW)])
+W <- scale(W0)
+ZW <- scale(W0[match(pheno$year_loc,dataW$year_loc),])
+
+pheno$year <- factor(as.character(pheno$year))
+pheno$location <- factor(as.character(pheno$location))
+pheno$year_loc <- factor(as.character(pheno$year_loc))
+
+pheno0$year <- factor(as.character(pheno0$year))
+pheno0$loc <- factor(as.character(pheno0$loc))
+pheno0$year_loc <- factor(as.character(pheno0$year_loc))
+
+Z.YEAR=scale(as.matrix(model.matrix(~ year-1,data=pheno0)),center=TRUE,scale=FALSE)
+Z.LOC=scale(as.matrix(model.matrix(~ location-1,data=pheno0)),center=TRUE,scale=FALSE)
+Z.YL=scale(as.matrix(model.matrix(~ year_loc-1,data=pheno0)),center=TRUE,scale=FALSE)
+
+```
+
+# Variance components
+
+Model M2a was fitted including EC with Gaussian prior and model M2b EC are assumed a Bayes C prior
+
+```{r echo=FALSE}
+models <- c('1'="YEAR+LOC+YL+G", '2a'="W1+G", '2b'="W2+G", '3a'="LOC+W1+G", '3b'="LOC+W2+G")
+
+VC <- matrix(NA,ncol=7,nrow=length(models))
+colnames(VC) <- c("Year","Loc","Year-Loc","(Year-Loc)","Wb","G","Error")
+
+for(mm in 1:length(models))
+{
+  load(paste0("../Output/run_VC_full_model/fm_M",names(models)[mm],"_",models[mm],".RData"))
+  stopifnot(paste(names(fm$ETA),collapse="+") == models[mm])
+
+  varY <- varWb <- varYLTot <- NA
+  # Variance explained by YEAR
+  if("YEAR" %in% names(fm$ETA)){
+    B=read.table(paste0("../Output/run_VC_full_model/M",names(models)[mm],"_ETA_YEAR_b.dat"),header=T)  
+    ff <- Z.YEAR %*% t(as.matrix(B))
+    varY <- mean(apply(ff,2,var))
+  }
+
+  if(all(c("YEAR","LOC","YL") %in% names(fm$ETA))){
+    bYEAR <- fm$ETA$YEAR$b
+    bLOC <- fm$ETA$LOC$b
+    bYL <- fm$ETA$YL$b
+
+    varYLTot <-  var(Z.YEAR[,names(bYEAR)] %*% bYEAR +
+                    Z.LOC[,names(bLOC)] %*% bLOC +
+                    Z.YL[,names(bYL)] %*% bYL)
+  }
+
+  # Variance explained by Wb
+  if(any(c("W1","W2") %in% names(fm$ETA))){
+    if("W1" %in% names(fm$ETA)){
+      B=readBinMat(paste0("../Output/run_VC_full_model/M",names(models)[mm],"_ETA_W1_b.bin"))  
+      index <- match(colnames(W),fm$ETA$W1$colNames)
+    }
+    if("W2" %in% names(fm$ETA)){
+      B=readBinMat(paste0("../Output/run_VC_full_model/M",names(models)[mm],"_ETA_W2_b.bin"))  
+      index <- match(colnames(W),fm$ETA$W2$colNames)
+    }
+    ff <- W %*% t(as.matrix(B[,index]))
+    varWb <- mean(apply(ff,2,var))
+  }
+
+  varLOC <- ifelse(is.null(fm$ETA$LOC$varB),NA,fm$ETA$LOC$varB)
+  varYL <- ifelse(is.null(fm$ETA$YL$varB),NA,fm$ETA$YL$varB)
+  varG <- ifelse(is.null(fm$ETA$G$varB),NA,fm$ETA$G$varB)
+
+  VC[mm,] <- c(varY,varLOC, varYL, varYLTot,varWb, varG, fm$varE)
+}
+
+out <- as.data.frame(cbind(M=paste0("M",names(models)), Model=gsub("W1|W2","Wb",models),round(VC,3)))
+
+```
+
+```{r echo=FALSE, results = 'asis'}
+print(xtable(out), type="latex", comment=FALSE, include.rownames=FALSE)
+
+```
+a: Effects are assumed Gaussian prior, b: Effects with Bayes C
+
+## Mean effects of $year-location$ vs $\mathbf{W}\boldsymbol{b}$
+
+```{r echo=FALSE}
+# Model 1
+load(paste0("../Output/run_VC_full_model/fm_M1_YEAR+LOC+YL+G.RData"))
+bYEAR <- fm$ETA$YEAR$b
+bLOC <- fm$ETA$LOC$b
+bYL <- fm$ETA$YL$b
+
+YL_eff <-  fm$mu + drop(Z.YEAR[,names(bYEAR)] %*% bYEAR +
+                        Z.LOC[,names(bLOC)] %*% bLOC +
+                        Z.YL[,names(bYL)] %*% bYL)
+
+# Model 2
+load(paste0("../Output/run_VC_full_model/fm_M2a_W1+G.RData"))
+b1 <- fm$ETA$W1$b
+Wb1 <- fm$mu + drop(W %*% b1)
+
+load(paste0("../Output/run_VC_full_model/fm_M2b_W2+G.RData"))
+b2 <- fm$ETA$W2$b
+Wb2 <- fm$mu + drop(W %*% b2)
+
+dat <- data.frame(YL_eff,Wb1,Wb2)
+
+pp1 <- my_plot(dat,x="Wb1",y="YL_eff",xlab="Wb (BRR)",ylab="YEAR + LOC + YL")
+
+pp2 <- my_plot(dat,x="Wb2",y="YL_eff",xlab="Wb (Bayes-C)",ylab="YEAR + LOC + YL")
+
+pp3 <- my_plot(dat,x="Wb1",y="Wb2",xlab="Wb (BRR)",ylab="Wb (Bayes-C)")
+
+```
+
+```{r fig.align = 'center', fig.width=4.5, fig.height=4.5}
+print(pp1)
+print(pp2)
+print(pp3)
+
+```
+
+## Sequential variance
+
+Variance explained by $\mathbf{W}\boldsymbol{b}$ using EC from Phase $i$ to Phase $j$
+
+```{r echo=FALSE}
+models0 <- models[2:3]
+
+phase <- unlist(lapply(strsplit(colnames(W),"_"),function(x)x[1])) # Phases
+Phases <- unique(phase)
+group <- phase
+Groups <- Phases
+
+# Get variances and covariances
+COV1 <- COV2 <- matrix(NA,nrow=length(Groups),ncol=length(Groups))
+dimnames(COV1) <- dimnames(COV2) <- list(Groups,Groups)
+
+for(i in 1:length(Groups)){  
+  for(j in i:length(Groups)){
+    index <- which(group %in% Groups[i:j])
+
+    B1 <- readBinMat(paste0("../Output/run_VC_full_model_seq/M",names(models0)[1],"_P",i,"_P",j,"_ETA_W1_b.bin"))
+    ff1 <- W[,index] %*% t(as.matrix(B1))
+
+    B2 <- readBinMat(paste0("../Output/run_VC_full_model_seq/M",names(models0)[2],"_P",i,"_P",j,"_ETA_W2_b.bin"))
+    ff2 <- W[,index] %*% t(as.matrix(B2))
+
+    COV1[i,j] <- mean(apply(ff1,2,var))
+    COV2[i,j] <- mean(apply(ff2,2,var))
+    #cat("P=",i,", P=",j,"\n")
+  }
+}
+# COV1
+# COV2
+
+pp1 <- my_plot2(COV1, title="BRR", show.value=TRUE)
+pp2 <- my_plot2(COV2, title="Bayes-C", show.value=TRUE)
+
+```
+
+```{r fig.align = 'center', fig.width=6.2, fig.height=3.2}
+ggarrange(pp1,pp2)
+
+```
+
+## Separation of variance by groups
+
+```{r}
+B1 <- readBinMat(paste0("../Output/run_VC_full_model/M",names(models0)[1],"_ETA_W1_b.bin"))
+B2 <- readBinMat(paste0("../Output/run_VC_full_model/M",names(models0)[2],"_ETA_W2_b.bin"))  
+
+hc <- hclust(dist(t(W)), method="ward.D")
+
+```
+
+\vspace{5mm}
+
+Hierarchical clustering applied to a distance among ECs.
+
+**$k=10$ groups**
+```{r echo=FALSE, fig.align = 'center', fig.width=5, fig.height=3.2}
+k=10
+COVp1 <- get_VC_partition(k,hc,W,B1)
+COVp2 <- get_VC_partition(k,hc,W,B2)
+
+pp1 <- my_plot2(COVp1, xlab=NULL, ylab=NULL, prefix="", title="BRR")
+pp2 <- my_plot2(COVp2, xlab=NULL, ylab=NULL, prefix="", title="Bayes-C", show.legend=T)
+ggarrange(pp1, pp2, common.legend=TRUE)
+
+```
+
+\vspace{5mm}
+
+**$k=15$ groups**
+```{r echo=FALSE, fig.align = 'center', fig.width=5, fig.height=3.2}
+k=15
+COVp1 <- get_VC_partition(k,hc,W,B1)
+COVp2 <- get_VC_partition(k,hc,W,B2)
+
+pp1 <- my_plot2(COVp1, xlab=NULL, ylab=NULL, prefix="", title="BRR")
+pp2 <- my_plot2(COVp2, xlab=NULL, ylab=NULL, prefix="", title="Bayes-C", show.legend=T)
+ggarrange(pp1, pp2, common.legend=TRUE)
+
+```
+
+\vspace{5mm}
+
+$k=20$ groups
+```{r echo=FALSE, fig.align = 'center', fig.width=6, fig.height=3.84}
+k=20
+COVp1 <- get_VC_partition(k,hc,W,B1)
+COVp2 <- get_VC_partition(k,hc,W,B2)
+
+pp1 <- my_plot2(COVp1, xlab=NULL, ylab=NULL, prefix="", title="BRR")
+pp2 <- my_plot2(COVp2, xlab=NULL, ylab=NULL, prefix="", title="Bayes-C", show.legend=T)
+ggarrange(pp1, pp2, common.legend=TRUE)
+
+```

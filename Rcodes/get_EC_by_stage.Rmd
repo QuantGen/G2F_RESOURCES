@@ -32,6 +32,7 @@ Phases <- c('Germ-Emer', 'Emer-FlInit', 'FlInit-FgLeaf', 'FgLeaf-Flow',
 keep_cols <- which(!colnames(dataEC) %in%
     c("year_loc","year","location","Clock.Today","Stage","WinterDate","Date","yield"))
 
+cat("Processing", length(keep_cols),"ECs...\n")
 out <- lapply(split(dataEC,dataEC$year_loc),function(x){
   x <- x[order(as.Date(x$Date), decreasing = FALSE),]
   if(sum(order(as.Date(x$Date)) != 1:nrow(x)) > 0) stop("Dates are not in correct order in year-loc ",x$year_loc[1])
@@ -50,15 +51,14 @@ out <- lapply(split(dataEC,dataEC$year_loc),function(x){
     envmat[k,] <- apply(x[index,keep_cols],2,mean)
   }
   envmat <- as.data.frame(envmat)
-
   #cat("Year-loc=",x$year_loc[1]," processed \n")
   as.data.frame(cbind(x[1,c("year_loc","year","location"),drop=T], yield=max(x$yield)*10, phase=Phases, envmat))
 })
 
 dataW <- do.call(rbind, out)
 rownames(dataW) <- NULL
-#dataW[1:10,1:10]
-dim(dataW)
+# dataW[1:10,1:10]
+# dim(dataW)
 
 dataW$phase <- factor(as.character(dataW$phase),levels=Phases)
 dataW$year_loc <- factor(as.character(dataW$year_loc))
@@ -88,11 +88,10 @@ if(length(drop)>0){
   W <- W[,-drop]
 }
 
-dim(W)
 # Remove NAs (keep columns with no un-observed values)
 W <- W[,which(colSums(is.na(W)) == 0)]
 if(any(colSums(is.na(W)) > 0)) stop("Some columns have NA values")
-dim(W)
+#dim(W)
 
 dataW <- cbind(INFO,W)
 head(dataW[,1:8])
@@ -113,7 +112,7 @@ colnames(out) <- c("Phase","Name","nEC")
 kable(out)
 
 ```
-### Hydric stress EC
+### Hydric stress-related EC
 
 ```{r echo=FALSE, results = 'asis'}
 
@@ -130,11 +129,12 @@ out <- data.frame(Name=names(tmp),Description=as.vector(tmp))
 print(xtable(out), type="latex", comment=FALSE)
 
 ```
-$i$: soil profile
+$i$: soil profile ($i=1,...,10$) each 20 cm
 
 
 \newpage
 
+### Correlation between ECs
 ESW across phases
 ```{r echo=FALSE, fig.align = 'center', fig.width=7, fig.height=6}
 pp <- make_heatmap("ESW",W, cluster_rows=TRUE,cluster_cols=TRUE,
@@ -165,9 +165,9 @@ print(pp)
 
 \newpage
 
-Eo, Eos, Es, Evap, Flow(1), ESW(1), and PAW(1)
+Eo, Eos, Es, Evap, Flow(i), ESW(i), and PAW(i), $i=1,4,7,10$
 ```{r echo=FALSE, fig.align = 'center', fig.width=7, fig.height=6}
-pp <- make_heatmap(c("Eo","Eos","Es","Evap","Flow","ESW","PAW"),W,layer=c(1,3,5,7,9),
+pp <- make_heatmap(c("Eo","Eos","Es","Evap","Flow","ESW","PAW"),W,layer=c(1,4,7,10),
       cluster_rows=TRUE,cluster_cols=TRUE,
       fontsize=9,fontsize_row=3.3,fontsize_col=3.3, silent=TRUE)
 print(pp)

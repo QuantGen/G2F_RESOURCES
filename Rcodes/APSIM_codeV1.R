@@ -16,6 +16,9 @@ pheno <- read.csv('Data/OutputFiles/clean_pheno_yearloc_means.csv')
 simfile <- 'Maize.apsimx'
 simdir <- 'Data/APSIM_sim'
 
+#SIM0=read.csv('Data/OutputFiles/simulated_EC_V1.csv', check.names=F) # previous SIMUlation
+#pheno <- pheno[!pheno$year_loc %in% SIM0$year_loc,]
+
 # Run site-specific simulation
 out <- lapply(1:nrow(pheno), function(i){
   tmp <- pheno[i,]
@@ -38,4 +41,4 @@ out <- lapply(1:nrow(pheno), function(i){
 
 SIM <- do.call(rbind,out)
 
-write.csv(SIM, file = 'Data/OutputFiles/simulation_V1.csv', row.names=FALSE)
+write.csv(SIM, file = 'Data/OutputFiles/simulated_EC_V1.csv', row.names=FALSE)
