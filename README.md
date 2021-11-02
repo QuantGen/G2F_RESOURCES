@@ -59,14 +59,14 @@ Previous results can be found [here](https://github.com/QuantGen/G2F_RESOURCES/b
 
 ### Validation
 
-ECs were assesssed for its ability to predict year-location means using leave-one-out (LOO) cross-validation assigning each year-location to folds. 
+ECs were assesssed for its ability to predict year-location means using leave-one-out (LOO) cross-validation assigning each year-location (YL) to folds. 
 The ability to predict years performance are also evaluated.
 
 | What? | Input | Script | Output | Description |
 |-------|-------|--------|--------|-------------|
-|  LOO YEARxLOC replicates | [clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv)  <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model_LOO.R) | [files YEARxLOC](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model) |  |
-| LOO YEARxLOC means <br>LOO YEAR means<br/> | [clean_pheno_yearloc_means.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_yearloc_means.csv) <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model_LOO_means.R) | [files LOO YEARxLOC ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_LOO_YEAR_mean) <br>[files LOO YEARxLOC](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_LOO_YEAR_mean)<br/>| |
-| Summary LOO | [files LOO YEARxLOC ANOVA](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_LOO_YEAR_mean) <br>[files LOO YEARxLOC](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_LOO_YEAR_mean)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/get_results_validation.Rmd) | [output](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/get_results_validation.pdf) | |
+|  LOO YL replicates | [clean_pheno_raw.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_raw.csv)  <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model_LOO.R) | [files YL](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_VC_full_model) |  |
+| LOO YL means <br>LOO YEAR means<br/> | [clean_pheno_yearloc_means.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_pheno_yearloc_means.csv) <br>[clean_EC_by_stage.csv](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Data/OutputFiles/clean_EC_by_stage.csv)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/fit_mixed_model_LOO_means.R) | [files LOO YL means](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_LOO_YEAR_mean) <br>[files LOO YEAR](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_LOO_YEAR_mean)<br/>| |
+| Summary LOO | [files LOO YL](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_LOO_YEAR_mean) <br>[files LOO YEAR](https://github.com/QuantGen/G2F_RESOURCES/tree/main/Output/run_LOO_YEAR_mean)<br/> | [link](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/get_results_validation.Rmd) | [output](https://github.com/QuantGen/G2F_RESOURCES/blob/main/Rcodes/get_results_validation.pdf) | |
 
 <!-- 
  - [Tools to examine weather data](https://github.com/QuantGen/G2F_RESOURCES/blob/main/ExamineEnvData.md)
