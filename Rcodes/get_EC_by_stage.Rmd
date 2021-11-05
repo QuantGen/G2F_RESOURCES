@@ -13,6 +13,7 @@ library(lubridate)
 library(pheatmap)
 library(xtable)
 library(knitr)
+library(ggplot2)
 
 ```
 
@@ -173,3 +174,41 @@ pp <- make_heatmap(c("Eo","Eos","Es","Evap","Flow","ESW","PAW"),W,layer=c(1,4,7,
 print(pp)
 
 ```
+
+\newpage
+
+Principal Components decomposition of the covariance among ECs
+```{r echo=FALSE, fig.align = 'center', fig.width=6.5, fig.height=4.9}
+ec2 <- ec[]
+ec2[grep("AboveGround", ec2)] <- "Biomass"
+ec2[grep("Cover", ec2)] <- "Cover"
+ec2[grep("SW", ec2)] <- "SW"
+ec2[grep("ESW\\(", ec2)] <- "ESW"
+ec2[grep("Flow\\(", ec2)] <- "Flow"
+ec2[grep("FlowNO3", ec2)] <- "FlowNO3"
+ec2[grep("LeachNO3", ec2)] <- "LeachNO3"
+ec2[grep("Flux", ec2)] <- "Flux"
+ec2[grep("PAW", ec2)] <- "PAW"
+ec2[grep("Water", ec2)] <- "Water"
+ec2[grep("Runoff", ec2)] <- "Runoff"
+ec2[grep("Inf", ec2)] <- "Infiltration"
+ec2[ec2 %in% c("SW","Water")] <- "Water"
+ec2[ec2 %in% c("Eos","Es","Evap")] <- "Evaporation"
+ec2[ec2 %in% c("T","LeachNO3","FlowNO3")] <- "Other"
+#unique(ec2)
+
+tmp <- cor(W)
+EVD <- eigen(tmp)
+
+expVar <- 100*EVD$values / sum(EVD$values)
+
+dat <- data.frame(EVD$vectors[,1:2],EC_type=ec2)
+
+ggplot(dat, aes(X1, X2, fill=EC_type)) + theme_bw() +
+  geom_point(shape=21,size=1.8,color="gray20") +
+  labs(x=paste0("PC1 (",round(expVar[1],2),"%)"), 
+       y=paste0("PC2 (",round(expVar[2],2),"%)"), fill=NULL)
+
+```
+
+
