@@ -1,12 +1,23 @@
 # Function to rename columns
 
 rename <- function(old_name, new_name, list) {
-  lapply(list, function(x){ colnames(x)[grep(old_name, colnames(x))] <- new_name
-  return(x)
+  old_name <- unlist(strsplit(old_name, "\\&"))
+
+  lapply(list,function(x){
+    tmp <- lapply(1:length(old_name),function(k)grep(old_name[k],colnames(x)))
+    index <- tmp[[1]]
+    if(length(old_name) == 1){
+      if(length(index) > 1) index <- which(colnames(x)==old_name)
+    }else{
+      for(k in 2:length(old_name)) index <- intersect(index,tmp[[k]])
+    }
+    colnames(x)[index] <- new_name
+    return(x)
   })
 }
 
-#####
+#=============================================================================
+
 
 # Fix date format
 fix_date <- function(date_as_character) {
@@ -19,18 +30,19 @@ fix_date <- function(date_as_character) {
   d3 <- sapply(tmp2, function(x) x[3])
   d3[nchar(d3) == 2] <- paste0('20', d3[nchar(d3) == 2])
   swap <- which(as.numeric(d1) > 12)
-  d1_swap <- d1[swap]
-  d1[swap] <- d2[swap]
-  d2[swap] <- d1_swap
+  if(length(swap) > 0){
+    if(any(as.numeric(d2) > 12))stop("Some values are greater than 12 simultaneously in days and months")
+    d1_swap <- d1[swap]
+    d1[swap] <- d2[swap]
+    d2[swap] <- d1_swap
+  }
   res_dates <- as.Date(paste0(d1,'/', d2, '/', d3), format = '%m/%d/%Y')
   res <- as.Date(rep(NA, length(date_as_character)))
   res[!nas] <- res_dates
   return(res)
 }
 
-#####
-
-
+#=============================================================================
 
 # Calculate daily rainfall from a dataset with columns 'valid' and 'rainfall'
 
@@ -66,7 +78,7 @@ calculate_daily <- function(x) {
   prec[,5:4]
 }
 
-#####
+#=============================================================================
 
 # Get weather data from ASOS/AWOS network through https://mesonet.agron.iastate.edu
 
@@ -92,6 +104,8 @@ getWeatherASOS <- function(time_period = NA, network = "IA_ASOS", sid = NA) {
   }
 }
 
+#=============================================================================
+
 # Get weather station information from ASOS/AWOS
 
 getStationASOS <- function(network){
@@ -106,6 +120,8 @@ getStationASOS <- function(network){
   }
   stations[,c('elevation', 'sname', 'county', 'state', 'country', 'sid', 'lat', 'lon')]
 }
+
+#=============================================================================
 
 # Get weather data from NOAA
 
@@ -129,9 +145,45 @@ getWeatherNOAA <- function(time_period = c('2018-01-01', '2018-12-31'), sid = 'Z
   return(dweather)
 }
 
-################
+#=============================================================================
 
 # Function to calculate GDD from weather data
+
+# type=c("C","F")[1]; Tbase=10; Tmax=30; date_names=c("anthesis","silking")
+get_GDD <- function(dat,type=c("C","F"),Tbase=10,Tmax=30,date_names=c("anthesis","silking"))
+{
+  type <- match.arg(type)
+
+  end_date <- NA
+  if(any(!is.na(dat$harvesting))) end_date <- max(as.Date(dat$harvesting),na.rm=T)
+  if(is.na(end_date)) end_date <- max(as.Date(dat$silking),as.Date(dat$anthesis),na.rm=T) + 100
+  if(is.na(end_date)) end_date <- min(as.Date(dat$sowing)) + 500
+
+  pwr <- data.frame(nasapower::get_power(community = 'AG',
+            lonlat = c(dat$lon[1], dat$lat[1]),
+            pars = c("T2M","T2M_MIN","T2M_MAX"),
+            dates = c(min(as.Date(dat$sowing))-5, end_date),
+            temporal_api = 'daily'))
+  pwr$Tmin <- ifelse(pwr$T2M_MIN < Tbase, Tbase, pwr$T2M_MIN)
+  pwr$Tmax <- ifelse(pwr$T2M_MAX > Tmax, Tmax, pwr$T2M_MAX)
+  pwr$Tavg <- (pwr$Tmin + pwr$Tmax)/2
+  pwr$GDD <- ifelse(pwr$Tavg<Tbase, Tbase, pwr$Tavg-Tbase)
+
+  out <- matrix(NA,ncol=length(date_names),nrow=nrow(dat))
+  colnames(out) <- paste0(date_names,"_GDD",type)
+  for(i in 1:nrow(dat)){
+      isowing <- which(pwr$YYYYMMDD == dat$sowing[i])
+      for(k in 1:length(date_names)){
+        if(!is.na(dat[i,date_names[k]])){
+          idate <- which(pwr$YYYYMMDD == dat[i,date_names[k]])
+          out[i,k] <- sum(pwr[isowing:idate,"GDD"])
+        }
+      }
+  }
+  out
+}
+
+#=============================================================================
 
 calcGDD <- function(wdata, phenotype, envCol = 'env', intCol = c('date_plant', 'date_silking'), basetemp = 10) {
   # works with celsius degrees only
@@ -163,9 +215,9 @@ calcGDD <- function(wdata, phenotype, envCol = 'env', intCol = c('date_plant', '
   return(phenotype)
 }
 
-#===================================================================
+#=============================================================================
 
-search_apsimx2 <- function(tmp, keyword, return_lvls = FALSE) {
+search_apsimx <- function(tmp, keyword, return_lvls = FALSE) {
   lvls <- vector()
   for (i in 1:5) {
     sapp <- sapply(tmp$Children, function(x) length(grep(keyword, unlist(capture.output(str(x))))) > 0)
@@ -181,22 +233,7 @@ search_apsimx2 <- function(tmp, keyword, return_lvls = FALSE) {
   }
 }
 
-#search_apsimx <- function(tmp, keyword, return_lvls = FALSE) {
-#  lvls <- vector()
-#  for (i in 1:5) {
-#    sapp <- sapply(tmp$Children, function(x) length(grep(keyword, unlist(capture.output(str(x))))) > 0)
-#    if (length(sapp) == 0) break
-#    lvls[i] <- which(sapp)
-#    tmp <- tmp$Children[[lvls[i]]]
-#  }
-#  if (return_lvls) {
-#    return(lvls)
-#  } else {
-#    return(tmp)
-#  }
-#}
-
-#===================================================================
+#=============================================================================
 # New version of edit APSIM
 # file=simfile; src.dir=simdir; node = 'Cultivar'; overwrite = T; verbose = F; parm = 'Name'; value = 'Custom'
 # wrt.dir=NULL; soil.child="Metadata"; manager.child = NULL;  edit.tag = "-edited"; parm.path = NULL
@@ -543,7 +580,7 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
     }
   }
   if (node == 'Cultivar') {
-    lvls <- search_apsimx2(apsimx_json, 'Models.PMF.Plant, Models', T)
+    lvls <- search_apsimx(apsimx_json, 'Models.PMF.Plant, Models', T)
 
     if(length(grep('Models.PMF.Cultivar, Models', capture.output(str(apsimx_json)), ignore.case = T)) == 0) {
       x <- list(list())
@@ -605,8 +642,8 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
       warning('value should be a list. It will be coerced.')
       value <- as.list(value)
     }
-    tmp <- search_apsimx2(apsimx_json, parm)
-    lvls <- search_apsimx2(apsimx_json, parm, T)
+    tmp <- search_apsimx(apsimx_json, parm)
+    lvls <- search_apsimx(apsimx_json, parm, T)
 
     if (length(lvls) == 2)
       apsimx_json$Children[[lvls[1]]]$Children[[lvls[2]]][[parm]] <- value
@@ -654,12 +691,13 @@ edit_apsimx_new <- function (file, src.dir = ".", wrt.dir = NULL,
   }
 }
 
+#=============================================================================
 
 # New inspect_apsimx
 
-inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
-                                                                   "Weather", "Soil", "SurfaceOrganicMatter", "Cultivar",
-                                                                   "MicroClimate", "Crop", "Manager", "Other", "Report"),
+inspect_apsimx_new <- function (file = "", src.dir = ".",
+                                node = c("Clock","Weather", "Soil", "SurfaceOrganicMatter",
+                                         "Cultivar", "MicroClimate", "Crop", "Manager", "Other", "Report"),
                                 soil.child = c("Metadata", "Water", "InitialWater",
                                                "Chemical", "Physical", "Analysis",
                                                "SoilWater", "InitialN", "CERESSoilTemperature",
@@ -716,21 +754,6 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
   else {
     parent.node <- apsimx_json$Children[[fcsn]]$Children
     parm.path.1 <- paste0(parm.path.0, ".", apsimx_json$Children[[fcsn]]$Name)
-  }
-
-  search_apsimx <- function(tmp, keyword, return_lvls = FALSE) {
-    lvls <- vector()
-    for (i in 1:5) {
-      sapp <- sapply(tmp$Children, function(x) length(grep(keyword, unlist(capture.output(str(x))))) > 0)
-      if (length(sapp) == 0) break
-      lvls[i] <- which(sapp)
-      tmp <- tmp$Children[[lvls[i]]]
-    }
-    if (return_lvls) {
-      return(lvls)
-    } else {
-      return(tmp)
-    }
   }
 
   if (node == "Clock") {
@@ -886,7 +909,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
   if (node == 'Cultivar') {
     if (length(grep('Models.PMF.Cultivar, Models', capture.output(str(apsimx_json)), ignore.case = T)) > 0) {
       # There is at least one edited cultivar
-      tmp <- search_apsimx2(apsimx_json, keyword = 'Models.PMF.Cultivar, Models')
+      tmp <- search_apsimx(apsimx_json, keyword = 'Models.PMF.Cultivar, Models')
       cat('Name = ', tmp$Name)
       cat("\n")
       print(knitr::kable(data.frame(Command = unlist(tmp$Command))))
@@ -982,7 +1005,7 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
     }
   }
   if (node == "Report") {
-    tmp <- search_apsimx2(apsimx_json, keyword = 'VariableNames')
+    tmp <- search_apsimx(apsimx_json, keyword = 'VariableNames')
     print(knitr::kable(data.frame(VariableNames = unlist(tmp$VariableNames))))
     cat("\n")
     print(knitr::kable(data.frame(EventNames = unlist(tmp$EventNames))))
@@ -1009,9 +1032,38 @@ inspect_apsimx_new <- function (file = "", src.dir = ".", node = c("Clock",
   invisible(parm.path)
 }
 
-# ========================
+#=============================================================================
+
 # Plot Yield predictions with conditional probabilities
 # Function to plot
+
+plot_conditional2 <- function(x, y, quantiles = c(.2, .5, .8), gp=NULL,
+    point_size=0.9, vjust=-0.2){
+  index <- !is.na(x) & !is.na(y)
+  x <- x[index]
+  y <- y[index]
+  if(is.null(gp)){
+    gp <- factor(rep(1,length(y)))
+  }else{
+    gp <- gp[index]
+  }
+  xq <- quantile(x, probs = quantiles)
+  yq <- quantile(y, probs = quantiles)
+  rho <- sprintf('%.3f', as.numeric(cor(x, y)))
+
+  dat <- data.frame(x,y,gp)
+  dat2 <- data.frame(qq=names(yq), xq, yq, ymin=-Inf, xmin=-Inf)
+
+  ggplot(dat,aes(x,y)) + theme_bw() +
+    geom_point(aes(fill=gp),shape=21,color="gray20",size=point_size) +
+    geom_vline(xintercept=xq, color=4, linetype=3, size=0.5) +
+    geom_label(data=dat2,aes(x=xq,y=ymin, label=qq), color=4, vjust=vjust, label.size = NA) +
+    geom_hline(yintercept=yq, color=4, linetype=3, size=0.5) +
+    geom_label(data=dat2,aes(x=xmin,y=yq, label=qq), color=4, hjust=vjust, label.size = NA)
+}
+
+#=============================================================================
+
 plot_conditional <- function(x, y, quantiles = c(.2, .5, .8), xpos = .05, ypos = .05, cex.text=0.7, cex.point=0.6, ...) {
   index <- !is.na(x) & !is.na(y)
   x <- x[index]
@@ -1052,7 +1104,8 @@ plot_conditional <- function(x, y, quantiles = c(.2, .5, .8), xpos = .05, ypos =
   }
 }
 
-#--------------
+#=============================================================================
+
 make_heatmap <- function(ec, W, layer=NULL, cluster_rows=TRUE, cluster_cols=TRUE, ...)
 {
   phase <- unlist(lapply(strsplit(colnames(W),"_"),function(x)x[1])) # Phases
@@ -1084,4 +1137,319 @@ make_heatmap <- function(ec, W, layer=NULL, cluster_rows=TRUE, cluster_cols=TRUE
   pheatmap(cor(W0),cluster_rows = cluster_rows, cluster_cols = cluster_cols,
             show_rownames = T, show_colnames = T,
             annotation_col=annot, annotation_row=annot, ...)
+}
+
+
+#=============================================================================
+
+get_frontier <- function(dat,x="ASI_GDDC",y="yield",
+              probs=c(0.6,0.7,0.8,0.9), x.breaks_n=10,
+              x.breaks_type=c("percentile","evenly_spaced"))
+{
+  x.breaks_type <- match.arg(x.breaks_type)
+
+  dat <- dat[!is.na(dat[,x]) & !is.na(dat[,y]),]
+
+  br <- seq(min(dat[,x]),max(dat[,x]),length=x.breaks_n+1)
+  if(x.breaks_type=="percentile"){
+     br <- quantile(dat[,x], probs=seq(0,1,length=x.breaks_n+1))
+  }
+  br2 <- cbind(br[1:x.breaks_n],br[2:(x.breaks_n+1)])
+
+  out <- c()
+  for(j in 1:x.breaks_n){
+      a1 <- ifelse(j==1,br2[j,1]-1,br2[j,1])
+      a2 <- br2[j,2]
+      index <- which(dat[,x] > a1 & dat[,x] <= a2)
+      #cat(range(dat[index,x]),"\n")
+      q <- quantile(dat[index,y], probs)
+      out <- rbind(out,data.frame(xmean=mean(br2[j,]),p=names(q),q))
+  }
+  pp <- ggplot(dat, aes_string(x,y)) +
+          geom_point(color="gray70",size=0.4,shape=21) + theme_bw() +
+          geom_line(data=out,aes(xmean,q,color=p,group=p),size=0.5) +
+          geom_point(data=out,aes(xmean,q,color=p))
+  pp
+}
+
+#=============================================================================
+
+get_outliers <- function(y,kIQR=2){
+  qq <- quantile(y,probs=c(0.25,0.75))
+  IQR <- as.vector(qq[2] - qq[1])
+  which((y < qq[1] - kIQR*IQR) | (y > qq[2] + kIQR*IQR))
+}
+#=============================================================================
+
+get_cluster_EC <- function(W, rgTT=c(-100,100),
+                    method=c("hclust","kmeans"),k=4, decreasing=TRUE)
+{
+  method <- match.arg(method)
+  TT <- lapply(strsplit(colnames(W),"\\(|\\)-"),function(x)x[2])
+  TT <- 100*as.numeric(unlist(TT))
+
+  index <- which(TT >= rgTT[1] & TT <= rgTT[2])
+  W <- W[, index, drop=FALSE]
+
+  # Grouping
+  if(method=="hclust"){
+    cl <- hclust(dist(W), method="ward.D")
+    Group <- cutree(cl, k=k)
+  }
+
+  if(method=="kmeans"){
+    cl <- kmeans(W, centers=k, nstart=50, iter.max=1000)
+    Group <- cl$cluster
+  }
+  # Make boxplot by group and rearrenge acording to mean values
+  tmp <- data.frame(Group,X=I(W))
+  tmp <- split(tmp, tmp$Group)
+  bp <- do.call(rbind,lapply(tmp, function(x){
+    a1 <- apply(x$X,1,mean)
+    data.frame(Group=x$Group[1],Var=names(a1),value=a1)
+  }))
+  rownames(bp) <- NULL
+  tmp <- aggregate(value~Group, data=bp, median)
+  tmp <- tmp[order(tmp$value, decreasing=decreasing),]
+
+  # Change order of levels
+  ll <- as.numeric(factor(as.character(Group),levels=tmp$Group))
+  names(ll) <- names(Group)
+  Group <- ll
+
+  SVD <- svd(W)
+  d <- SVD$d
+  rk <- qr(W)$rank
+  v <- d^2/sum(d^2)
+  SDVe <- (-1/log(rk))*sum((v*log(v))[1:rk])
+  PCvar <- round(100*d/sum(d),1)
+  PC <- SVD$u
+  for(j in 1:ncol(PC)) PC[,j] <- PC[,j]*d[j]
+  rownames(PC) <- rownames(W)
+
+  tmp <- ifelse(ncol(PC)>=2,2,ncol(PC))
+  INFO <- data.frame(rownames(W),do.call(rbind,strsplit(rownames(W),"-")))
+  dat <- data.frame(INFO,Group,SVD$u[,1:tmp, drop=F])
+  colnames(dat) <- c("year_loc","year","location","Group",paste0("PC",1:tmp))
+  dat$year_loc2 <- paste0(dat$location,"-",substr(dat$year,3,4))
+
+  if(ncol(PC) > 1){
+    tmp <- range(TT[index])
+    title0 <- paste0("TT in [",tmp[1]-50,", ",tmp[2]+50,"]")
+    pp <- ggplot(dat, aes(PC1,PC2,color=factor(Group))) +
+      geom_label(aes(label=year_loc2),size=1.6) + theme_bw() +
+      labs(x=paste0("PC1 (",PCvar[1],"%)"), color="Group",
+           y=paste0("PC2 (",PCvar[2],"%)"), title=title0) +
+      theme(legend.position="none", plot.title=element_text(hjust=0.5)) +
+      guides(color = guide_legend(override.aes=list(size = 3))) +
+      annotate("text",x=min(dat$PC1),y=max(dat$PC2),
+        label=paste0("Entropy=",round(SDVe,4)),color="blue",hjust=-0.01)
+  }else pp <- NULL
+
+  list(pp=pp, Group=Group, PC=PC, W=W, Entropy=SDVe)
+}
+
+#=============================================================================
+#dat=OUT; x="yHat"; y="y"; ylab="Observed"; xlab="Predicted"; showcor=TRUE;
+#color="cluster"; title=vline=hline=label=NULL
+my_scatterplot <- function(dat, x, y, xlab="x", ylab="y", title=NULL, showcor=TRUE,
+            vline=NULL, hline=NULL, label=NULL, color=NULL, facet=NULL, scales=NULL)
+{
+  # xlab="x"; ylab="y"; title=NULL; showcor=TRUE; vline=NULL; hline=NULL; label=NULL; color=NULL
+  drop <- which(apply(dat[,c(x,y)],1,function(x)any(is.na(x))))
+  if(length(drop) > 0) dat <- dat[-drop,]
+
+  rg <- range(dat[,x],dat[,y])
+  rgx <- range(dat[,x])
+  rgy <- range(dat[,y])
+
+  if(is.null(color)){
+    dat$color <- factor(1)
+  }else dat$color <- dat[,color]
+
+  if(is.null(facet)){
+    dat$facet <- factor(" ")
+  }else{
+    tmp <- dat[,facet]; tmp <- ifelse(is.na(tmp),"none",tmp)
+    dat$facet <- tmp
+  }
+
+  if(!is.null(label)){
+    dat$label <- factor(as.character(dat[,label]))
+  }
+  #corre <- cor(dat[,x],dat[,y])
+  #corre <- sprintf('%.2f', corre)
+  if(is.null(scales)) scales <- "fixed"
+  dat0 <- do.call(rbind,lapply(split(dat,dat$facet), function(tt){
+    rr = lm(formula=paste(y,"~",x), data=tt)
+    data.frame(facet=tt$facet[1], R2=summary(rr)[["r.squared"]],
+       cor=cor(tt[,x],tt[,y]),
+       minx=min(tt[,x]),maxx=max(tt[,x]),
+       miny=min(tt[,y]),maxy=max(tt[,y]))
+  }))
+  dat0$label1 <- paste('R^2 ==',sprintf('%.3f',dat0$R2))
+  dat0$label2 <- paste('rho ==',sprintf('%.3f',dat0$cor))
+
+  if(all(!c("free","free_x")%in%scales)){
+    dat0[,"minx"]=min(dat[,x]); dat0[,"maxx"]=max(dat[,x])
+  }
+  if(all(!c("free","free_y")%in%scales)){
+    dat0[,"miny"]=min(dat[,y]); dat0[,"maxy"]=max(dat[,y])
+  }
+
+  pp <- ggplot(dat,aes_string(x,y)) +
+     labs(x=xlab,y=ylab,fill=NULL,title=title) + theme_bw() + # lims(x=rg, y=rg) +
+     geom_smooth(method='lm', formula= y~x, size=0.5,se=FALSE) +
+     #stat_regline_equation(label.y=rgy[2],aes(label= ..rr.label..),size=3.8) +
+     geom_text(data=dat0,aes(x=minx,y=maxy,
+                   label=label1), parse=TRUE, hjust=0, vjust=0.7) +
+     theme(legend.position=c(0.99,0.01),
+           legend.justification=c(1,0),
+           legend.key.height=unit(0.75,"line"),
+           legend.margin=margin(t=-0.17,b=0.17,l=0.17,r=0.17,unit='line'),
+           legend.box.background = element_rect(colour = "gray32",size=0.8),
+           legend.background = element_rect(fill="gray92"),
+           plot.title=element_text(hjust=0.5),
+           strip.text.x = element_text(size = 10,margin = margin(t=2,b=2))
+           )
+  if(!is.null(facet)){
+     pp <- pp + facet_wrap(~facet, scales=scales)
+  }
+  #else{
+
+  #}
+
+  if(showcor){
+    pp <- pp + geom_text(data=dat0,aes(x=minx,y=maxy-0.09*(maxy-miny),
+                  label=label2), parse=TRUE, hjust=0, vjust=0.7)
+  }
+
+  if(!is.null(vline)){
+     pp <- pp + geom_vline(xintercept=vline, linetype="dashed",color="red",size=0.2)
+  }
+  if(!is.null(hline)){
+     pp <- pp + geom_hline(yintercept=hline, linetype="dashed",color="red",size=0.2)
+  }
+
+  if(is.null(label)){
+    pp <- pp + geom_point(aes(fill=color),shape=21,size=1.9)
+    if(length(unique(dat$color)) == 1){
+        pp <- pp + theme(legend.position="none")
+    }
+  }else{
+    pp <- pp + geom_label(aes(label=label,fill=color),size=2.1) +
+              theme(legend.position=c(0.99,0.01))
+  }
+  pp
+}
+
+#=============================================================================
+
+my_xyplot_TT <- function(dat, x="Var2", y="value", group="Var1",
+                    color="cluster", xlab=NULL, ylab="y",
+                    legend.pos=c("topleft","topright","bottomleft","bottomright","none"))
+{
+  legend.pos <- match.arg(legend.pos)
+
+  if(is.null(xlab)) xlab=expression(paste("TT after flowering (",degree,"Cd)"))
+  dat$tt <- 100*as.numeric(unlist(lapply(strsplit(as.character(dat[,x]),"\\(|\\)-"),function(x)x[2])))
+
+  dat <- do.call(rbind,lapply(split(dat,paste(dat$tt,dat[,group])),function(z){
+    rr <- z[1,]
+    rr[,y] <- sum(z[,y])
+    rr
+  }))
+  rownames(dat) <- NULL
+
+  mm <- do.call(rbind,lapply(split(dat,dat$tt),function(z){
+    data.frame(z[1,c(x,"tt")], t(apply(z[,y, drop=F],2,mean)))
+  }))
+  br <- seq(min(dat$tt)-50,max(dat$tt)+50,by=200)
+
+  #legend.pos=c("topleft","topright","bottomleft","bottomright","none")[4]
+  tmp <- switch(legend.pos,"topleft"=list(c(0,1),c(0.01,0.99)),
+                     "topright"=list(c(1,1),c(0.99,0.99)),
+                     "bottomleft"=list(c(0,0),c(0.01,0.01)),
+                     "bottomright"=list(c(1,0),c(0.99,0.01)),
+                     "none"=list(c(0,0),"none"))
+  lgdjust <- tmp[[1]]
+  lgdpos <- tmp[[2]]
+
+  pp <- ggplot(dat, aes_string("tt",y)) + theme_bw()
+  if(is.null(color)){
+    pp <- pp + geom_line(aes_string(group=group),color="gray60",size=0.3)
+  }else{
+    pp <- pp + geom_line(aes_string(group=group, color=color),size=0.3) +
+               theme(legend.position=lgdpos,
+                     legend.justification=lgdjust,
+                     legend.key.height=unit(0.7,"line"),
+                     legend.margin=margin(t=-0.15,b=0.15,l=0.15,unit='line'),
+                     legend.background = element_rect(fill="gray92"))
+  }
+
+  pp <- pp + geom_line(data=mm,color="gray20") +
+             scale_x_continuous(breaks=br) +
+             labs(x=xlab, y=ylab, color=NULL)
+
+  pp
+
+}
+
+#=============================================================================
+
+my_levelplot_TT <- function(COV,xlab="Phase j",ylab="Phase i",title=NULL,
+                     show.legend=FALSE,show.value=FALSE,prefix="P")
+{
+  namesGp <- paste0(prefix,1:ncol(COV))
+
+  dat <- melt(t(COV))
+  dat<- dat[!is.na(dat$value),]
+  dat$Var1 <- factor(as.character(dat$Var1),levels=colnames(COV))
+  dat$Var2 <- factor(as.character(dat$Var2),levels=rownames(COV))
+
+  dat$x <- as.numeric(dat$Var1)
+  dat$y <- max(as.numeric(dat$Var2)) - as.numeric(dat$Var2) +1
+  ee <- 0.01
+  pp <- ggplot(dat,aes(x,y)) + theme_bw() + geom_tile(aes(fill=value)) +
+    scale_fill_gradientn(colours = rev(viridis(10))) +
+    scale_y_continuous(breaks=1:nrow(COV),labels=rev(rownames(COV)), expand=c(ee,ee)) +
+    scale_x_continuous(sec.axis=sec_axis(~.+0,xlab,breaks=1:ncol(COV),labels=colnames(COV)),
+                       expand=c(ee,ee)) +
+    labs(x=NULL,y=ylab,title=title, fill=NULL) +
+    theme(axis.ticks.x.bottom = element_blank(),
+          axis.text.x.bottom = element_blank(),
+          panel.grid = element_blank(),
+          plot.title=element_text(hjust=0.5))
+   if(show.value) pp <- pp + geom_text(aes(label=sprintf('%.3f',value)),size=3)
+   if(!show.legend) pp <- pp + theme(legend.position="none")
+   pp
+}
+
+#=============================================================================
+
+get_mean <- function(dat, x="Var2", y="value", group="Var1", stat=c("mean","sum"))
+{
+  stat <- match.arg(stat)
+  dat$tt <- 100*as.numeric(unlist(lapply(strsplit(as.character(dat[,x]),"\\(|\\)-"),function(x)x[2])))
+  tmp <- dat$tt
+  if(!is.null(group)){
+    tmp <- paste0(tmp,"-",apply(dat[,group, drop=F],1,paste,collapse="-"))
+  }
+  out <- do.call(rbind,lapply(split(dat,tmp),function(z){
+    rr <- z[1,]
+    if(stat=="mean"){
+      aa <- apply(z[,y,drop=F],2,mean)
+    }else aa <- apply(z[,y,drop=F],2,sum)
+    rr[,y] <- aa
+    rr
+  }))
+  rownames(out) <- NULL
+  out <- out[,colnames(out)!="tt"]
+  out
+}
+
+
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
 }
