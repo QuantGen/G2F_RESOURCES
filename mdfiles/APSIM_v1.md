@@ -20,9 +20,9 @@ The following is a table of the environmental covariates and its descriptions:
 | SoilWater.DiffusConst	| Constant in the soil water diffusivity calculation (mm2/day)	|
 | SoilWater.DiffusSlope	| Effect of soil water storage above the lower limit on soil water diffusivity (/mm)	|
 | SoilWater.Drainage	| Drainage (mm)	|
-| SoilWater.Eo	| Gets potential evapotransipration of the whole soil-plant system (mm)	|
+| SoilWater.Eo	| Gets potential evapotranspiration of the whole soil-plant system (mm)	|
 | SoilWater.Eos	| Gets potential evaporation from soil surface (mm)	|
-| SoilWater.Es	| Gets the actual (realised) soil water evaporation (mm)	|
+| SoilWater.Es	| Gets the actual (realized) soil water evaporation (mm)	|
 | SoilWater.ESW	| Gets extractable soil water relative to LL15 (mm)	|
 | SoilWater.Evaporation	| Evaporation (mm)	|
 | SoilWater.Flow	| Flow. Water moving up (mm)	|
